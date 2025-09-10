@@ -1,4 +1,4 @@
-### Azan Widget (Tawkit) → Next.js + React (shadcn) Migration Plan
+# Azan Widget (Tawkit) → Next.js + React (shadcn) Migration Plan
 
 #### Objective
 
@@ -32,14 +32,14 @@ maintainability, testability, performance, and UX.
 
 ### 3) Tooling & Quality Gates (Checkboxes for actionable)
 
-| ✔︎ | Item                     | Command(s)                    | Files                        | Notes                       |
-| --- | ------------------------ | ----------------------------- | ---------------------------- | --------------------------- |
-| [x] | Package manager          | `pnpm -v`                     | n/a                          | Project uses pnpm           |
-| [x] | Biome (linter/formatter) | `pnpm run biome:check`        | `biome.json`, `.biomeignore` | Enforced pre-commit         |
-| [x] | TypeScript noEmit        | `pnpm run typecheck`          | `tsconfig.json`              | Strict; no emit             |
-| [x] | Knip (dead code)         | `pnpm run knip`               | `knip.json`                  | Ignores legacy trees        |
-| [x] | Husky pre-commit         | n/a                           | `.husky/pre-commit`          | Runs Biome, tsc, Knip       |
-| [ ] | mdformat (Markdown)      | `pnpm dlx mdformat --check .` | n/a                          | Enforce Markdown formatting |
+| ✔︎ | Item                     | Command(s)                   | Files                            | Notes                           |
+| --- | ------------------------ | ---------------------------- | -------------------------------- | ------------------------------- |
+| [x] | Package manager          | `pnpm -v`                    | n/a                              | Project uses pnpm               |
+| [x] | Biome (linter/formatter) | `pnpm run biome:check`       | `biome.json`, `.biomeignore`     | Enforced pre-commit             |
+| [x] | TypeScript noEmit        | `pnpm run typecheck`         | `tsconfig.json`                  | Strict; no emit                 |
+| [x] | Knip (dead code)         | `pnpm run knip`              | `knip.json`                      | Ignores legacy trees            |
+| [x] | Husky pre-commit         | n/a                          | `.husky/pre-commit`              | Runs Biome, tsc, Knip, Prettier |
+| [x] | Prettier (Markdown)      | `pnpm run prettier:md:check` | `.prettierrc`, `.prettierignore` | Enforce Markdown formatting     |
 
 Note: Ensure `pnpm install && pnpm exec husky install` after cloning.
 
@@ -244,5 +244,5 @@ through WP-12.
 | Biome      | `pnpm run biome:check`                  |
 | TypeScript | `pnpm run typecheck`                    |
 | Knip       | `pnpm run knip`                         |
-| mdformat   | `pnpm dlx mdformat --check .`           |
+| Prettier   | `pnpm run prettier:md:check`            |
 | Pre-commit | Triggered automatically on `git commit` |

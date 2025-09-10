@@ -1,18 +1,18 @@
 {
-	"compilerOptions": {
-		"target": "ES2022",
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
-		"jsx": "react-jsx",
-		"resolveJsonModule": true,
-		"allowJs": true,
-		"checkJs": false,
-		"strict": true,
-		"noEmit": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"isolatedModules": true
-	},
-	"include": ["src", "*.config.*", "scripts", "PLAN.md"],
-	"exclude": ["node_modules", "dist", ".next", "out"]
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": false,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true
+  },
+  "include": ["src", "*.config.*", "scripts", "PLAN.md"],
+  "exclude": ["node_modules", "dist", ".next", "out"]
 }

@@ -9,6 +9,7 @@
   ],
   "ignore": [
     "node_modules/**",
+    ".next/**",
     "tawkit-9.61/**",
     "data/**",
     "audio/**",
@@ -17,7 +18,10 @@
     "font/**",
     "slides/**",
     "languages/**"
+  ],
+  "ignoreDependencies": [
+    "markdownlint",
+    "markdownlint-cli",
+    "prettier"
   ]
 }
-
-

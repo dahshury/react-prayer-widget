@@ -7,6 +7,7 @@
 	},
 	"files": {
 		"experimentalScannerIgnores": [
+			".next/**",
 			"node_modules/**",
 			"tawkit-9.61/**",
 			"audio/**",

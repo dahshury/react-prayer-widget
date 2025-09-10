@@ -1,4 +1,4 @@
-pnpm run -s biome:check
+pnpm run -s biome:fix
 RESULT1=$?
 
 if git ls-files '*.ts' '*.tsx' '*.js' '*.jsx' | grep -q .; then
@@ -12,10 +12,13 @@ fi
 pnpm run -s knip
 RESULT3=$?
 
-pnpm run -s prettier:md:check
+pnpm run -s prettier:md:write
 RESULT4=$?
 
-if [ $RESULT1 -ne 0 ] || [ $RESULT2 -ne 0 ] || [ $RESULT3 -ne 0 ] || [ $RESULT4 -ne 0 ]; then
+pnpm run -s mdlint:fix
+RESULT5=$?
+
+if [ $RESULT1 -ne 0 ] || [ $RESULT2 -ne 0 ] || [ $RESULT3 -ne 0 ] || [ $RESULT4 -ne 0 ] || [ $RESULT5 -ne 0 ]; then
   exit 1
 fi
 
