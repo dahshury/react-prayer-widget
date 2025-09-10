@@ -1,0 +1,22 @@
+{
+  "name": "tawkit-next",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "husky install",
+    "biome:check": "biome check --no-errors-on-unmatched .",
+    "typecheck": "tsc --noEmit",
+    "knip": "pnpm dlx knip",
+    "prettier:md:check": "prettier --check \"**/*.md\" --ignore-path .prettierignore",
+    "prettier:md:write": "prettier --write \"**/*.md\" --ignore-path .prettierignore"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.4",
+    "husky": "^9.1.6",
+    "typescript": "^5.6.2",
+    "prettier": "3.3.3"
+  }
+}
+
+

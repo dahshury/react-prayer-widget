@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+dist/
+audio/
+images/
+themes/
+font/
+slides/
+data/
+*.zip
+tawkit-9.61/**

@@ -1,0 +1,24 @@
+pnpm run -s biome:check
+RESULT1=$?
+
+if git ls-files '*.ts' '*.tsx' '*.js' '*.jsx' | grep -q .; then
+  pnpm run -s typecheck
+  RESULT2=$?
+else
+  echo "No TS/JS sources; skipping typecheck"
+  RESULT2=0
+fi
+
+pnpm run -s knip
+RESULT3=$?
+
+pnpm run -s prettier:md:check
+RESULT4=$?
+
+if [ $RESULT1 -ne 0 ] || [ $RESULT2 -ne 0 ] || [ $RESULT3 -ne 0 ] || [ $RESULT4 -ne 0 ]; then
+  exit 1
+fi
+
+exit 0
+
+

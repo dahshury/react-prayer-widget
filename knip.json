@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/knip/schemas/knip-schema.json",
+  "entry": [
+    "src/**/*.{ts,tsx,js,jsx}",
+    "scripts/**/*.{ts,js}",
+    "next.config.{js,ts}",
+    "postcss.config.{js,ts}",
+    "tailwind.config.{js,ts}"
+  ],
+  "ignore": [
+    "node_modules/**",
+    "tawkit-9.61/**",
+    "data/**",
+    "audio/**",
+    "images/**",
+    "themes/**",
+    "font/**",
+    "slides/**",
+    "languages/**"
+  ]
+}
+
+
