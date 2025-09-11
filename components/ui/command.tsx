@@ -28,7 +28,7 @@ function Command({
 	);
 }
 
-function CommandDialog({
+function _CommandDialog({
 	title = "Command Palette",
 	description = "Search for a command to run...",
 	children,
@@ -128,7 +128,7 @@ function CommandGroup({
 	);
 }
 
-function CommandSeparator({
+function _CommandSeparator({
 	className,
 	...props
 }: React.ComponentProps<typeof CommandPrimitive.Separator>) {
@@ -157,7 +157,7 @@ function CommandItem({
 	);
 }
 
-function CommandShortcut({
+function _CommandShortcut({
 	className,
 	...props
 }: React.ComponentProps<"span">) {

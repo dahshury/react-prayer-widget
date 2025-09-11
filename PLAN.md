@@ -69,10 +69,11 @@ Each row is an atomic, parallelizable task with legacy→target mapping and conc
 | [ ] | WP-03B | `wcsv.js`                          | `public/static/times/wcsv.json`, `src/infrastructure/times/WcsvDataSource.ts`, `scripts/convert-wcsv.mjs`                    | - Convert CSV to JSON incl. jamaat/iqama<br>- Adapter: resolve iqama (fixed/relative)                                               | WP-01        | Yes      | WCSV mode displays jamaat/iqama           |
 | [ ] | WP-03C | (none)                             | `src/infrastructure/times/AdhanCalculatorDataSource.ts`                                                                      | - Wrap adhan-js for computed times fallback                                                                                         | WP-02        | Yes      | Calculation parity within tolerance       |
 
-| [ ] | WP-03D | `countries.js`, `data/<CC>/<CC>.js` (city lists) | `public/static/geo/countries.json`,
-`public/static/geo/<CC>/cities.json`, `src/infrastructure/geo/GeoRepository.ts` | - Convert legacy country
-list and per-country city lists to JSON<br>- Implement `GeoRepository` to query countries/cities and
-provide labels (AR/EN) | WP-01 | Yes | Country/city lists load lazily and feed selector |
+| [ ] | WP-03D | `countries.js`, `data/<CC>/<CC>.js` (city lists) |
+`public/static/geo/countries.json`, `public/static/geo/<CC>/cities.json`,
+`src/infrastructure/geo/GeoRepository.ts` | - Convert legacy country list and per-country city lists
+to JSON<br>- Implement `GeoRepository` to query countries/cities and provide labels (AR/EN) | WP-01
+| Yes | Country/city lists load lazily and feed selector |
 
 #### WP-04: Content Repositories (Ayats, Ahadith, Messages, Slides)
 
@@ -83,12 +84,12 @@ provide labels (AR/EN) | WP-01 | Yes | Country/city lists load lazily and feed s
 | [ ] | WP-04C | `messages-bottom.js`             | `public/static/content/messages.json`, `StaticContentRepository` | - Parse `a                                                                                              | b            | c°°`→`{enabled,schedule,text}` | WP-01                        | Yes | Marquee shows scheduled messages |
 | [ ] | WP-04D | `messages-slides.js`, `slides/*` | `public/static/content/slides.json`, `public/slides/*`           | - Text/image slides; durations from settings                                                            | WP-01        | Yes                            | Carousel cycles per settings |
 
-| [ ] | WP-04E | `azkar/azkar.js`, `azkar/azkar-sabah.js`, `azkar/azkar-masaa.js`, `azkar/*.jpg`, `azkar/*.bmp`
-| `public/static/content/azkar/*.json`, `public/azkar/*` (images), `StaticContentRepository` | - Convert
-azkar files to structured JSON (sections, lines, timings)<br>- Migrate azkar images (hr0.jpg, hr1.jpg,
-hr2.jpg, vr0.jpg, vr1.jpg, azkar5min-hr.jpg, azkar5min-vr.jpg, azkar5min-hr.bmp)<br>- Expose filtered
-sets (after-prayer, sabah, masaa) | WP-01 | Yes | Azkar display lists render per settings with proper
-images |
+| [ ] | WP-04E | `azkar/azkar.js`, `azkar/azkar-sabah.js`, `azkar/azkar-masaa.js`, `azkar/*.jpg`,
+`azkar/*.bmp` | `public/static/content/azkar/*.json`, `public/azkar/*` (images),
+`StaticContentRepository` | - Convert azkar files to structured JSON (sections, lines, timings)<br>-
+Migrate azkar images (hr0.jpg, hr1.jpg, hr2.jpg, vr0.jpg, vr1.jpg, azkar5min-hr.jpg,
+azkar5min-vr.jpg, azkar5min-hr.bmp)<br>- Expose filtered sets (after-prayer, sabah, masaa) | WP-01 |
+Yes | Azkar display lists render per settings with proper images |
 
 #### WP-05: i18n Migration
 
@@ -117,9 +118,10 @@ images |
 | [ ] | WP-08C | Marquee in `index.html`          | `AnnouncementsMarquee`                                       | - Autoscroll; schedule by day/date/jomoa                             | WP-04C                            | Yes      | Messages rotate; pause on hover  |
 | [ ] | WP-08D | Slides                           | `SlidesCarousel`                                             | - Text/image slides; durations from settings                         | WP-04D                            | Yes      | Slides cycle and can be disabled |
 
-| [ ] | WP-08E | City/Location Selector | `src/components/azan/LocationSelector.tsx` | - Selector using
-`GeoRepository` to choose country/city and persist choice<br>- Triggers data source reload; integrates
-with widget header | WP-03D, WP-06 | Yes | User can pick country/city and widget updates times |
+| [ ] | WP-08E | City/Location Selector | `src/components/azan/LocationSelector.tsx` | - Selector
+using `GeoRepository` to choose country/city and persist choice<br>- Triggers data source reload;
+integrates with widget header | WP-03D, WP-06 | Yes | User can pick country/city and widget updates
+times |
 
 #### WP-10: Styling & Tokens Migration
 

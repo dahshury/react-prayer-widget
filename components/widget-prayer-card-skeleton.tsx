@@ -42,6 +42,89 @@ function paddingTokens(
 	return s === "xs" ? "p-2" : s === "sm" ? "p-2.5" : s === "lg" ? "p-4" : "p-3";
 }
 
+function textTokens(
+	size: WidgetPrayerCardSize | undefined,
+	variant: "next" | "horizontal" | "vertical",
+) {
+	const s = size || "md";
+	if (variant === "next") {
+		const nameText =
+			s === "xs"
+				? "text-[9px]"
+				: s === "sm"
+					? "text-[10px]"
+					: s === "lg"
+						? "text-xs"
+						: "text-[10px]";
+		const timeText =
+			s === "xs"
+				? "text-xs"
+				: s === "sm"
+					? "text-sm"
+					: s === "lg"
+						? "text-base"
+						: "text-sm";
+		const countdownText =
+			s === "xs"
+				? "text-[9px]"
+				: s === "sm"
+					? "text-[10px]"
+					: s === "lg"
+						? "text-xs"
+						: "text-[10px]";
+		return { nameText, timeText, countdownText };
+	}
+	if (variant === "horizontal") {
+		const nameText =
+			s === "xs"
+				? "text-[10px]"
+				: s === "sm"
+					? "text-xs"
+					: s === "lg"
+						? "text-sm"
+						: "text-xs";
+		const timeText =
+			s === "xs"
+				? "text-xs"
+				: s === "sm"
+					? "text-sm"
+					: s === "lg"
+						? "text-base"
+						: "text-sm";
+		return { nameText, timeText, countdownText: "text-[10px]" };
+	}
+	// vertical
+	const nameText =
+		s === "xs"
+			? "text-[9px]"
+			: s === "sm"
+				? "text-[10px]"
+				: s === "lg"
+					? "text-xs"
+					: "text-[10px]";
+	const timeText =
+		s === "xs"
+			? "text-[11px]"
+			: s === "sm"
+				? "text-xs"
+				: s === "lg"
+					? "text-sm"
+					: "text-xs";
+	return { nameText, timeText, countdownText: "text-[10px]" };
+}
+
+function minHeightStyle(
+	variant: "next" | "horizontal" | "vertical",
+	size: WidgetPrayerCardSize | undefined,
+) {
+	const s = size || "md";
+	const token =
+		variant === "next"
+			? `var(--prayer-card-h-next-${s})`
+			: `var(--prayer-card-h-item-${s})`;
+	return { minHeight: `calc(${token})` } as React.CSSProperties;
+}
+
 export function WidgetPrayerCardSkeleton({
 	variant,
 	horizontalView = false,
@@ -51,6 +134,8 @@ export function WidgetPrayerCardSkeleton({
 }: WidgetPrayerCardSkeletonProps) {
 	if (variant === "next") {
 		const paddings = paddingTokens(nextSize || size, "next");
+		const texts = textTokens(nextSize || size, "next");
+		const style = minHeightStyle("next", nextSize || size);
 		return (
 			<Card
 				className={cn(
@@ -58,17 +143,20 @@ export function WidgetPrayerCardSkeleton({
 					paddings,
 					className,
 				)}
+				style={style}
 			>
 				<div className="relative p-0.5 text-center">
 					<div className="flex items-center justify-center gap-1 mb-0">
 						<Skeleton className="h-3 w-3 rounded-full" />
-						<Skeleton className="h-3 w-12" />
+						<div className={cn(texts.nameText)}>
+							<Skeleton className="h-[1em] w-12" />
+						</div>
 					</div>
-					<div className="flex justify-center">
-						<Skeleton className="h-4 w-24" />
+					<div className={cn("flex justify-center", texts.timeText)}>
+						<Skeleton className="h-[1em] w-24" />
 					</div>
-					<div className="mt-1 flex justify-center">
-						<Skeleton className="h-3 w-20" />
+					<div className={cn("mt-1 flex justify-center", texts.countdownText)}>
+						<Skeleton className="h-[1em] w-20" />
 					</div>
 				</div>
 			</Card>
@@ -78,6 +166,8 @@ export function WidgetPrayerCardSkeleton({
 	// grid item variant
 	if (horizontalView) {
 		const paddings = paddingTokens(size, "horizontal");
+		const texts = textTokens(size, "horizontal");
+		const style = minHeightStyle("horizontal", size);
 		return (
 			<div
 				className={cn(
@@ -85,17 +175,24 @@ export function WidgetPrayerCardSkeleton({
 					paddings,
 					className,
 				)}
+				style={style}
 			>
 				<div className="flex items-center gap-2">
 					<Skeleton className="h-4 w-4 rounded-full" />
-					<Skeleton className="h-3 w-10" />
+					<div className={cn(texts.nameText)}>
+						<Skeleton className="h-[1em] w-10" />
+					</div>
 				</div>
-				<Skeleton className="h-3 w-10" />
+				<div className={cn(texts.timeText)}>
+					<Skeleton className="h-[1em] w-10" />
+				</div>
 			</div>
 		);
 	}
 
 	const paddings = paddingTokens(size, "vertical");
+	const texts = textTokens(size, "vertical");
+	const style = minHeightStyle("vertical", size);
 	return (
 		<div
 			className={cn(
@@ -103,10 +200,15 @@ export function WidgetPrayerCardSkeleton({
 				paddings,
 				className,
 			)}
+			style={style}
 		>
 			<Skeleton className="h-4 w-4 rounded-full mb-1" />
-			<Skeleton className="h-3 w-10 mb-1" />
-			<Skeleton className="h-3 w-12" />
+			<div className={cn("mb-1", texts.nameText)}>
+				<Skeleton className="h-[1em] w-10" />
+			</div>
+			<div className={cn(texts.timeText)}>
+				<Skeleton className="h-[1em] w-12" />
+			</div>
 		</div>
 	);
 }

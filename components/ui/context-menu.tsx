@@ -20,7 +20,7 @@ function ContextMenuTrigger({
 	);
 }
 
-function ContextMenuGroup({
+function _ContextMenuGroup({
 	...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Group>) {
 	return (
@@ -28,7 +28,7 @@ function ContextMenuGroup({
 	);
 }
 
-function ContextMenuPortal({
+function _ContextMenuPortal({
 	...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Portal>) {
 	return (
@@ -36,13 +36,13 @@ function ContextMenuPortal({
 	);
 }
 
-function ContextMenuSub({
+function _ContextMenuSub({
 	...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Sub>) {
 	return <ContextMenuPrimitive.Sub data-slot="context-menu-sub" {...props} />;
 }
 
-function ContextMenuRadioGroup({
+function _ContextMenuRadioGroup({
 	...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.RadioGroup>) {
 	return (
@@ -53,7 +53,7 @@ function ContextMenuRadioGroup({
 	);
 }
 
-function ContextMenuSubTrigger({
+function _ContextMenuSubTrigger({
 	className,
 	inset,
 	children,
@@ -77,7 +77,7 @@ function ContextMenuSubTrigger({
 	);
 }
 
-function ContextMenuSubContent({
+function _ContextMenuSubContent({
 	className,
 	...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {
@@ -134,7 +134,7 @@ function ContextMenuItem({
 	);
 }
 
-function ContextMenuCheckboxItem({
+function _ContextMenuCheckboxItem({
 	className,
 	children,
 	checked,
@@ -160,7 +160,7 @@ function ContextMenuCheckboxItem({
 	);
 }
 
-function ContextMenuRadioItem({
+function _ContextMenuRadioItem({
 	className,
 	children,
 	...props
@@ -184,7 +184,7 @@ function ContextMenuRadioItem({
 	);
 }
 
-function ContextMenuLabel({
+function _ContextMenuLabel({
 	className,
 	inset,
 	...props
@@ -204,7 +204,7 @@ function ContextMenuLabel({
 	);
 }
 
-function ContextMenuSeparator({
+function _ContextMenuSeparator({
 	className,
 	...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {
@@ -217,7 +217,7 @@ function ContextMenuSeparator({
 	);
 }
 
-function ContextMenuShortcut({
+function _ContextMenuShortcut({
 	className,
 	...props
 }: React.ComponentProps<"span">) {
@@ -233,9 +233,4 @@ function ContextMenuShortcut({
 	);
 }
 
-export {
-	ContextMenu,
-	ContextMenuTrigger,
-	ContextMenuContent,
-	ContextMenuItem,
-};
+export { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem };

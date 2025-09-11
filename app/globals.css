@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+@plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -38,6 +38,15 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #4b5563;
   --sidebar-ring: #0891b2;
+  /* Prayer card height tokens */
+  --prayer-card-h-next-xs: 2.25rem;   /* matches py-1 and text scales */
+  --prayer-card-h-next-sm: 2.5rem;
+  --prayer-card-h-next-md: 2.75rem;
+  --prayer-card-h-next-lg: 3.25rem;
+  --prayer-card-h-item-xs: 2.0rem;    /* horizontal/vertical items */
+  --prayer-card-h-item-sm: 2.25rem;
+  --prayer-card-h-item-md: 2.5rem;
+  --prayer-card-h-item-lg: 3.0rem;
 }
 
 .dark {
@@ -74,6 +83,15 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #4b5563;
   --sidebar-ring: #0891b2;
+  /* Keep same height tokens in dark */
+  --prayer-card-h-next-xs: 2.25rem;
+  --prayer-card-h-next-sm: 2.5rem;
+  --prayer-card-h-next-md: 2.75rem;
+  --prayer-card-h-next-lg: 3.25rem;
+  --prayer-card-h-item-xs: 2.0rem;
+  --prayer-card-h-item-sm: 2.25rem;
+  --prayer-card-h-item-md: 2.5rem;
+  --prayer-card-h-item-lg: 3.0rem;
 }
 
 @theme inline {
