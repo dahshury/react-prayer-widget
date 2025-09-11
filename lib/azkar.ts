@@ -1,0 +1,231 @@
+import type { IslamicContent } from "./islamic-content";
+
+// Extracted subset from tawkit-9.61/azkar/azkar-sabah.js and azkar-masaa.js
+// Only content lines; separators and repetition notes removed
+
+export const AZKAR_SABAH: IslamicContent[] = [
+	{
+		id: "s1",
+		type: "hadith",
+		arabic:
+			"اللّهُـمَّ بِكَ أَصْـبَحْنا وَبِكَ أَمْسَـينا | وَبِكَ نَحْـيا وَبِكَ نَمُـوتُ | وَإِلَـيْكَ النُّـشُور",
+		english: "اللّهُـمَّ بِكَ أَصْـبَحْنا...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s2",
+		type: "hadith",
+		arabic: "حَسْبِـيَ اللّهُ لا إلهَ إلاّ هُوَ | عَلَـيهِ تَوَكَّـلتُ | وَهُوَ رَبُّ العَرْشِ العَظـيم",
+		english: "حَسْبِـيَ اللّهُ لا إلهَ إلاّ هُوَ...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s3",
+		type: "hadith",
+		arabic: "أَصْـبَحْنا وَأَصْـبَحَ المُـلْكُ لله...",
+		english: "أَصْـبَحْنا وَأَصْـبَحَ المُـلْكُ لله...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s4",
+		type: "hadith",
+		arabic: "اللَّهُمَّ أنْتَ رَبِّي لا إلَهَ إلَّا أَنْتَ...",
+		english: "اللَّهُمَّ أنْتَ رَبِّي...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s5",
+		type: "hadith",
+		arabic: "اللّهُـمَّ إِنِّـي أَصْبَـحْتُ أُشْـهِدُك...",
+		english: "اللّهُـمَّ إِنِّـي أَصْبَـحْتُ...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s6",
+		type: "hadith",
+		arabic: "بِسـمِ اللهِ الذي لا يَضُـرُّ مَعَ اسمِـهِ شَيءٌ...",
+		english: "بِسـمِ اللهِ الذي لا يَضُـرُّ...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s7",
+		type: "hadith",
+		arabic: "أَصْبَـحْـنا عَلَى فِطْرَةِ الإسْلاَمِ...",
+		english: "أَصْبَـحْـنا عَلَى فِطْرَةِ الإسْلاَمِ...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s8",
+		type: "hadith",
+		arabic: "اللّهُـمَّ عافِـني في بَدَنـي ...",
+		english: "اللّهُـمَّ عافِـني في بَدَنـي ...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s9",
+		type: "hadith",
+		arabic: "اللّهُـمَّ إِنّـي أَعـوذُ بِكَ مِنَ الْكُـفر ...",
+		english: "اللّهُـمَّ إِنّـي أَعـوذُ بِكَ مِنَ الْكُـفر ...",
+		source: "Azkar Sabah",
+	},
+	{
+		id: "s10",
+		type: "hadith",
+		arabic: "اللّهُـمَّ إِنِّـي أسْـأَلُـكَ العَـفْوَ وَالعـافِـيةَ...",
+		english: "اللّهُـمَّ إِنِّـي أسْـأَلُـكَ...",
+		source: "Azkar Sabah",
+	},
+];
+
+export const AZKAR_MASAA: IslamicContent[] = [
+	{
+		id: "m1",
+		type: "hadith",
+		arabic: "أَعُوذُ بِاللهِ مِنْ الشَّيْطَانِ الرَّجِيمِ",
+		english: "أَعُوذُ بِاللهِ مِنْ الشَّيْطَانِ الرَّجِيمِ",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m2",
+		type: "ayah",
+		arabic: "آمَنَ الرَّسُولُ بِمَا أُنْزِلَ إِلَيْهِ...",
+		english: "آمَنَ الرَّسُولُ بِمَا أُنْزِلَ إِلَيْهِ...",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m3",
+		type: "hadith",
+		arabic: "أَمْسَيْـنا وَأَمْسـى المـلكُ لله...",
+		english: "أَمْسَيْـنا وَأَمْسـى المـلكُ لله...",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m4",
+		type: "hadith",
+		arabic: "اللّهـمَّ أَنْتَ رَبِّـي لا إلهَ إلاّ أَنْتَ...",
+		english: "اللّهـمَّ أَنْتَ رَبِّـي...",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m5",
+		type: "hadith",
+		arabic: "حَسْبِـيَ اللّهُ لا إلهَ إلاّ هُوَ...",
+		english: "حَسْبِـيَ اللّهُ لا إلهَ إلاّ هُوَ...",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m6",
+		type: "hadith",
+		arabic: "بِسـمِ اللهِ الذي لا يَضُـرُّ...",
+		english: "بِسـمِ اللهِ الذي لا يَضُـرُّ...",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m7",
+		type: "hadith",
+		arabic: "اللّهُـمَّ بِكَ أَمْسَـينا وَبِكَ أَصْـبَحْنا...",
+		english: "اللّهُـمَّ بِكَ أَمْسَـينا...",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m8",
+		type: "hadith",
+		arabic: "أَمْسَيْنَا عَلَى فِطْرَةِ الإسْلاَمِ...",
+		english: "أَمْسَيْنَا عَلَى فِطْرَةِ الإسْلاَمِ...",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m9",
+		type: "hadith",
+		arabic: "اللّهُـمَّ عافِـني في بَدَنـي ...",
+		english: "اللّهُـمَّ عافِـني في بَدَنـي ...",
+		source: "Azkar Masaa",
+	},
+	{
+		id: "m10",
+		type: "hadith",
+		arabic: "اللّهُـمَّ إِنّـي أَعـوذُ بِكَ مِنَ الْكُـفر ...",
+		english: "اللّهُـمَّ إِنّـي أَعـوذُ بِكَ مِنَ الْكُـفر ...",
+		source: "Azkar Masaa",
+	},
+];
+
+export const AZKAR_GENERAL: IslamicContent[] = [
+	{
+		id: "g1",
+		type: "hadith",
+		arabic: "أَسْـتَغْفِرُ الله",
+		english: "أَسْـتَغْفِرُ الله",
+		source: "Azkar General",
+	},
+	{
+		id: "g2",
+		type: "hadith",
+		arabic: "اللّهُـمَّ أَنْـتَ السَّلامُ وَمِـنْكَ السَّلام",
+		english: "اللّهُـمَّ أَنْـتَ السَّلامُ وَمِـنْكَ السَّلام",
+		source: "Azkar General",
+	},
+	{
+		id: "g3",
+		type: "hadith",
+		arabic: "تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام",
+		english: "تَبارَكْتَ يا ذا الجَـلالِ وَالإِكْـرام",
+		source: "Azkar General",
+	},
+	{
+		id: "g4",
+		type: "hadith",
+		arabic: "لا إلهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ",
+		english: "لا إلهَ إلاّ اللّهُ وحدَهُ لا شريكَ لهُ",
+		source: "Azkar General",
+	},
+	{
+		id: "g5",
+		type: "hadith",
+		arabic: "لهُ المُـلْكُ ولهُ الحَمْد وهوَ على كلّ شَيءٍ قَدير",
+		english: "لهُ المُـلْكُ ولهُ الحَمْد وهوَ على كلّ شَيءٍ قَدير",
+		source: "Azkar General",
+	},
+	{
+		id: "g6",
+		type: "hadith",
+		arabic: "لا حَـوْلَ وَلا قـوَّةَ إِلاّ بِاللهِ",
+		english: "لا حَـوْلَ وَلا قـوَّةَ إِلاّ بِاللهِ",
+		source: "Azkar General",
+	},
+	{
+		id: "g7",
+		type: "hadith",
+		arabic: "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+		english: "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+		source: "Azkar General",
+	},
+	{
+		id: "g8",
+		type: "ayah",
+		arabic: "﴿ آية الكرسي ﴾",
+		english: "Ayat al-Kursi",
+		source: "Azkar General",
+	},
+	{
+		id: "g9",
+		type: "ayah",
+		arabic: "﴿ قُلْ هُوَ ٱللَّهُ أَحَدٌ ﴾",
+		english: "Surah Al-Ikhlas",
+		source: "Azkar General",
+	},
+	{
+		id: "g10",
+		type: "ayah",
+		arabic: "﴿ قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ ﴾",
+		english: "Surah Al-Falaq",
+		source: "Azkar General",
+	},
+	{
+		id: "g11",
+		type: "ayah",
+		arabic: "﴿ قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ ﴾",
+		english: "Surah An-Nas",
+		source: "Azkar General",
+	},
+];

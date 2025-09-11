@@ -1,8 +1,32 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+/dist
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Project specific
 tawkit-9.61/
-tawkit-9.61-db056.zip
-node_modules/
-.next/
-tawkit-9.61/
-tawkit-9.61-db056.zip
-out/
-dist/in 
+tawkit-9.61-db056.zip 
