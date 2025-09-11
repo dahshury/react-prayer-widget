@@ -21,6 +21,9 @@
     "languages/**"
   ],
   "ignoreDependencies": [
-    "markdownlint"
+    "markdownlint",
+    "tailwindcss",
+    "tailwindcss-animate",
+    "autoprefixer"
   ]
 }
