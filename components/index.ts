@@ -1,5 +1,6 @@
 export { WidgetSettingsContext } from "./contexts/widget-settings-context";
 export { DualDateDisplay } from "./dual-date-display";
+export { default as FileUpload } from "./kokonutui/file-upload";
 export { MinimalTicker } from "./minimal-ticker";
 export { NextPrayerCard } from "./next-prayer-card";
 export { PrayerGrid } from "./prayer-grid";

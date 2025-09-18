@@ -27,10 +27,25 @@ export function WidgetSettingsContext({
 			requestAnimationFrame(() => setOpen(true));
 		});
 	}, []);
+	const styleVars = React.useMemo(
+		() => ({
+			["--prayer-name-color" as unknown as string]:
+				settings.prayerNameColor || "var(--foreground)",
+			["--prayer-time-color" as unknown as string]:
+				settings.prayerTimeColor || "var(--foreground)",
+			["--prayer-countdown-color" as unknown as string]:
+				settings.prayerCountdownColor || "#ffffff",
+		}),
+		[
+			settings.prayerNameColor,
+			settings.prayerTimeColor,
+			settings.prayerCountdownColor,
+		],
+	);
 	return (
 		<ContextMenu>
 			<ContextMenuTrigger className="w-full">
-				<div>{children}</div>
+				<div style={styleVars as React.CSSProperties}>{children}</div>
 			</ContextMenuTrigger>
 			<ContextMenuContent>
 				<ContextMenuItem onSelect={handleOpen}>Settings…</ContextMenuItem>

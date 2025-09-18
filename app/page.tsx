@@ -8,8 +8,10 @@ import { MinimalTicker } from "@/components/minimal-ticker";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { WidgetPrayerCard } from "@/components/widget-prayer-card";
 import { WidgetPrayerCardSkeleton } from "@/components/widget-prayer-card-skeleton";
+import { useAzan } from "@/hooks/use-azan";
 import { usePrayerTimes } from "@/hooks/use-prayer-times";
 import { TranslationProvider } from "@/hooks/use-translation";
+import { storeCustomAzanFile } from "@/lib/azan";
 import {
 	countryToFlag,
 	formatCurrentTime,
@@ -28,6 +30,8 @@ export default function PrayerTimesPage() {
 		currentTime,
 		updateSettings,
 	} = usePrayerTimes();
+
+	useAzan({ prayerTimes, settings });
 	const [, startTransition] = useTransition();
 
 	const updateSettingsDeferred = useCallback(
@@ -57,10 +61,31 @@ export default function PrayerTimesPage() {
 		return h * 60 + m < cm;
 	};
 
+	const isFriday = currentTime.getDay() === 5;
+
+	// Determine if the other prayer cards are visible (not on xxs/xs widths and toggle enabled)
+	const otherPrayersVisible =
+		(settings.showOtherPrayers ?? true) &&
+		!(settings.appWidth === "xs" || settings.appWidth === "xxs");
+
 	return (
 		<TranslationProvider language={settings.language || "en"}>
 			<div className="min-h-screen bg-background">
-				<div className="max-w-xl mx-auto p-4 space-y-4">
+				<div
+					className={`mx-auto p-4 space-y-4 ${(() => {
+						const w = settings.appWidth || "xl";
+						const map: Record<string, string> = {
+							xxs: "max-w-[360px]",
+							xs: "max-w-sm",
+							md: "max-w-md",
+							lg: "max-w-lg",
+							xl: "max-w-xl",
+							"2xl": "max-w-2xl",
+							"3xl": "max-w-3xl",
+						};
+						return map[w] || "max-w-xl";
+					})()}`}
+				>
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-3">
 							{settings.showDate && <DualDateDisplay />}
@@ -111,109 +136,174 @@ export default function PrayerTimesPage() {
 								settings={settings}
 								onSettingsChange={updateSettingsDeferred}
 							>
-								<WidgetPrayerCard
-									name={nextPrayer.name}
-									time={formatTimeDisplay(
-										nextPrayer.time,
-										settings.timeFormat24h ?? true,
-										settings.language || "en",
-									)}
-									isNext={true}
-									progress={nextPrayer.progress}
-									countdown={formatMinutesHHmm(nextPrayer.timeUntil)}
-									className="mb-2"
-								/>
-							</WidgetSettingsContext>
+								{settings.appWidth === "xs" || settings.appWidth === "xxs" ? (
+									<div className="mx-auto max-w-[360px]">
+										<WidgetPrayerCard
+											name={nextPrayer.name}
+											time={formatTimeDisplay(
+												nextPrayer.time,
+												settings.timeFormat24h ?? true,
+												settings.language || "en",
+											)}
+											isNext={true}
+											progress={nextPrayer.progress}
+											countdown={formatMinutesHHmm(nextPrayer.timeUntil)}
+											className="mb-2"
+											nextSize="xxs"
+											timezone={settings.timezone}
+											isFriday={isFriday}
+										/>
+									</div>
+								) : (
+									<WidgetPrayerCard
+										name={nextPrayer.name}
+										time={formatTimeDisplay(
+											nextPrayer.time,
+											settings.timeFormat24h ?? true,
+											settings.language || "en",
+										)}
+										isNext={true}
+										progress={nextPrayer.progress}
+										countdown={formatMinutesHHmm(nextPrayer.timeUntil)}
+										className="mb-2"
+										nextSize={settings.nextCardSize || "md"}
+										timezone={settings.timezone}
+										isFriday={isFriday}
+									/>
+								)}
 
-							{settings.showOtherPrayers && (
-								<div
-									className={
-										settings.horizontalView
-											? "space-y-2"
-											: "grid grid-cols-5 gap-2"
-									}
-								>
-									<WidgetPrayerCard
-										name="Fajr"
-										time={formatTimeDisplay(
-											prayerTimes.fajr,
-											settings.timeFormat24h ?? true,
-											settings.language || "en",
-										)}
-										isCurrent={nextPrayer.name === "Fajr"}
-										horizontalView={settings.horizontalView}
+								{/* Inline ticker directly below the central card when other prayers are hidden */}
+								{settings.showTicker && !otherPrayersVisible && (
+									<MinimalTicker
 										className={
-											settings.dimPreviousPrayers && isPast(prayerTimes.fajr)
-												? "opacity-40"
+											settings.appWidth === "xs" || settings.appWidth === "xxs"
+												? "mx-auto max-w-[360px]"
 												: undefined
 										}
+										prayerTimes={prayerTimes}
+										intervalMs={settings.tickerIntervalMs ?? 5000}
 									/>
-									<WidgetPrayerCard
-										name="Dhuhr"
-										time={formatTimeDisplay(
-											prayerTimes.dhuhr,
-											settings.timeFormat24h ?? true,
-											settings.language || "en",
-										)}
-										isCurrent={nextPrayer.name === "Dhuhr"}
-										horizontalView={settings.horizontalView}
-										className={
-											settings.dimPreviousPrayers && isPast(prayerTimes.dhuhr)
-												? "opacity-40"
-												: undefined
-										}
-									/>
-									<WidgetPrayerCard
-										name="Asr"
-										time={formatTimeDisplay(
-											prayerTimes.asr,
-											settings.timeFormat24h ?? true,
-											settings.language || "en",
-										)}
-										isCurrent={nextPrayer.name === "Asr"}
-										horizontalView={settings.horizontalView}
-										className={
-											settings.dimPreviousPrayers && isPast(prayerTimes.asr)
-												? "opacity-40"
-												: undefined
-										}
-									/>
-									<WidgetPrayerCard
-										name="Maghrib"
-										time={formatTimeDisplay(
-											prayerTimes.maghrib,
-											settings.timeFormat24h ?? true,
-											settings.language || "en",
-										)}
-										isCurrent={nextPrayer.name === "Maghrib"}
-										horizontalView={settings.horizontalView}
-										className={
-											settings.dimPreviousPrayers && isPast(prayerTimes.maghrib)
-												? "opacity-40"
-												: undefined
-										}
-									/>
-									<WidgetPrayerCard
-										name="Isha"
-										time={formatTimeDisplay(
-											prayerTimes.isha,
-											settings.timeFormat24h ?? true,
-											settings.language || "en",
-										)}
-										isCurrent={nextPrayer.name === "Isha"}
-										horizontalView={settings.horizontalView}
-										className={
-											settings.dimPreviousPrayers && isPast(prayerTimes.isha)
-												? "opacity-40"
-												: undefined
-										}
-									/>
-								</div>
-							)}
+								)}
+
+								{settings.showOtherPrayers &&
+									!(
+										settings.appWidth === "xs" || settings.appWidth === "xxs"
+									) && (
+										<div
+											className={
+												settings.horizontalView
+													? "space-y-2"
+													: "grid grid-cols-5 gap-2"
+											}
+										>
+											<WidgetPrayerCard
+												name="Fajr"
+												time={formatTimeDisplay(
+													prayerTimes.fajr,
+													settings.timeFormat24h ?? true,
+													settings.language || "en",
+												)}
+												isCurrent={nextPrayer.name === "Fajr"}
+												horizontalView={settings.horizontalView}
+												timezone={settings.timezone}
+												isFriday={isFriday}
+												className={
+													settings.dimPreviousPrayers &&
+													isPast(prayerTimes.fajr)
+														? "opacity-40"
+														: undefined
+												}
+												size={settings.otherCardSize || "sm"}
+												onDropFile={async (file) => {
+													await storeCustomAzanFile("Fajr", file);
+													updateSettingsDeferred({
+														azanByPrayer: {
+															...(settings.azanByPrayer || {}),
+															Fajr: "custom:Fajr",
+														},
+													});
+												}}
+											/>
+											<WidgetPrayerCard
+												name="Dhuhr"
+												time={formatTimeDisplay(
+													prayerTimes.dhuhr,
+													settings.timeFormat24h ?? true,
+													settings.language || "en",
+												)}
+												isCurrent={nextPrayer.name === "Dhuhr"}
+												horizontalView={settings.horizontalView}
+												timezone={settings.timezone}
+												isFriday={isFriday}
+												className={
+													settings.dimPreviousPrayers &&
+													isPast(prayerTimes.dhuhr)
+														? "opacity-40"
+														: undefined
+												}
+												size={settings.otherCardSize || "sm"}
+											/>
+											<WidgetPrayerCard
+												name="Asr"
+												time={formatTimeDisplay(
+													prayerTimes.asr,
+													settings.timeFormat24h ?? true,
+													settings.language || "en",
+												)}
+												isCurrent={nextPrayer.name === "Asr"}
+												horizontalView={settings.horizontalView}
+												timezone={settings.timezone}
+												isFriday={isFriday}
+												className={
+													settings.dimPreviousPrayers && isPast(prayerTimes.asr)
+														? "opacity-40"
+														: undefined
+												}
+												size={settings.otherCardSize || "sm"}
+											/>
+											<WidgetPrayerCard
+												name="Maghrib"
+												time={formatTimeDisplay(
+													prayerTimes.maghrib,
+													settings.timeFormat24h ?? true,
+													settings.language || "en",
+												)}
+												isCurrent={nextPrayer.name === "Maghrib"}
+												horizontalView={settings.horizontalView}
+												isFriday={isFriday}
+												className={
+													settings.dimPreviousPrayers &&
+													isPast(prayerTimes.maghrib)
+														? "opacity-40"
+														: undefined
+												}
+												size={settings.otherCardSize || "sm"}
+											/>
+											<WidgetPrayerCard
+												name="Isha"
+												time={formatTimeDisplay(
+													prayerTimes.isha,
+													settings.timeFormat24h ?? true,
+													settings.language || "en",
+												)}
+												isCurrent={nextPrayer.name === "Isha"}
+												horizontalView={settings.horizontalView}
+												isFriday={isFriday}
+												className={
+													settings.dimPreviousPrayers &&
+													isPast(prayerTimes.isha)
+														? "opacity-40"
+														: undefined
+												}
+												size={settings.otherCardSize || "sm"}
+											/>
+										</div>
+									)}
+							</WidgetSettingsContext>
 						</div>
 					) : null}
 
-					{settings.showTicker && (
+					{settings.showTicker && otherPrayersVisible && (
 						<div className="mt-8">
 							<MinimalTicker
 								prayerTimes={prayerTimes}

@@ -1,6 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+
+// Module-level pure helper so hooks don't require it as a dependency
+function adjustTimeByMinutes(hhmm: string, deltaMinutes: number): string {
+	if (!deltaMinutes) return hhmm;
+	const [h, m] = hhmm.split(":").map(Number);
+	let total = h * 60 + m + deltaMinutes;
+	total = ((total % (24 * 60)) + 24 * 60) % (24 * 60);
+	const nh = Math.floor(total / 60)
+		.toString()
+		.padStart(2, "0");
+	const nm = (total % 60).toString().padStart(2, "0");
+	return `${nh}:${nm}`;
+}
+
 import {
 	formatTimeUntil,
 	getCurrentLocation,
@@ -13,7 +27,6 @@ import {
 import {
 	getCountryCodeFromTimezone,
 	getLocationFromTimezoneLocalized,
-	guessTimezoneFromCountryCode,
 	TIMEZONES,
 } from "@/lib/timezones";
 
@@ -32,6 +45,38 @@ export interface ExtendedPrayerSettings extends PrayerSettings {
 	autoDetectTimezone?: boolean;
 	showClock?: boolean;
 	tickerIntervalMs?: number;
+	/** Custom colors for prayer UI text */
+	prayerNameColor?: string;
+	prayerTimeColor?: string;
+	prayerCountdownColor?: string;
+	/** Enable azan playback at prayer times */
+	azanEnabled?: boolean;
+	/** When true, customize azan per prayer; otherwise use one global choice */
+	azanPerPrayer?: boolean;
+	/** Per-prayer azan selection id (default|short|fajr|beep|off|custom) */
+	azanByPrayer?: Partial<
+		Record<"Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha", string>
+	>;
+	/** Display names for custom uploaded files per prayer */
+	azanCustomNames?: Partial<
+		Record<"Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha", string>
+	>;
+	/** Global azan volume 0..1 */
+	azanVolume?: number;
+	/** Global azan choice id used when not customizing per prayer */
+	azanGlobalChoice?: string;
+	/** Global custom azan uploaded by user (name only; data stored in localStorage) */
+	azanGlobalCustomName?: string;
+	/** Toggle edit mode to drag-drop azan files over prayer cards */
+	azanEditMode?: boolean;
+	/** Visual size of the next (center) card */
+	nextCardSize?: "xxs" | "xs" | "sm" | "md" | "lg";
+	/** Visual size of the other prayer cards */
+	otherCardSize?: "xxs" | "xs" | "sm" | "md" | "lg";
+	/** Max width for the overall app/cards container */
+	appWidth?: "xxs" | "xs" | "md" | "lg" | "xl" | "2xl" | "3xl";
+	/** Error flag for location/permission issues */
+	locationError?: string;
 }
 
 export type UsePrayerTimesOptions = {
@@ -155,7 +200,31 @@ const DEFAULT_EXTENDED_SETTINGS: ExtendedPrayerSettings = {
 	autoDetectTimezone: false,
 	showClock: true,
 	tickerIntervalMs: 5000,
+	// Default prayer text colors (match theme defaults; user can override)
+	prayerNameColor: "#ffffff",
+	prayerTimeColor: "#ffffff",
+	prayerCountdownColor: "#ffffff",
+	azanEnabled: true,
+	azanPerPrayer: false,
+	azanGlobalChoice: "default",
+	azanByPrayer: {
+		Fajr: "default",
+		Dhuhr: "default",
+		Asr: "default",
+		Maghrib: "default",
+		Isha: "default",
+	},
+	azanCustomNames: {},
+	azanVolume: 1,
+	azanEditMode: false,
+	// Card sizes
+	nextCardSize: "md",
+	otherCardSize: "sm",
+	// Container width (Tailwind max-w-*)
+	appWidth: "xl",
 };
+
+const SETTINGS_STORAGE_KEY = "tawkit:settings:v1";
 
 export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 	const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
@@ -173,6 +242,36 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 		progress: number;
 	} | null>(null);
 	const [currentTime, setCurrentTime] = useState(new Date());
+	const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+	const [isDetectingLocation, setIsDetectingLocation] = useState(false);
+
+	// Load settings from localStorage once on mount
+	useEffect(() => {
+		try {
+			const raw =
+				typeof window !== "undefined"
+					? localStorage.getItem(SETTINGS_STORAGE_KEY)
+					: null;
+			if (raw) {
+				const parsed = JSON.parse(raw) as Partial<ExtendedPrayerSettings>;
+				setSettings((prev) => ({ ...prev, ...parsed }));
+			}
+		} catch (e) {
+			console.warn("Failed to read settings from localStorage", e);
+		}
+	}, []);
+
+	// Persist settings to localStorage whenever they change
+	useEffect(() => {
+		try {
+			if (typeof window !== "undefined") {
+				localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+			}
+		} catch (e) {
+			console.warn("Failed to write settings to localStorage", e);
+		}
+	}, [settings]);
 
 	// Update current time every second
 	useEffect(() => {
@@ -192,7 +291,6 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 					...prev,
 					timezone: sysTz,
 					countryCode: getCountryCodeFromTimezone(sysTz) || prev.countryCode,
-					city: undefined,
 				}));
 			}
 		}
@@ -254,25 +352,56 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 			} = dataSettings;
 
 			try {
-				setLoading(true);
+				if (!hasLoadedOnce) setLoading(true);
 				setError(null);
 
 				let currentLocation: Location;
 
-				if (useCurrentLocation) {
-					// Use device location
-					const detected = await getCurrentLocation(language || "en");
-					if (!timezone && detected.countryCode) {
-						const tz = guessTimezoneFromCountryCode(detected.countryCode);
-						if (tz) {
-							setSettings((prev) => ({
-								...prev,
-								timezone: tz,
-								countryCode: detected.countryCode,
-							}));
-						}
+				// Prefer device coordinates when auto-detect is enabled or explicitly requested
+				if (useCurrentLocation || settings.autoDetectTimezone === true) {
+					console.log(
+						"🚀 [usePrayerTimes] Using device location, autoDetect:",
+						settings.autoDetectTimezone,
+					);
+
+					// Prevent multiple simultaneous location requests
+					if (isDetectingLocation) {
+						console.log(
+							"⏳ [usePrayerTimes] Location detection already in progress, skipping",
+						);
+						return;
 					}
-					currentLocation = detected;
+
+					setIsDetectingLocation(true);
+					try {
+						// Use device location
+						const detected = await getCurrentLocation(language || "en");
+						console.log(
+							"📍 [usePrayerTimes] Detected location:",
+							detected.city,
+							detected.countryCode,
+							`(${detected.latitude}, ${detected.longitude})`,
+						);
+
+						// Reflect detected data into settings for UI/state coherency
+						setSettings((prev) => {
+							const sysTz =
+								Intl.DateTimeFormat().resolvedOptions().timeZone ||
+								prev.timezone ||
+								"Asia/Mecca";
+							return {
+								...prev,
+								timezone: sysTz,
+								countryCode: detected.countryCode || prev.countryCode,
+								city: detected.city || prev.city,
+								cityCode: undefined, // Clear cityCode when using coordinates
+								locationError: undefined, // Clear any previous location errors
+							};
+						});
+						currentLocation = detected;
+					} finally {
+						setIsDetectingLocation(false);
+					}
 				} else if (timezone) {
 					// Use timezone-based location
 					const tzMeta = TIMEZONES.find((t) => t.value === timezone);
@@ -287,16 +416,28 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 					};
 				} else {
 					// Fallback to Makkah
+					console.log("⚠️ [usePrayerTimes] Falling back to Makkah. Settings:", {
+						timezone,
+						countryCode,
+						city,
+						autoDetectTimezone: settings.autoDetectTimezone,
+					});
 					currentLocation = {
 						latitude: 21.4225,
 						longitude: 39.8262,
-						city: city || "Makkah",
+						city: city || "Makkah Al-Mukarramah",
 						country: "Saudi Arabia",
 						countryCode: countryCode || "SA",
 					};
 				}
 
 				setLocation(currentLocation);
+				console.log(
+					"🕌 [usePrayerTimes] Using location:",
+					currentLocation.city,
+					currentLocation.countryCode,
+					`(${currentLocation.latitude}, ${currentLocation.longitude})`,
+				);
 
 				const times = await getPrayerTimes(currentLocation, {
 					calculationMethod,
@@ -310,18 +451,95 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 					forceHourMore,
 					forceHourLess,
 				});
+				console.log(
+					"⏰ [usePrayerTimes] Prayer times:",
+					times.fajr,
+					times.dhuhr,
+					times.asr,
+					times.maghrib,
+					times.isha,
+				);
 				setPrayerTimes(times);
 			} catch (err) {
 				setError("Failed to load prayer times");
 				console.error(err);
 			} finally {
-				setLoading(false);
+				if (!hasLoadedOnce) setLoading(false);
 			}
 		},
-		[dataSettings],
+		[
+			dataSettings,
+			hasLoadedOnce,
+			settings.autoDetectTimezone,
+			isDetectingLocation,
+		],
 	);
 
-	// getTimezoneCoordinates moved to module scope
+	// When user enables auto-detect, immediately prefer device location
+	useEffect(() => {
+		if (settings.autoDetectTimezone) {
+			void loadPrayerTimes(true);
+		}
+	}, [settings.autoDetectTimezone, loadPrayerTimes]);
+
+	// If user previously denied and later grants geolocation permission, auto-enable auto-detect
+	useEffect(() => {
+		if (typeof navigator === "undefined" || !("permissions" in navigator))
+			return;
+		let disposed = false;
+		let cleanup: (() => void) | undefined;
+		(async () => {
+			try {
+				const status = await navigator.permissions.query({
+					name: "geolocation" as PermissionName,
+				});
+				const handleChange = async () => {
+					if (disposed) return;
+					if (status.state === "granted" && settings.locationError) {
+						try {
+							const detected = await getCurrentLocation(
+								settings.language || "en",
+								{ strict: true },
+							);
+							const sysTz =
+								Intl.DateTimeFormat().resolvedOptions().timeZone ||
+								"Asia/Mecca";
+							setSettings((prev) => ({
+								...prev,
+								autoDetectTimezone: true,
+								timezone: sysTz,
+								countryCode: detected.countryCode || prev.countryCode,
+								city: detected.city || prev.city,
+								cityCode: undefined, // Reset cityCode since we're using coordinates
+								locationError: undefined,
+							}));
+							// Recompute using device coordinates
+							void loadPrayerTimes(true);
+						} catch {
+							// ignore retry failures
+						}
+					}
+				};
+				status.addEventListener("change", handleChange);
+				// Trigger once in case it is already granted now
+				void handleChange();
+				cleanup = () => status.removeEventListener("change", handleChange);
+			} catch {
+				// Permissions API unsupported; nothing to do
+			}
+		})();
+		return () => {
+			disposed = true;
+			if (cleanup) cleanup();
+		};
+	}, [settings.locationError, settings.language, loadPrayerTimes]);
+
+	// Load on mount and whenever inputs to the memoized loader change
+	useEffect(() => {
+		void loadPrayerTimes(false).then(() => {
+			if (!hasLoadedOnce) setHasLoadedOnce(true);
+		});
+	}, [loadPrayerTimes, hasLoadedOnce]);
 
 	// Update next prayer and progress with real-time precision, recompute every second
 	useEffect(() => {
@@ -346,13 +564,35 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 		return () => clearInterval(interval);
 	}, [prayerTimes]);
 
-	// Load on mount and whenever inputs to the memoized loader change
-	useEffect(() => {
-		void loadPrayerTimes();
-	}, [loadPrayerTimes]);
-
 	const updateSettings = useCallback(
 		(newSettings: Partial<ExtendedPrayerSettings>) => {
+			// Compute offset deltas against current settings to allow immediate UI adjustment
+			const nextFajr = newSettings.fajrOffset ?? settings.fajrOffset ?? 0;
+			const nextDhuhr = newSettings.dhuhrOffset ?? settings.dhuhrOffset ?? 0;
+			const nextAsr = newSettings.asrOffset ?? settings.asrOffset ?? 0;
+			const nextMaghrib =
+				newSettings.maghribOffset ?? settings.maghribOffset ?? 0;
+			const nextIsha = newSettings.ishaOffset ?? settings.ishaOffset ?? 0;
+			const dFajr = nextFajr - (settings.fajrOffset ?? 0);
+			const dDhuhr = nextDhuhr - (settings.dhuhrOffset ?? 0);
+			const dAsr = nextAsr - (settings.asrOffset ?? 0);
+			const dMaghrib = nextMaghrib - (settings.maghribOffset ?? 0);
+			const dIsha = nextIsha - (settings.ishaOffset ?? 0);
+
+			if (dFajr || dDhuhr || dAsr || dMaghrib || dIsha) {
+				setPrayerTimes((prevTimes) => {
+					if (!prevTimes) return prevTimes;
+					return {
+						...prevTimes,
+						fajr: adjustTimeByMinutes(prevTimes.fajr, dFajr),
+						dhuhr: adjustTimeByMinutes(prevTimes.dhuhr, dDhuhr),
+						asr: adjustTimeByMinutes(prevTimes.asr, dAsr),
+						maghrib: adjustTimeByMinutes(prevTimes.maghrib, dMaghrib),
+						isha: adjustTimeByMinutes(prevTimes.isha, dIsha),
+					};
+				});
+			}
+
 			setSettings((prev) => {
 				let hasChange = false;
 				for (const key in newSettings) {
@@ -362,10 +602,16 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 						break;
 					}
 				}
-				return hasChange ? { ...prev, ...newSettings } : prev;
+				if (!hasChange) return prev;
+				const merged = { ...prev, ...newSettings };
+				// Dim previous prayers must always be enabled
+				merged.dimPreviousPrayers = true;
+				return merged;
 			});
 		},
-		[],
+		// adjustTimeByMinutes is a stable function defined within this module scope
+		// and does not need to be included as a dependency.
+		[settings],
 	);
 
 	const refreshLocation = () => {
@@ -399,5 +645,6 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 		refreshLocation,
 		formatTimeUntil,
 		getCountdownString,
+		initialized: hasLoadedOnce,
 	};
 }

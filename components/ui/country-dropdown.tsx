@@ -4,7 +4,7 @@
 import { countries } from "country-data-list";
 // assets
 import { CheckIcon, ChevronDown, Globe } from "lucide-react";
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { CircleFlag } from "react-circle-flags";
 // shadcn
 import {
@@ -65,9 +65,28 @@ const CountryDropdownComponent = (
 	ref: React.ForwardedRef<HTMLButtonElement>,
 ) => {
 	const [open, setOpen] = useState(false);
+
 	const [selectedCountry, setSelectedCountry] = useState<Country | undefined>(
 		undefined,
 	);
+
+	// Debug component mount and open state changes
+	useEffect(() => {
+		console.log("🏁 CountryDropdown component mounted/updated");
+	}, []);
+
+	useEffect(() => {
+		console.log(
+			"🚪 Country dropdown open changed:",
+			open,
+			"Selected:",
+			selectedCountry?.name,
+			"Alpha2:",
+			selectedCountry?.alpha2,
+			"Full object:",
+			!!selectedCountry,
+		);
+	}, [open, selectedCountry]);
 
 	useEffect(() => {
 		if (selectedAlpha2) {
@@ -93,19 +112,37 @@ const CountryDropdownComponent = (
 		}
 	}, [defaultValue, selectedAlpha2, options]);
 
-	// Auto-scroll to selected item when opening
+	// Center-scroll to the selected item when opening
+	const listRef = useRef<HTMLDivElement | null>(null);
+	const [shouldScrollToSelected, setShouldScrollToSelected] = useState(false);
+
+	// Trigger scroll when dropdown opens
 	useEffect(() => {
 		if (open && selectedCountry) {
-			const id =
-				selectedCountry.alpha3 ||
-				selectedCountry.alpha2 ||
-				selectedCountry.name;
-			const el = document.querySelector(`[data-id="${id}"]`);
-			if (el && "scrollIntoView" in el) {
-				(el as HTMLElement).scrollIntoView({ block: "center" });
-			}
+			setShouldScrollToSelected(true);
+		} else {
+			setShouldScrollToSelected(false);
 		}
 	}, [open, selectedCountry]);
+
+	// Handle scroll when list is ready
+	const handleListReady = useCallback(() => {
+		if (!shouldScrollToSelected || !selectedCountry || !listRef.current) return;
+
+		const id = (selectedCountry.alpha2 || "").toUpperCase();
+		try {
+			const el = listRef.current.querySelector(
+				`[data-id="${CSS.escape(id)}"]`,
+			) as HTMLElement | null;
+
+			if (el) {
+				el.scrollIntoView({ block: "center", behavior: "instant" });
+				setShouldScrollToSelected(false); // Reset flag
+			}
+		} catch {
+			// ignore scroll errors
+		}
+	}, [shouldScrollToSelected, selectedCountry]);
 
 	const handleSelect = useCallback(
 		(country: Country) => {
@@ -154,7 +191,16 @@ const CountryDropdownComponent = (
 				className="min-w-[--radix-popper-anchor-width] p-0 rounded-lg border shadow-lg"
 			>
 				<Command className="w-full max-h-[280px]">
-					<CommandList className="max-h-[280px] overflow-y-auto">
+					<CommandList
+						ref={(node) => {
+							listRef.current = node;
+							if (node) {
+								// Trigger scroll when list is mounted/updated
+								requestAnimationFrame(handleListReady);
+							}
+						}}
+						className="max-h-[280px] overflow-y-auto"
+					>
 						<div className="sticky top-0 z-10 bg-popover">
 							<CommandInput placeholder="Search country..." />
 						</div>
@@ -165,8 +211,8 @@ const CountryDropdownComponent = (
 								.map((option) => (
 									<CommandItem
 										className="flex items-center w-full gap-2 px-3 py-2"
-										key={option.alpha3 || option.alpha2 || option.name}
-										data-id={option.alpha3 || option.alpha2 || option.name}
+										key={(option.alpha2 || option.name).toUpperCase()}
+										data-id={(option.alpha2 || "").toUpperCase()}
 										onSelect={() => handleSelect(option)}
 									>
 										<div className="flex flex-grow w-0 items-center justify-between space-x-2 overflow-hidden">

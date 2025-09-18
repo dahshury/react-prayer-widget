@@ -36,7 +36,7 @@ export interface PrayerSettings {
 const DEFAULT_LOCATION: Location = {
 	latitude: 21.3891,
 	longitude: 39.8579,
-	city: "Makkah",
+	city: "Makkah Al-Mukarramah",
 	country: "Saudi Arabia",
 };
 
@@ -53,8 +53,14 @@ export async function getCurrentLocation(
 	language: "en" | "ar" = "en",
 	opts?: { strict?: boolean },
 ): Promise<Location> {
+	console.log(
+		"🌐 [getCurrentLocation] Starting location detection, strict:",
+		opts?.strict,
+	);
+
 	// Helper: IP-based fallback geolocation (when geolocation blocked/unavailable)
 	const ipFallback = async (): Promise<Location> => {
+		console.log("🌍 [getCurrentLocation] Using IP-based fallback");
 		try {
 			const res = await fetch("https://ipapi.co/json/");
 			const data = (await res.json()) as {
@@ -64,12 +70,14 @@ export async function getCurrentLocation(
 				country_name?: string;
 				country_code?: string;
 			};
+			console.log("📍 [getCurrentLocation] IP API response:", data);
+
 			if (
 				data &&
 				typeof data.latitude === "number" &&
 				typeof data.longitude === "number"
 			) {
-				return {
+				const result = {
 					latitude: data.latitude,
 					longitude: data.longitude,
 					city: data.city || (language === "ar" ? "غير معروف" : "Unknown"),
@@ -77,15 +85,22 @@ export async function getCurrentLocation(
 						data.country_name || (language === "ar" ? "غير معروف" : "Unknown"),
 					countryCode: data.country_code || undefined,
 				};
+				console.log("✅ [getCurrentLocation] IP fallback result:", result);
+				return result;
 			}
-		} catch {
-			// ignore
+		} catch (e) {
+			console.log("❌ [getCurrentLocation] IP fallback failed:", e);
 		}
+		console.log(
+			"🕋 [getCurrentLocation] Using DEFAULT_LOCATION:",
+			DEFAULT_LOCATION,
+		);
 		return DEFAULT_LOCATION;
 	};
 
 	return new Promise((resolve, reject) => {
 		if (!navigator.geolocation) {
+			console.log("❌ [getCurrentLocation] Geolocation not available");
 			if (opts?.strict) {
 				reject(new Error("geolocation_unavailable"));
 			} else {
@@ -94,42 +109,88 @@ export async function getCurrentLocation(
 			return;
 		}
 
+		console.log("📡 [getCurrentLocation] Requesting GPS position...");
 		navigator.geolocation.getCurrentPosition(
 			async (position) => {
+				console.log(
+					"✅ [getCurrentLocation] GPS position received:",
+					position.coords,
+				);
 				try {
 					const { latitude, longitude } = position.coords;
 
 					// Reverse geocoding to get city name
+					console.log("🔍 [getCurrentLocation] Reverse geocoding...");
+
+					// Create abort controller for timeout
+					const controller = new AbortController();
+					const timeoutId = setTimeout(() => controller.abort(), 8000);
+
 					const response = await fetch(
 						`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=${language}`,
+						{ signal: controller.signal },
 					);
-					const data = await response.json();
 
-					resolve({
+					clearTimeout(timeoutId);
+					const data = await response.json();
+					console.log("🏙️ [getCurrentLocation] Reverse geocode result:", data);
+
+					const result = {
 						latitude,
 						longitude,
-						city: data.city || (language === "ar" ? "غير معروف" : "Unknown"),
+						city:
+							data.city ||
+							data.locality ||
+							data.principalSubdivision ||
+							(language === "ar" ? "غير معروف" : "Unknown"),
 						country:
 							data.countryName || (language === "ar" ? "غير معروف" : "Unknown"),
 						countryCode: data.countryCode || undefined,
-					});
-				} catch (error) {
-					console.error("Error getting location details:", error);
+					};
+					console.log("🎯 [getCurrentLocation] GPS final result:", result);
+					resolve(result);
+				} catch (e) {
+					console.log("❌ [getCurrentLocation] Reverse geocoding failed:", e);
+					// If reverse geocoding fails, still use GPS coordinates with generic location
+					const fallbackResult = {
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude,
+						city: language === "ar" ? "موقع مكتشف" : "Detected Location",
+						country: language === "ar" ? "غير معروف" : "Unknown",
+						countryCode: undefined,
+					};
+					console.log(
+						"🔄 [getCurrentLocation] Using GPS coordinates with fallback info:",
+						fallbackResult,
+					);
+
 					if (opts?.strict) {
-						reject(new Error("reverse_geocode_failed"));
+						reject("reverse_geocode_failed" as unknown as never);
 					} else {
-						void ipFallback().then(resolve);
+						resolve(fallbackResult);
 					}
 				}
 			},
-			() => {
+			(error) => {
+				console.log(
+					"❌ [getCurrentLocation] GPS position failed:",
+					error.code,
+					error.message,
+				);
 				if (opts?.strict) {
-					reject(new Error("geolocation_denied"));
+					reject(
+						new Error(`geolocation_failed_${error.code}`) as unknown as never,
+					);
 				} else {
+					console.log("🔄 [getCurrentLocation] Falling back to IP location");
 					void ipFallback().then(resolve);
 				}
 			},
-			{ timeout: 10000 },
+			{
+				timeout: 15000, // Increased timeout
+				enableHighAccuracy: true,
+				maximumAge: 300000, // 5 minutes cache
+			},
 		);
 	});
 }
@@ -186,7 +247,15 @@ export async function getPrayerTimes(
 
 		const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${location.latitude}&longitude=${location.longitude}&method=${settings.calculationMethod}&school=${settings.asrMethod}`;
 
-		const response = await fetch(url);
+		let response: Response;
+		try {
+			response = await fetch(url);
+		} catch (_e) {
+			throw new Error("network_fetch_failed");
+		}
+		if (!response.ok) {
+			throw new Error(`fetch_not_ok_${response.status}`);
+		}
 		const data = await response.json();
 
 		if (data.code !== 200) {

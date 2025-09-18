@@ -6,11 +6,15 @@ import { Card } from "@/components/ui/card";
 import { useTranslation } from "@/hooks/use-translation";
 import { cn } from "@/lib/utils";
 
-export type WidgetPrayerCardSize = "xs" | "sm" | "md" | "lg";
+export type WidgetPrayerCardSize = "xxs" | "xs" | "sm" | "md" | "lg";
 
 export interface WidgetPrayerCardProps {
 	name: string;
 	time: string;
+	/** IANA timezone to determine local weekday (for Friday/Jumuʿah handling) */
+	timezone?: string;
+	/** Optional explicit Friday override from parent */
+	isFriday?: boolean;
 	isNext?: boolean;
 	isCurrent?: boolean;
 	progress?: number;
@@ -39,6 +43,8 @@ export interface WidgetPrayerCardProps {
 	};
 	/** Inline style on the container */
 	style?: React.CSSProperties;
+	/** Optional drop handler for custom azan files */
+	onDropFile?: (file: File) => void;
 }
 
 const defaultIcon = (name: string) => {
@@ -86,85 +92,119 @@ function sizeTokens(
 	const s = size || "md";
 	if (variant === "next") {
 		const paddings =
-			s === "xs"
-				? "py-1 px-2"
-				: s === "sm"
-					? "py-1.5 px-2.5"
-					: s === "lg"
-						? "py-3 px-4"
-						: "py-2 px-3";
+			s === "xxs"
+				? "py-0 px-1.5"
+				: s === "xs"
+					? "py-0.5 px-2"
+					: s === "sm"
+						? "py-1 px-2.5"
+						: s === "lg"
+							? "py-1.5 px-4"
+							: "py-1 px-3";
 		const nameText =
-			s === "xs"
-				? "text-[9px]"
-				: s === "sm"
-					? "text-[10px]"
-					: s === "lg"
-						? "text-xs"
-						: "text-[10px]";
+			s === "xxs"
+				? "text-[8px]"
+				: s === "xs"
+					? "text-[9px]"
+					: s === "sm"
+						? "text-[10px]"
+						: s === "lg"
+							? "text-xs"
+							: "text-[10px]";
 		const timeText =
-			s === "xs"
-				? "text-xs"
-				: s === "sm"
-					? "text-sm"
-					: s === "lg"
-						? "text-base"
-						: "text-sm";
-		const countdownText =
-			s === "xs"
-				? "text-[9px]"
-				: s === "sm"
-					? "text-[10px]"
-					: s === "lg"
+			s === "xxs"
+				? "text-[10px]"
+				: s === "xs"
+					? "text-[11px]"
+					: s === "sm"
 						? "text-xs"
-						: "text-[10px]";
+						: s === "lg"
+							? "text-lg"
+							: "text-base";
+		const countdownText =
+			s === "xxs"
+				? "text-[7px]"
+				: s === "xs"
+					? "text-[8px]"
+					: s === "sm"
+						? "text-[9px]"
+						: s === "lg"
+							? "text-[11px]"
+							: "text-[9px]";
 		return { paddings, nameText, timeText, countdownText };
 	}
 	if (variant === "horizontal") {
 		const paddings =
-			s === "xs" ? "p-2" : s === "sm" ? "p-2.5" : s === "lg" ? "p-4" : "p-3";
+			s === "xxs"
+				? "py-0.5 px-1.5"
+				: s === "xs"
+					? "py-1 px-2"
+					: s === "sm"
+						? "py-1 px-2.5"
+						: s === "lg"
+							? "py-2 px-4"
+							: "py-1.5 px-3";
 		const nameText =
-			s === "xs"
-				? "text-[10px]"
-				: s === "sm"
-					? "text-xs"
-					: s === "lg"
-						? "text-sm"
-						: "text-xs";
+			s === "xxs"
+				? "text-[9px]"
+				: s === "xs"
+					? "text-[10px]"
+					: s === "sm"
+						? "text-xs"
+						: s === "lg"
+							? "text-base"
+							: "text-sm";
 		const timeText =
-			s === "xs"
-				? "text-xs"
-				: s === "sm"
-					? "text-sm"
-					: s === "lg"
-						? "text-base"
-						: "text-sm";
+			s === "xxs"
+				? "text-[11px]"
+				: s === "xs"
+					? "text-xs"
+					: s === "sm"
+						? "text-sm"
+						: s === "lg"
+							? "text-lg"
+							: "text-base";
 		return { paddings, nameText, timeText, countdownText: "text-[10px]" };
 	}
 	// vertical
 	const paddings =
-		s === "xs" ? "p-2" : s === "sm" ? "p-2.5" : s === "lg" ? "p-4" : "p-3";
+		s === "xxs"
+			? "py-0.5 px-1.5"
+			: s === "xs"
+				? "py-1 px-2"
+				: s === "sm"
+					? "py-1 px-2.5"
+					: s === "lg"
+						? "py-2 px-4"
+						: "py-1.5 px-3";
 	const nameText =
-		s === "xs"
-			? "text-[9px]"
-			: s === "sm"
-				? "text-[10px]"
-				: s === "lg"
-					? "text-xs"
-					: "text-[10px]";
+		s === "xxs"
+			? "text-[8px]"
+			: s === "xs"
+				? "text-[9px]"
+				: s === "sm"
+					? "text-[10px]"
+					: s === "lg"
+						? "text-sm"
+						: "text-xs";
 	const timeText =
-		s === "xs"
-			? "text-[11px]"
-			: s === "sm"
-				? "text-xs"
-				: s === "lg"
-					? "text-sm"
-					: "text-xs";
+		s === "xxs"
+			? "text-[10px]"
+			: s === "xs"
+				? "text-[11px]"
+				: s === "sm"
+					? "text-xs"
+					: s === "lg"
+						? "text-base"
+						: "text-sm";
 	return { paddings, nameText, timeText, countdownText: "text-[10px]" };
 }
 
 function InnerWidgetPrayerCard({
 	name,
 	time,
+	timezone,
+	isFriday: fridayOverride,
 	isNext,
 	isCurrent,
 	progress = 0,
@@ -178,8 +218,31 @@ function InnerWidgetPrayerCard({
 	getIcon,
 	classes,
 	style,
+	onDropFile,
 }: WidgetPrayerCardProps) {
 	const { t } = useTranslation();
+	const tz =
+		timezone ||
+		(typeof Intl !== "undefined"
+			? Intl.DateTimeFormat().resolvedOptions().timeZone
+			: undefined);
+	const isFridayDetected = (() => {
+		try {
+			const opts: Intl.DateTimeFormatOptions & { timeZone?: string } = {
+				weekday: "long",
+			};
+			if (tz) opts.timeZone = tz;
+			const weekday = new Date().toLocaleDateString(
+				"en-US",
+				opts as Intl.DateTimeFormatOptions,
+			);
+			return weekday === "Friday";
+		} catch {
+			return false;
+		}
+	})();
+	const isFriday =
+		typeof fridayOverride === "boolean" ? fridayOverride : isFridayDetected;
 	const translatedName = (() => {
 		switch (name.toLowerCase()) {
 			case "fajr":
@@ -187,7 +250,7 @@ function InnerWidgetPrayerCard({
 			case "sunrise":
 				return t("prayers.sunrise");
 			case "dhuhr":
-				return t("prayers.dhuhr");
+				return isFriday ? t("prayers.jumuah") : t("prayers.dhuhr");
 			case "asr":
 				return t("prayers.asr");
 			case "maghrib":
@@ -200,7 +263,9 @@ function InnerWidgetPrayerCard({
 	})();
 
 	const resolvedGradient = gradientClass || defaultGradient(name);
-	const iconNode = showIcon
+	const shouldShowIcon =
+		showIcon && (isNext || !(size === "xxs" || size === "xs"));
+	const iconNode = shouldShowIcon
 		? getIcon
 			? getIcon(name)
 			: defaultIcon(name)
@@ -218,6 +283,16 @@ function InnerWidgetPrayerCard({
 					classes?.container,
 				)}
 				style={style}
+				onDrop={(e) => {
+					if (!onDropFile) return;
+					e.preventDefault();
+					const f = e.dataTransfer?.files?.[0] as File | undefined;
+					if (!f) return;
+					onDropFile(f);
+				}}
+				onDragOver={(e) => {
+					if (onDropFile) e.preventDefault();
+				}}
 			>
 				<div
 					className={cn(
@@ -234,41 +309,48 @@ function InnerWidgetPrayerCard({
 					/>
 				</div>
 
-				<div className="relative p-0.5 text-center">
-					<div className="flex items-center justify-center gap-0.5 mb-0">
+				<div className="relative p-0.5 pr-12">
+					<div className="flex items-center gap-1.5 min-w-0">
 						{iconNode ? (
-							<div className={cn("scale-75", classes?.icon)}>{iconNode}</div>
+							<div className={cn("scale-75 shrink-0", classes?.icon)}>
+								{iconNode}
+							</div>
 						) : null}
 						<span
 							className={cn(
-								"leading-none font-medium text-foreground whitespace-nowrap",
+								"leading-none font-medium whitespace-nowrap",
 								tokens.nameText,
 								classes?.name,
 							)}
+							style={{ color: "var(--prayer-name-color)" }}
 						>
 							{translatedName}
 						</span>
 					</div>
-					<div
-						className={cn(
-							"font-semibold leading-none text-foreground whitespace-nowrap",
-							tokens.timeText,
-							classes?.time,
-						)}
-					>
-						{countdown || time}
-					</div>
-					{countdown && (
+					<div className="absolute right-2 top-1/2 -translate-y-1/2 text-right pointer-events-none">
 						<div
 							className={cn(
-								"mt-1 text-muted-foreground whitespace-nowrap",
-								tokens.countdownText,
-								classes?.countdown,
+								"font-semibold leading-none whitespace-nowrap",
+								tokens.timeText,
+								classes?.time,
 							)}
+							style={{ color: "var(--prayer-time-color)" }}
 						>
-							{t("general.remainingTillAzan")}
+							{countdown ? (
+								<>
+									<span className={cn("opacity-70 mr-1", tokens.nameText)}>
+										{t("general.remaining") !== "general.remaining"
+											? t("general.remaining")
+											: "Remaining"}
+										:
+									</span>
+									{countdown}
+								</>
+							) : (
+								time
+							)}
 						</div>
-					)}
+					</div>
 				</div>
 			</Card>
 		);
@@ -292,20 +374,22 @@ function InnerWidgetPrayerCard({
 					{iconNode}
 					<span
 						className={cn(
-							"font-medium text-foreground whitespace-nowrap",
+							"font-medium whitespace-nowrap",
 							tokens.nameText,
 							classes?.name,
 						)}
+						style={{ color: "var(--prayer-name-color)" }}
 					>
 						{translatedName}
 					</span>
 				</div>
 				<div
 					className={cn(
-						"font-semibold text-foreground whitespace-nowrap",
+						"font-semibold whitespace-nowrap",
 						tokens.timeText,
 						classes?.time,
 					)}
+					style={{ color: "var(--prayer-time-color)" }}
 				>
 					{time}
 				</div>
@@ -326,22 +410,26 @@ function InnerWidgetPrayerCard({
 			)}
 			style={style}
 		>
-			<div className={cn("mb-1", classes?.icon)}>{iconNode}</div>
+			{iconNode ? (
+				<div className={cn("mb-1", classes?.icon)}>{iconNode}</div>
+			) : null}
 			<div
 				className={cn(
-					"text-muted-foreground mb-0.5 whitespace-nowrap",
+					"mb-0.5 whitespace-nowrap",
 					tokens.nameText,
 					classes?.name,
 				)}
+				style={{ color: "var(--prayer-name-color)" }}
 			>
 				{translatedName}
 			</div>
 			<div
 				className={cn(
-					"font-semibold text-foreground whitespace-nowrap",
+					"font-semibold whitespace-nowrap",
 					tokens.timeText,
 					classes?.time,
 				)}
+				style={{ color: "var(--prayer-time-color)" }}
 			>
 				{time}
 			</div>

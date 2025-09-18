@@ -6,6 +6,10 @@ export type Translations = {
 		locationTimezone: string;
 		displayOptions: string;
 		horizontalPrayerList: string;
+		verticalFirst?: string;
+		general: string;
+		calculation: string;
+		azan: string;
 		showOtherPrayers: string;
 		showCity: string;
 		showTicker: string;
@@ -23,6 +27,24 @@ export type Translations = {
 		locationPermissionDenied?: string;
 		tickerSpeed?: string;
 	};
+	azan?: {
+		enable: string;
+		volume: string;
+		type: string;
+		customOverride: string;
+		perPrayer: string;
+		full: string;
+		short: string;
+		beepOnly: string;
+		customFile: string;
+		selected: string;
+		preview: string;
+	};
+	uploader?: {
+		dragOr: string;
+		browse: string;
+		dropHere: string;
+	};
 	general: {
 		remaining: string;
 		loading: string;
@@ -32,6 +54,7 @@ export type Translations = {
 		fajr: string;
 		sunrise: string;
 		dhuhr: string;
+		jumuah: string;
 		asr: string;
 		maghrib: string;
 		isha: string;
@@ -47,7 +70,11 @@ export const translations: Record<Language, Translations> = {
 			title: "Prayer Settings",
 			locationTimezone: "Location & Timezone",
 			displayOptions: "Display Options",
-			horizontalPrayerList: "Horizontal Prayer List",
+			horizontalPrayerList: "Vertical first",
+			verticalFirst: "Vertical first",
+			general: "General",
+			calculation: "Calculation",
+			azan: "Azan",
 			showOtherPrayers: "Show Other Prayer Cards",
 			showCity: "Show Current City",
 			showTicker: "Show Ticker",
@@ -64,8 +91,26 @@ export const translations: Record<Language, Translations> = {
 			language: "Language",
 			autoDetectTimezone: "Auto-detect timezone",
 			locationPermissionDenied:
-				"Location permission denied. Auto-detect disabled.",
+				"Location permission denied. Auto-detect is off. Defaulting to Makkah Al-Mukarramah, Saudi Arabia.",
 			tickerSpeed: "Ticker change interval",
+		},
+		azan: {
+			enable: "Enable Azan",
+			volume: "Volume",
+			type: "Azan type",
+			customOverride: "Custom (overrides all)",
+			perPrayer: "Per‑prayer",
+			full: "Full",
+			short: "Short",
+			beepOnly: "Beep only",
+			customFile: "Custom file",
+			selected: "Selected:",
+			preview: "Preview azan",
+		},
+		uploader: {
+			dragOr: "Drag a file here or",
+			browse: "browse",
+			dropHere: "Drop file here",
 		},
 		general: {
 			remaining: "remaining",
@@ -76,6 +121,7 @@ export const translations: Record<Language, Translations> = {
 			fajr: "Fajr",
 			sunrise: "Sunrise",
 			dhuhr: "Dhuhr",
+			jumuah: "Jumuʿah",
 			asr: "Asr",
 			maghrib: "Maghrib",
 			isha: "Isha",
@@ -102,7 +148,11 @@ export const translations: Record<Language, Translations> = {
 			title: "إعدادات الصلاة",
 			locationTimezone: "الموقع والمنطقة الزمنية",
 			displayOptions: "خيارات العرض",
-			horizontalPrayerList: "قائمة الصلوات الأفقية",
+			horizontalPrayerList: "العرض العمودي أولًا",
+			verticalFirst: "العرض العمودي أولًا",
+			general: "عام",
+			calculation: "الحساب",
+			azan: "الأذان",
 			showOtherPrayers: "إظهار بطاقات الصلوات الأخرى",
 			showCity: "إظهار المدينة الحالية",
 			showTicker: "إظهار الشريط المتحرك",
@@ -118,8 +168,26 @@ export const translations: Record<Language, Translations> = {
 			language: "اللغة",
 			autoDetectTimezone: "اكتشاف المنطقة الزمنية تلقائيًا",
 			locationPermissionDenied:
-				"تم رفض إذن الموقع. تم إيقاف الاكتشاف التلقائي.",
+				"تم رفض إذن الموقع. الاكتشاف التلقائي غير مُفعل. سيتم الافتراضي إلى مكة المكرمة، السعودية.",
 			tickerSpeed: "مدة تبديل الشريط",
+		},
+		azan: {
+			enable: "تفعيل الأذان",
+			volume: "مستوى الصوت",
+			type: "نوع الأذان",
+			customOverride: "مخصص (يستبدل الكل)",
+			perPrayer: "لكل صلاة",
+			full: "كامل",
+			short: "قصير",
+			beepOnly: "تنبيه فقط",
+			customFile: "ملف مخصص",
+			selected: "المحدد:",
+			preview: "معاينة الأذان",
+		},
+		uploader: {
+			dragOr: "اسحب ملفًا هنا أو",
+			browse: "تصفح",
+			dropHere: "أفلت الملف هنا",
 		},
 		general: {
 			remaining: "متبقي",
@@ -130,6 +198,7 @@ export const translations: Record<Language, Translations> = {
 			fajr: "الفجر",
 			sunrise: "الشروق",
 			dhuhr: "الظهر",
+			jumuah: "الجمعة",
 			asr: "العصر",
 			maghrib: "المغرب",
 			isha: "العشاء",

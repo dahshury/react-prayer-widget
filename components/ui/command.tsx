@@ -2,7 +2,7 @@
 
 import { Command as CommandPrimitive } from "cmdk";
 import { SearchIcon } from "lucide-react";
-import type * as React from "react";
+import * as React from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -81,12 +81,13 @@ function CommandInput({
 	);
 }
 
-function CommandList({
-	className,
-	...props
-}: React.ComponentProps<typeof CommandPrimitive.List>) {
+const CommandList = React.forwardRef<
+	React.ElementRef<typeof CommandPrimitive.List>,
+	React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
+>(({ className, ...props }, ref) => {
 	return (
 		<CommandPrimitive.List
+			ref={ref}
 			data-slot="command-list"
 			className={cn(
 				"max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto overscroll-contain",
@@ -98,7 +99,9 @@ function CommandList({
 			{...props}
 		/>
 	);
-}
+});
+
+CommandList.displayName = "CommandList";
 
 function CommandEmpty({
 	...props

@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import {
 	WidgetPrayerCard,
 	type WidgetPrayerCardSize,
@@ -33,6 +34,8 @@ export type NextPrayerCardProps = {
 		overlay?: string;
 		progressFill?: string;
 	};
+	/** Optional max width for the rendered card container */
+	maxWidth?: "md" | "lg" | "xl" | "2xl" | "3xl" | number | string;
 };
 
 export function NextPrayerCard({
@@ -45,20 +48,57 @@ export function NextPrayerCard({
 	gradientClass,
 	showIcon,
 	classes,
+	maxWidth,
 }: NextPrayerCardProps) {
+	const maxWidthClass = (() => {
+		if (maxWidth === undefined) return "";
+		if (typeof maxWidth === "number") return "";
+		if (
+			maxWidth === "md" ||
+			maxWidth === "lg" ||
+			maxWidth === "xl" ||
+			maxWidth === "2xl" ||
+			maxWidth === "3xl"
+		) {
+			const map: Record<string, string> = {
+				md: "max-w-md",
+				lg: "max-w-lg",
+				xl: "max-w-xl",
+				"2xl": "max-w-2xl",
+				"3xl": "max-w-3xl",
+			};
+			return map[maxWidth];
+		}
+		return "";
+	})();
+	const maxWidthStyle: CSSProperties | undefined = (() => {
+		if (maxWidth === undefined) return undefined;
+		if (typeof maxWidth === "number") return { maxWidth: `${maxWidth}px` };
+		if (
+			maxWidth === "md" ||
+			maxWidth === "lg" ||
+			maxWidth === "xl" ||
+			maxWidth === "2xl" ||
+			maxWidth === "3xl"
+		)
+			return undefined;
+		return { maxWidth: String(maxWidth) };
+	})();
 	return (
-		<WidgetPrayerCard
-			name={nextPrayer.name}
-			time={formatTimeDisplay(nextPrayer.time, timeFormat24h, language)}
-			isNext
-			progress={nextPrayer.progress}
-			countdown={formatMinutesHHmm(nextPrayer.timeUntil)}
-			className={className}
-			size={size}
-			nextSize={nextSize}
-			gradientClass={gradientClass}
-			showIcon={showIcon}
-			classes={classes}
-		/>
+		<div className={`mx-auto ${maxWidthClass}`} style={maxWidthStyle}>
+			<WidgetPrayerCard
+				name={nextPrayer.name}
+				time={formatTimeDisplay(nextPrayer.time, timeFormat24h, language)}
+				isNext
+				progress={nextPrayer.progress}
+				countdown={formatMinutesHHmm(nextPrayer.timeUntil)}
+				className={className}
+				size={size}
+				nextSize={nextSize}
+				gradientClass={gradientClass}
+				showIcon={showIcon}
+				classes={classes}
+			/>
+		</div>
 	);
 }
