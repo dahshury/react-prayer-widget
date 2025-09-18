@@ -102,17 +102,17 @@ const notificationVariants = {
 };
 
 const lineVariants = {
-    initial: { scaleX: 0, x: "-50%" },
-    animate: {
-        scaleX: 1,
-        x: "0%",
-        transition: { duration: 0.2 },
-    },
-    exit: {
-        scaleX: 0,
-        x: "50%",
-        transition: { duration: 0.2 },
-    },
+	initial: { scaleX: 0, x: "-50%" },
+	animate: {
+		scaleX: 1,
+		x: "0%",
+		transition: { duration: 0.2 },
+	},
+	exit: {
+		scaleX: 0,
+		x: "50%",
+		transition: { duration: 0.2 },
+	},
 };
 
 const transition = { type: "spring" as const, bounce: 0, duration: 0.4 };

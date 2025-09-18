@@ -65,91 +65,91 @@ function Counter({
 type CounterMinusButtonProps = WithAsChild<HTMLMotionProps<"button">>;
 
 const CounterMinusButton = ({
-    onClick,
-    asChild = false,
-    ...props
+	onClick,
+	asChild = false,
+	...props
 }: CounterMinusButtonProps) => {
 	const { setValue, value } = useCounter();
 
-    if (asChild) {
-        const { asChild: _ignore, ...rest } = (props as Omit<
-            HTMLMotionProps<"button">,
-            "children"
-        > & { children?: React.ReactElement } & { asChild?: boolean });
-        return (
-            <Slot
-                data-slot="counter-minus-button"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    setValue(value - 1);
-                    onClick?.(e);
-                }}
-                {...(rest as import("./slot").SlotProps<HTMLButtonElement>)}
-            />
-        );
-    }
+	if (asChild) {
+		const { asChild: _ignore, ...rest } = props as Omit<
+			HTMLMotionProps<"button">,
+			"children"
+		> & { children?: React.ReactElement } & { asChild?: boolean };
+		return (
+			<Slot
+				data-slot="counter-minus-button"
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+					setValue(value - 1);
+					onClick?.(e);
+				}}
+				{...(rest as import("./slot").SlotProps<HTMLButtonElement>)}
+			/>
+		);
+	}
 
-    const { asChild: _ignore, ...rest } = (props as HTMLMotionProps<"button"> & {
-        asChild?: boolean;
-    });
-    return (
-        <motion.button
-            data-slot="counter-minus-button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                setValue(value - 1);
-                onClick?.(e);
-            }}
-            {...rest}
-        />
-    );
+	const { asChild: _ignore, ...rest } = props as HTMLMotionProps<"button"> & {
+		asChild?: boolean;
+	};
+	return (
+		<motion.button
+			data-slot="counter-minus-button"
+			whileHover={{ scale: 1.05 }}
+			whileTap={{ scale: 0.95 }}
+			onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+				setValue(value - 1);
+				onClick?.(e);
+			}}
+			{...rest}
+		/>
+	);
 };
 
 type CounterPlusButtonProps = WithAsChild<HTMLMotionProps<"button">>;
 
 const CounterPlusButton = ({
-    onClick,
-    asChild = false,
-    ...props
+	onClick,
+	asChild = false,
+	...props
 }: CounterPlusButtonProps) => {
 	const { setValue, value } = useCounter();
 
-    if (asChild) {
-        const { asChild: _ignore, ...rest } = (props as Omit<
-            HTMLMotionProps<"button">,
-            "children"
-        > & { children?: React.ReactElement } & { asChild?: boolean });
-        return (
-            <Slot
-                data-slot="counter-plus-button"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    setValue(value + 1);
-                    onClick?.(e);
-                }}
-                {...(rest as import("./slot").SlotProps<HTMLButtonElement>)}
-            />
-        );
-    }
+	if (asChild) {
+		const { asChild: _ignore, ...rest } = props as Omit<
+			HTMLMotionProps<"button">,
+			"children"
+		> & { children?: React.ReactElement } & { asChild?: boolean };
+		return (
+			<Slot
+				data-slot="counter-plus-button"
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+					setValue(value + 1);
+					onClick?.(e);
+				}}
+				{...(rest as import("./slot").SlotProps<HTMLButtonElement>)}
+			/>
+		);
+	}
 
-    const { asChild: _ignore, ...rest } = (props as HTMLMotionProps<"button"> & {
-        asChild?: boolean;
-    });
-    return (
-        <motion.button
-            data-slot="counter-plus-button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                setValue(value + 1);
-                onClick?.(e);
-            }}
-            {...rest}
-        />
-    );
+	const { asChild: _ignore, ...rest } = props as HTMLMotionProps<"button"> & {
+		asChild?: boolean;
+	};
+	return (
+		<motion.button
+			data-slot="counter-plus-button"
+			whileHover={{ scale: 1.05 }}
+			whileTap={{ scale: 0.95 }}
+			onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+				setValue(value + 1);
+				onClick?.(e);
+			}}
+			{...rest}
+		/>
+	);
 };
 
 type CounterNumberProps = Omit<SlidingNumberProps, "number">;
