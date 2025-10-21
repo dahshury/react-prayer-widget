@@ -194,26 +194,9 @@ export default function CompactFileUploader({
 								? t("uploader.dropHere") || "Drop file here"
 								: t("uploader.dragOr") || "Drag a file here or"}
 						</span>
-					<button
-						type="button"
-						disabled={disabled}
-						onClick={openPicker}
-					>
-						{t("uploader.browse") || "browse"}
-					</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
+						<button disabled={disabled} onClick={openPicker} type="button">
+							{t("uploader.browse") || "browse"}
+						</button>
 					</div>
 				</div>
 			</button>

@@ -76,26 +76,22 @@ app/frontend/
 Before starting the workflow:
 
 1. **Identify the Target File**
-
    - You will be given a specific file path to analyze
    - This is the ONLY file you should analyze in this planning phase
    - Do NOT refactor anything - just analyze and plan
 
 2. **Understand the Target File**
-
    - Read the entire file thoroughly
    - Identify all functions, components, hooks, types, and utilities
    - Map dependencies (imports) and dependents (who uses this code)
    - Note code smells: long functions, mixed concerns, duplicated logic
 
 3. **Understand the Architecture**
-
    - Review the provided codebase structure
    - Understand when to use `entities/`, `features/`, `widgets/`, `shared/libs/`
    - Know the distinction: domain entities vs. UI components vs. utilities
 
 4. **Analyze for Refactoring Opportunities**
-
    - Large files (>300 lines) are candidates for splitting
    - Custom hooks should move to `shared/libs/hooks/` or `widgets/{name}/hooks/`
    - Domain logic should move to `entities/{domain}/`
@@ -115,20 +111,17 @@ Before starting the workflow:
 **IMPORTANT: This phase is ANALYSIS ONLY. Do NOT make any code changes.**
 
 1. **Read and Understand the File**
-
    - Document all code sections: components, hooks, types, utilities, constants
    - Identify the main responsibility of each section
    - Note interdependencies between sections
 
 2. **Map the Refactoring Opportunities**
-
    - Identify sections that violate Single Responsibility Principle
    - Find duplicated logic that should be extracted
    - Spot utilities that are too generic for this file
    - Identify hooks that could be reusable
 
 3. **Capture Analysis Results**
-
    - Create a detailed inventory of all refactoring candidates
    - For each candidate, note:
      - Current location and line numbers
@@ -144,19 +137,16 @@ Before starting the workflow:
 ## Output: Create a markdown file with the refactoring plan
 
 1. **File Location and Naming**
-
    - Save the plan as: `/docs/[target-file-name]-refactor.md`
    - Example: `/docs/Grid-refactor.md`
 
 2. **Document Structure**
-
    - Include: Target file name, file size (lines), analysis date
    - Include: Brief description of current state and issues
    - Include: Overview of proposed refactoring strategy
    - Include: Detailed refactoring plan as a step-by-step table
 
 3. **Refactoring Plan Table Format**
-
    - Create a markdown table with columns:
      - **Step**: Numbered (1, 2, 3...)
      - **Description**: What's being refactored
@@ -178,7 +168,6 @@ Before starting the workflow:
    | 5    | Update imports in original | -            | Grid.tsx                                            | Add 4 import statements | Previous steps           |
 
 5. **Include Additional Context**
-
    - Current file stats: total lines, number of functions/components/hooks
    - Estimated refactored state: total lines after all extractions
    - Expected file size reduction percentage
@@ -214,13 +203,11 @@ If and when the user approves, proceed with:
 Follow the steps in the generated plan:
 
 1. **Use Cursor Todo List**
-
    - Create a todo for each step in the refactoring plan
    - Order them exactly as in the plan document
    - Set all to `pending` initially
 
 2. **Execute Each Step**
-
    - Re-read the code section to be extracted
    - Analyze all dependencies
    - Create the target file with proper types and exports
@@ -229,7 +216,6 @@ Follow the steps in the generated plan:
    - **🚨 CRITICAL: Verify with linting after EVERY step** (see Linting Validation below)
 
 3. **Linting Validation** (MANDATORY AFTER EACH STEP)
-
    - After each refactoring step, immediately run linting checks:
      - Run: `pnpm tsc --noEmit` from `app/frontend/` to check TypeScript errors
      - Run: `npx ultracite check app/frontend/` to check Biome linting violations
@@ -250,13 +236,11 @@ Follow the steps in the generated plan:
 After all todos are completed:
 
 1. **Full Codebase Linting Check** (PRIMARY VALIDATION)
-
    - **MUST achieve**: Zero TypeScript errors and zero linting violations
    - Use `read_lints` tool to capture any remaining errors for analysis
    - If any linting errors exist, treat as critical blockers and fix immediately
 
 2. **Verify Refactoring Results**
-
    - Compare original file before/after
    - Verify all new files exist and are importable
    - Check that all imports are correct across the codebase
@@ -289,7 +273,6 @@ After all todos are completed:
 ### Step-by-Step Linting Workflow (During Refactoring Execution)
 
 1. **Capture Error Details**
-
    - Use `read_lints` tool on affected files
    - Review specific errors and understand root causes
    - Fix all errors before proceeding to next step

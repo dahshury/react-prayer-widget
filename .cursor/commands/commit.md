@@ -4,61 +4,61 @@ You are a Git commit autopilot. Run all repository fixers/checks until clean bef
 
 ### Context
 
-* Repo root is the working directory.
-* Git shell is non-interactive (Git Bash on Windows is available).
-* The repo uses `simple-git-hooks` to run `node scripts/ci/pre-commit.mjs` on pre-commit. That hook runs in this order:
+- Repo root is the working directory.
+- Git shell is non-interactive (Git Bash on Windows is available).
+- The repo uses `simple-git-hooks` to run `node scripts/ci/pre-commit.mjs` on pre-commit. That hook runs in this order:
   0\) Security: `gitleaks protect --staged --redact`
   1. Markdown formatting (if any staged `*.md`): `uv run --with mdformat --with mdformat-gfm --with mdformat-frontmatter --with mdformat-ruff mdformat <markdownFiles>` then re-add only those markdown files
   2. Frontend TypeScript (if any staged under `app/frontend`): `pnpm -C app/frontend tsc --noEmit`
   3. Frontend lint: `pnpm -C app/frontend biome check --fix --unsafe --staged` then `pnpm -C app/frontend biome check --staged`
   4. Frontend unused code info: `pnpm -C app/frontend knip --no-config-hints` (non-blocking)
-  * For Python files (outside `app/frontend`):
+  - For Python files (outside `app/frontend`):
     1. `uv run ruff check --fix --unsafe-fixes <pythonFiles>`
     2. `uv run ruff format <pythonFiles>`
-       * Then re-add formatted files
-* If any blocking step fails (e.g., GitLeaks, TypeScript, Biome, Ruff), the hook exits non-zero and the commit fails.
+       - Then re-add formatted files
+- If any blocking step fails (e.g., GitLeaks, TypeScript, Biome, Ruff), the hook exits non-zero and the commit fails.
 
 ### Inputs
 
-* Commit message: automatically generated from the staged diff. If a user-provided message exists, prefer it; otherwise generate one.
+- Commit message: automatically generated from the staged diff. If a user-provided message exists, prefer it; otherwise generate one.
 
 ### High-level algorithm
 
 1. Ensure repo root. If no staged changes, stop and ask to stage files first.
 2. Persist the originally staged file sets (null-delimited) to safely re-add only those files:
-   * `frontend-staged.zlst`: `git diff --cached --name-only --diff-filter=ACMR -z | grep -z '^app/frontend/'`
-   * `python-staged.zlst`: `git diff --cached --name-only --diff-filter=ACMR -z | grep -z -E '\\.py$' | grep -z -v '^app/frontend/'`
-   * `markdown-staged.zlst`: `git diff --cached --name-only --diff-filter=ACMR -z | grep -z -E '\\.md$'`
+   - `frontend-staged.zlst`: `git diff --cached --name-only --diff-filter=ACMR -z | grep -z '^app/frontend/'`
+   - `python-staged.zlst`: `git diff --cached --name-only --diff-filter=ACMR -z | grep -z -E '\\.py$' | grep -z -v '^app/frontend/'`
+   - `markdown-staged.zlst`: `git diff --cached --name-only --diff-filter=ACMR -z | grep -z -E '\\.md$'`
 3. Run fixers/checks BEFORE any commit, looping until clean or the max number of passes is reached (e.g., 3):
-   * Markdown (if `markdown-staged.zlst` is non-empty):
+   - Markdown (if `markdown-staged.zlst` is non-empty):
      1. `uv run --with mdformat --with mdformat-gfm --with mdformat-frontmatter --with mdformat-ruff mdformat <markdownFiles>`
      2. Re-add ONLY the originally staged markdown files from `markdown-staged.zlst`
-   * Frontend (if `frontend-staged.zlst` is non-empty):
+   - Frontend (if `frontend-staged.zlst` is non-empty):
      1. TypeScript check: `pnpm -C app/frontend tsc --noEmit`
      2. Biome fix: `pnpm -C app/frontend biome check --fix --unsafe --staged`
      3. Biome check: `pnpm -C app/frontend biome check --staged`
      4. Knip (informational): `pnpm -C app/frontend knip --no-config-hints` (do not block)
      5. Re-add ONLY the originally staged frontend files from `frontend-staged.zlst` in safe batches
-   * Python (if `python-staged.zlst` is non-empty):
+   - Python (if `python-staged.zlst` is non-empty):
      1. `uv run ruff check --fix --unsafe-fixes <pythonFiles>`
      2. `uv run ruff format <pythonFiles>`
      3. Re-add ONLY the originally staged Python files from `python-staged.zlst`
-   * Verification gate (must pass to proceed):
-     * Security → `gitleaks protect --staged --redact`
-     * Frontend present → `pnpm -C app/frontend biome check --staged` AND `pnpm -C app/frontend tsc --noEmit`
-     * Python present → `uv run ruff check <pythonFiles>` AND `uv run ruff format --check <pythonFiles>`
-   * If verification fails but any fixer made changes, loop another pass; if no changes across two consecutive passes, stop and surface errors.
+   - Verification gate (must pass to proceed):
+     - Security → `gitleaks protect --staged --redact`
+     - Frontend present → `pnpm -C app/frontend biome check --staged` AND `pnpm -C app/frontend tsc --noEmit`
+     - Python present → `uv run ruff check <pythonFiles>` AND `uv run ruff format --check <pythonFiles>`
+   - If verification fails but any fixer made changes, loop another pass; if no changes across two consecutive passes, stop and surface errors.
 4. Generate a Conventional Commit message from the staged diff (see below) and perform the commit.
 
 ### Command snippets
 
-* List staged files:
+- List staged files:
 
 ```bash
 git diff --cached --name-only --diff-filter=ACMR
 ```
 
-* Persist originally staged file sets (null-delimited; safe with spaces/newlines):
+- Persist originally staged file sets (null-delimited; safe with spaces/newlines):
 
 ```bash
 # FRONTEND staged list
@@ -71,14 +71,14 @@ git diff --cached --name-only --diff-filter=ACMR -z \
   | grep -z -E '\.py$' \
   | grep -z -v '^app/frontend/' \
   | tee python-staged.zlst >/dev/null
- 
+
 # MARKDOWN staged list (anywhere)
 git diff --cached --name-only --diff-filter=ACMR -z \
   | grep -z -E '\.md$' \
   | tee markdown-staged.zlst >/dev/null
 ```
 
-* Markdown auto-format (run only if `markdown-staged.zlst` is non-empty):
+- Markdown auto-format (run only if `markdown-staged.zlst` is non-empty):
 
 ```bash
 # format markdown using mdformat with plugins and re-add
@@ -88,7 +88,7 @@ cat markdown-staged.zlst | xargs -0 -r uv run \
 cat markdown-staged.zlst | xargs -0 -r git add --
 ```
 
-* Frontend auto-fix/check sequence (run only if `frontend-staged.zlst` is non-empty; follow hook order):
+- Frontend auto-fix/check sequence (run only if `frontend-staged.zlst` is non-empty; follow hook order):
 
 ```bash
 pnpm -C app/frontend tsc --noEmit
@@ -99,7 +99,7 @@ pnpm -C app/frontend knip --no-config-hints || true
 cat frontend-staged.zlst | xargs -0 -r -n 50 git add --
 ```
 
-* Python auto-fix/format (run only if `python-staged.zlst` is non-empty):
+- Python auto-fix/format (run only if `python-staged.zlst` is non-empty):
 
 ```bash
 # run ruff fix/format on the null-delimited list
@@ -108,7 +108,7 @@ cat python-staged.zlst | xargs -0 -r uv run ruff format --
 cat python-staged.zlst | xargs -0 -r git add --
 ```
 
-* Verification gate (must pass before committing):
+- Verification gate (must pass before committing):
 
 ```bash
 # SECURITY (always)
@@ -128,13 +128,13 @@ fi
 
 ### Success condition
 
-* All verification commands succeed, then the commit with the generated message exits with status 0.
+- All verification commands succeed, then the commit with the generated message exits with status 0.
 
 ### Notes
 
-* Do not ignore non-fixable failures (e.g., TypeScript type errors). After two unsuccessful auto-fix retries with no new changes, stop and print the exact errors for the developer.
-* Always run from repo root and prefer `pnpm -C app/frontend ...` to avoid changing directories.
-* Use the same set of commands and order as the pre-commit hook to ensure parity with CI.
+- Do not ignore non-fixable failures (e.g., TypeScript type errors). After two unsuccessful auto-fix retries with no new changes, stop and print the exact errors for the developer.
+- Always run from repo root and prefer `pnpm -C app/frontend ...` to avoid changing directories.
+- Use the same set of commands and order as the pre-commit hook to ensure parity with CI.
 
 ### Full pre-fix/check then commit flow (bounded passes, auto message)
 
@@ -247,8 +247,8 @@ rm -f "$COMMIT_MSG" frontend-staged.zlst python-staged.zlst markdown-staged.zlst
 
 ### Commit message generation guidance
 
-* Prefer Conventional Commits types: `feat`, `fix`, `refactor`, `perf`, `docs`, `style`, `test`, `build`, `ci`, `chore`.
-* Use a single, specific scope when clear (e.g., `frontend`, `python`, `documents`, `canvas`); otherwise omit the scope.
-* Keep the header subject imperative, concise, and <= 72 chars.
-* If only formatting/linting changes are detected, use `chore: format` or `style: apply linting/formatting`.
-* Include a `BREAKING CHANGE:` footer if the diff indicates incompatible API/behavior changes.
+- Prefer Conventional Commits types: `feat`, `fix`, `refactor`, `perf`, `docs`, `style`, `test`, `build`, `ci`, `chore`.
+- Use a single, specific scope when clear (e.g., `frontend`, `python`, `documents`, `canvas`); otherwise omit the scope.
+- Keep the header subject imperative, concise, and <= 72 chars.
+- If only formatting/linting changes are detected, use `chore: format` or `style: apply linting/formatting`.
+- Include a `BREAKING CHANGE:` footer if the diff indicates incompatible API/behavior changes.

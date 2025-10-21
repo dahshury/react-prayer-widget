@@ -11,7 +11,6 @@ You are an expert software architect tasked with analyzing a codebase to identif
    ```
 
 2. **Parse the output** to identify the top 10 files by lines of code (LOC). Extract:
-
    - File path (relative to project root)
    - Total lines of code
    - File language/type
@@ -231,12 +230,10 @@ After the main tables, create detailed sections for each file:
 **Critical Refactoring Blocks**:
 
 1. **Lines XXX-XXX** ([NN] LOC)
-
    - Issue: [Specific DRY/SoC/Modularity violation]
    - Suggestion: [Concrete refactoring action]
 
 2. **Lines XXX-XXX** ([NN] LOC)
-
    - Issue: [Specific violation]
    - Suggestion: [Concrete refactoring action]
 

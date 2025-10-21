@@ -80,7 +80,6 @@ Steps:
 **For each todo in order:**
 
 1. **Read the Violation Details**
-
    - Identify specific files, line numbers, and violation messages
    - Verify violations are within the defined scope
    - Understand the rule being violated and why
@@ -88,27 +87,23 @@ Steps:
    - Check if violation is in a dependency or the main code
 
 2. **Analyze Before Fixing**
-
    - For accessibility issues: Ensure semantic alternatives exist before changing
    - For unused imports: Verify they're not exported as part of public API
    - For type safety: Check if violations align with the project's strictness goals
    - Review similar patterns in the codebase to maintain consistency
 
 3. **Categorize Fixes**
-
    - **Automatic (via --unsafe)**: Formatting, unused imports, simple removals
    - **Manual**: Accessibility (requires domain knowledge), component logic changes
    - **Hybrid**: Some violations need both automatic fixes and manual review
 
 4. **Apply Fixes (Batch Before Running Command)**
-
    - For manual fixes: Correct the issues directly
    - For automatic fixes: Prepare them but don't run the command yet
    - **Fix ALL violations in the current todo batch** before running the command
    - Ensure changes maintain code quality and project standards
 
 5. **Verify the Fix (Run Command Sparingly)**
-
    - **ONLY after completing all violations in the current batch**, execute: `npx ultracite check [scope]` where scope is the supplied path or `app/frontend/`
    - Do NOT run this command between individual fixes - batch your changes
    - If issues are resolved, optionally apply formatting with: `npx ultracite fix --unsafe [scope]`
@@ -118,7 +113,6 @@ Steps:
    - If new violations appear, add them to the todo list but do NOT re-run the command until you've handled them all
 
 6. **Document Learnings**
-
    - If a fix reveals a pattern or reusable solution, note it internally
    - If similar violations appear elsewhere, apply the same fix proactively before running the next check
    - Note accessibility patterns for future components
