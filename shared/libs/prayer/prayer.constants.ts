@@ -1,0 +1,80 @@
+import type { ExtendedPrayerSettings } from "@/entities/prayer";
+
+export const timezoneCoordinates: Record<string, { lat: number; lng: number }> =
+	{
+		"Asia/Riyadh": { lat: 24.7136, lng: 46.6753 },
+		"Asia/Mecca": { lat: 21.4225, lng: 39.8262 },
+		"Asia/Dubai": { lat: 25.2048, lng: 55.2708 },
+		"Asia/Kuwait": { lat: 29.3117, lng: 47.4818 },
+		"Asia/Qatar": { lat: 25.2854, lng: 51.531 },
+		"Asia/Bahrain": { lat: 26.0667, lng: 50.5577 },
+		"Asia/Muscat": { lat: 23.5859, lng: 58.4059 },
+		"Asia/Baghdad": { lat: 33.3152, lng: 44.3661 },
+		"Asia/Damascus": { lat: 33.5138, lng: 36.2765 },
+		"Asia/Beirut": { lat: 33.8938, lng: 35.5018 },
+		"Asia/Amman": { lat: 31.9454, lng: 35.9284 },
+		"Asia/Jerusalem": { lat: 31.7683, lng: 35.2137 },
+		"Africa/Cairo": { lat: 30.0444, lng: 31.2357 },
+		"Africa/Casablanca": { lat: 33.5731, lng: -7.5898 },
+		"Africa/Tunis": { lat: 36.8065, lng: 10.1815 },
+		"Africa/Algiers": { lat: 36.7538, lng: 3.0588 },
+		"Europe/Istanbul": { lat: 41.0082, lng: 28.9784 },
+		"Asia/Karachi": { lat: 24.8607, lng: 67.0011 },
+		"Asia/Dhaka": { lat: 23.8103, lng: 90.4125 },
+		"Asia/Jakarta": { lat: -6.2088, lng: 106.8456 },
+		"Asia/Kuala_Lumpur": { lat: 3.139, lng: 101.6869 },
+		"Europe/London": { lat: 51.5074, lng: -0.1278 },
+		"America/New_York": { lat: 40.7128, lng: -74.006 },
+		"America/Los_Angeles": { lat: 34.0522, lng: -118.2437 },
+		"America/Toronto": { lat: 43.6532, lng: -79.3832 },
+		"Australia/Sydney": { lat: -33.8688, lng: 151.2093 },
+	};
+
+export function getTimezoneCoordinates(timezone: string) {
+	return timezoneCoordinates[timezone] || { lat: 21.4225, lng: 39.8262 };
+}
+
+export const DEFAULT_EXTENDED_SETTINGS: ExtendedPrayerSettings = {
+	calculationMethod: 4,
+	asrMethod: 0,
+	fajrOffset: 0,
+	dhuhrOffset: 0,
+	asrOffset: 0,
+	maghribOffset: 0,
+	ishaOffset: 0,
+	timezone: "Asia/Mecca",
+	countryCode: "SA",
+	city: undefined,
+	showOtherPrayers: true,
+	showCity: true,
+	showTicker: true,
+	showDate: true,
+	horizontalView: false,
+	timeFormat24h: true,
+	dimPreviousPrayers: true,
+	language: "en",
+	autoDetectTimezone: false,
+	showClock: true,
+	tickerIntervalMs: 5000,
+	prayerNameColor: "#ffffff",
+	prayerTimeColor: "#ffffff",
+	prayerCountdownColor: "#ffffff",
+	azanEnabled: true,
+	azanPerPrayer: false,
+	azanGlobalChoice: "default",
+	azanByPrayer: {
+		Fajr: "default",
+		Dhuhr: "default",
+		Asr: "default",
+		Maghrib: "default",
+		Isha: "default",
+	},
+	azanCustomNames: {},
+	azanVolume: 1,
+	azanEditMode: false,
+	nextCardSize: "md",
+	otherCardSize: "sm",
+	appWidth: "xl",
+};
+
+export const SETTINGS_STORAGE_KEY = "tawkit:settings:v1";

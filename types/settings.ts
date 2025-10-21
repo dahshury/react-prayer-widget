@@ -1,4 +1,4 @@
-import type { ExtendedPrayerSettings } from "@/hooks/use-prayer-times";
+import type { ExtendedPrayerSettings } from "@/entities/prayer";
 
 type WidgetUISettings = {
 	timezone?: string;

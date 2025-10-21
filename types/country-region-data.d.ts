@@ -1,14 +1,14 @@
 declare module "country-region-data/dist/data-umd" {
-	export interface Region {
+	export type Region = {
 		name: string;
 		shortCode: string;
-	}
+	};
 
-	export interface CountryRegion {
+	export type CountryRegion = {
 		countryName: string;
 		countryShortCode: string;
 		regions: Region[];
-	}
+	};
 
 	const data: CountryRegion[];
 	export default data;

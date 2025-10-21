@@ -2,9 +2,11 @@
   "$schema": "https://unpkg.com/knip/schemas/knip-schema.json",
   "entry": [
     "app/**/*.{ts,tsx,js,jsx}",
-    "components/**/*.{ts,tsx,js,jsx}",
-    "hooks/**/*.{ts,tsx,js,jsx}",
-    "lib/**/*.{ts,tsx,js,jsx}",
+    "features/**/*.{ts,tsx,js,jsx}",
+    "widgets/**/*.{ts,tsx,js,jsx}",
+    "services/**/*.{ts,tsx,js,jsx}",
+    "entities/**/*.{ts,tsx,js,jsx}",
+    "shared/**/*.{ts,tsx,js,jsx}",
     "next.config.{js,ts,mjs}",
     "postcss.config.{js,ts,mjs}"
   ],
@@ -18,12 +20,16 @@
     "themes/**",
     "font/**",
     "slides/**",
-    "languages/**"
+    "languages/**",
+    "components/**",
+    "hooks/**",
+    "lib/**"
   ],
   "ignoreDependencies": [
     "markdownlint",
     "tailwindcss",
     "tailwindcss-animate",
-    "autoprefixer"
+    "autoprefixer",
+    "prettier"
   ]
 }

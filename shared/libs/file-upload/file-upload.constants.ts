@@ -1,0 +1,20 @@
+const FILE_SIZE_MULTIPLIER_BYTES_PER_KB = 1024;
+const FILE_SIZE_MULTIPLIER_BYTES_PER_MB = 1024;
+const MAX_FILE_SIZE_MB = 5;
+
+export const DEFAULT_MAX_FILE_SIZE =
+	MAX_FILE_SIZE_MB *
+	FILE_SIZE_MULTIPLIER_BYTES_PER_KB *
+	FILE_SIZE_MULTIPLIER_BYTES_PER_MB; // 5MB
+export const UPLOAD_STEP_SIZE = 5;
+export const FILE_SIZES = [
+	"Bytes",
+	"KB",
+	"MB",
+	"GB",
+	"TB",
+	"PB",
+	"EB",
+	"ZB",
+	"YB",
+] as const;

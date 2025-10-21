@@ -14,8 +14,8 @@
     "biome:fix": "biome check --write --no-errors-on-unmatched .",
     "typecheck": "tsc --noEmit",
     "knip": "pnpm dlx knip",
-    "prettier:md:check": "prettier --check \"**/*.md\" --ignore-path .prettierignore",
-    "prettier:md:write": "prettier --write \"**/*.md\" --ignore-path .prettierignore",
+    "prettier:md:check": "pnpm dlx prettier --check \"**/*.md\" --ignore-path .prettierignore",
+    "prettier:md:write": "pnpm dlx prettier --write \"**/*.md\" --ignore-path .prettierignore",
     "mdlint:check": "markdownlint \"**/*.md\" -i .prettierignore",
     "mdlint:fix": "markdownlint --fix \"**/*.md\" -i .prettierignore"
   },
@@ -58,7 +58,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.4",
+    "@biomejs/biome": "2.2.6",
     "@tailwindcss/postcss": "^4.1.13",
     "@types/node": "^24.3.1",
     "@types/react": "^19.1.12",
@@ -69,9 +69,9 @@
     "markdownlint-cli": "^0.45.0",
     "postcss": "^8.5.6",
     "postcss-load-config": "^6.0.1",
-    "prettier": "3.6.2",
     "tailwindcss": "^4.1.13",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "ultracite": "5.6.4"
   }
 }
