@@ -1,31 +1,3 @@
-pnpm run -s biome:fix
-RESULT1=$?
-
-if git ls-files '*.ts' '*.tsx' '*.js' '*.jsx' | grep -q .; then
-  pnpm run -s typecheck
-  RESULT2=$?
-else
-  echo "No TS/JS sources; skipping typecheck"
-  RESULT2=0
-fi
-
-pnpm run -s knip
-RESULT3=$?
-
-pnpm run -s prettier:md:write
-RESULT4=$?
-
-pnpm run -s mdlint:fix
-RESULT5=$?
-
-if [ $RESULT1 -ne 0 ] || [ $RESULT2 -ne 0 ] || [ $RESULT3 -ne 0 ] || [ $RESULT4 -ne 0 ] || [ $RESULT5 -ne 0 ]; then
-  exit 1
-fi
-
-exit 0
-
-
-
 #!/bin/sh
 # Exit on any error
 set -e
@@ -49,7 +21,7 @@ git stash push --quiet --keep-index --message "pre-commit-stash" || true
 STASHED=$?
 
 # Run formatter on the staged files
-pnpm dlx ultracite fix
+bun x ultracite fix
 FORMAT_EXIT_CODE=$?
 
 # Restore working directory state

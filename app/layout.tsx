@@ -5,9 +5,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-	title: "v0 App",
-	description: "Created with v0",
-	generator: "v0.app",
+	title: "Tawkit - Prayer Times",
+	description:
+		"Prayer times application with accurate calculations and location-based times",
 };
 
 export default function RootLayout({

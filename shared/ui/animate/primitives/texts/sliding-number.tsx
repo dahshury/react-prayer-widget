@@ -231,7 +231,7 @@ function SlidingNumber({
 
 	const formatNumber = useCallback(
 		(num: number) =>
-			decimalPlaces != null ? num.toFixed(decimalPlaces) : num.toString(),
+			decimalPlaces !== null ? num.toFixed(decimalPlaces) : num.toString(),
 		[decimalPlaces]
 	);
 
@@ -312,7 +312,7 @@ function SlidingNumber({
 			}}
 			{...props}
 		>
-			{isInView && Number(number) < 0 && (
+			{!!isInView && Number(number) < 0 && (
 				<span style={{ marginRight: "0.25rem" }}>-</span>
 			)}
 
@@ -331,12 +331,12 @@ function SlidingNumber({
 							transition={transition}
 							value={Number.parseInt(newIntStr ?? "0", 10)}
 						/>
-						{isSeparatorPosition && <span>{thousandSeparator}</span>}
+						{!!isSeparatorPosition && <span>{thousandSeparator}</span>}
 					</Fragment>
 				);
 			})}
 
-			{newDecStrRaw && (
+			{!!newDecStrRaw && (
 				<>
 					<span>{decimalSeparator}</span>
 					{decPlaces.map((place) => (

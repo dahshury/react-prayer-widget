@@ -102,16 +102,22 @@ export function PrayerGrid({
 		}
 		return { maxWidth: String(maxWidth) } as React.CSSProperties;
 	})();
+	const fajrClassName =
+		dimPreviousPrayers && isPast(prayerTimes.fajr) ? "opacity-40" : null;
+	const dhuhrClassName =
+		dimPreviousPrayers && isPast(prayerTimes.dhuhr) ? "opacity-40" : null;
+	const asrClassName =
+		dimPreviousPrayers && isPast(prayerTimes.asr) ? "opacity-40" : null;
+	const maghribClassName =
+		dimPreviousPrayers && isPast(prayerTimes.maghrib) ? "opacity-40" : null;
+	const ishaClassName =
+		dimPreviousPrayers && isPast(prayerTimes.isha) ? "opacity-40" : null;
 	return (
 		<div className={`mx-auto ${maxWidthClass}`} style={maxWidthStyle}>
 			<div className={`${containerClass} ${className ?? ""}`}>
 				<WidgetPrayerCard
 					classes={classes}
-					className={
-						dimPreviousPrayers && isPast(prayerTimes.fajr)
-							? "opacity-40"
-							: undefined
-					}
+					className={fajrClassName}
 					gradientClass={gradientClass}
 					horizontalView={horizontalView}
 					isCurrent={currentOrNextName === "Fajr"}
@@ -124,11 +130,7 @@ export function PrayerGrid({
 				/>
 				<WidgetPrayerCard
 					classes={classes}
-					className={
-						dimPreviousPrayers && isPast(prayerTimes.dhuhr)
-							? "opacity-40"
-							: undefined
-					}
+					className={dhuhrClassName}
 					gradientClass={gradientClass}
 					horizontalView={horizontalView}
 					isCurrent={currentOrNextName === "Dhuhr"}
@@ -141,11 +143,7 @@ export function PrayerGrid({
 				/>
 				<WidgetPrayerCard
 					classes={classes}
-					className={
-						dimPreviousPrayers && isPast(prayerTimes.asr)
-							? "opacity-40"
-							: undefined
-					}
+					className={asrClassName}
 					gradientClass={gradientClass}
 					horizontalView={horizontalView}
 					isCurrent={currentOrNextName === "Asr"}
@@ -158,11 +156,7 @@ export function PrayerGrid({
 				/>
 				<WidgetPrayerCard
 					classes={classes}
-					className={
-						dimPreviousPrayers && isPast(prayerTimes.maghrib)
-							? "opacity-40"
-							: undefined
-					}
+					className={maghribClassName}
 					gradientClass={gradientClass}
 					horizontalView={horizontalView}
 					isCurrent={currentOrNextName === "Maghrib"}
@@ -173,11 +167,7 @@ export function PrayerGrid({
 				/>
 				<WidgetPrayerCard
 					classes={classes}
-					className={
-						dimPreviousPrayers && isPast(prayerTimes.isha)
-							? "opacity-40"
-							: undefined
-					}
+					className={ishaClassName}
 					gradientClass={gradientClass}
 					horizontalView={horizontalView}
 					isCurrent={currentOrNextName === "Isha"}

@@ -2,12 +2,12 @@
 
 import { AnimatePresence } from "motion/react";
 import { useRef } from "react";
-import { cn } from "@/lib/utils";
 import {
 	DEFAULT_MAX_FILE_SIZE,
 	type FileStatus,
 	type FileUploadProps,
 } from "@/shared/libs/file-upload";
+import { cn } from "@/shared/libs/utils/cn";
 import {
 	DropzoneContent,
 	ErrorMessage,
@@ -127,7 +127,7 @@ export default function FileUpload({
 			aria-disabled={disabled}
 			aria-label="File upload"
 			className={cn("relative", wrapperWidthClass, className || "")}
-			data-disabled={disabled ? "true" : undefined}
+			data-disabled={disabled ? "true" : null}
 		>
 			<div className="group relative w-full rounded-xl bg-white p-0.5 ring-1 ring-gray-200 dark:bg-black dark:ring-white/10">
 				<div className="-top-px absolute inset-x-0 h-px w-full bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />

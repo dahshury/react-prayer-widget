@@ -15,7 +15,7 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import {
@@ -443,7 +443,7 @@ export const ColorPickerFormat = ({
 					<Input
 						className={cn(
 							"h-8 rounded-r-none bg-secondary px-2 text-xs shadow-none",
-							index && "rounded-l-none",
+							!!index && "rounded-l-none",
 							className
 						)}
 						key={`rgb-${index}-${value}`}
@@ -494,7 +494,7 @@ export const ColorPickerFormat = ({
 					<Input
 						className={cn(
 							"h-8 rounded-r-none bg-secondary px-2 text-xs shadow-none",
-							index && "rounded-l-none",
+							!!index && "rounded-l-none",
 							className
 						)}
 						key={`hsl-${index}-${value}`}

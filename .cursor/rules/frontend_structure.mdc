@@ -1,0 +1,2104 @@
+---
+globs: "frontend/**/*"
+alwaysApply: false
+---
+
+# Feature-Sliced Design (FSD) Complete Rulebook
+
+This file is the exhaustive, single source of truth for Feature-Sliced Design
+architecture. It captures ALL design decisions, patterns, and integration guides
+for building, refactoring, and reviewing frontend code.
+
+> **Core Principle:** Everything in `src/` follows FSD:
+> **Layers → Slices → Segments**. Respect the layer import rule, expose slices
+> via public APIs only, colocate code by intent.
+
+---
+
+## 1. FSD Hierarchy Overview
+
+```
+📂 src/
+  📂 app/          # Application bootstrap, providers, global styles (NO slices)
+  📂 pages/        # Full pages mapped to routes
+    📂 feed/
+      📄 index.ts
+    📂 sign-in/
+      📄 index.ts
+    📂 article-read/
+      📄 index.ts
+    📁 …
+  📂 widgets/      # Composite blocks combining features/entities
+  📂 features/     # User interactions reused across pages
+  📂 entities/     # Business domain objects
+  📂 shared/       # Foundation utilities (NO slices)
+    📂 ui/
+      📄 index.ts
+    📂 api/
+      📄 index.ts
+    📂 config/
+      📄 index.ts
+    📂 lib/
+      📄 index.ts
+    📂 routes/
+      📄 index.ts
+    📂 i18n/
+      📄 index.ts
+```
+
+---
+
+## 2. Layers & Import Contract
+
+### Layer Hierarchy (Top to Bottom)
+
+1. `app/` — Application shell (no slices)
+2. `pages/` — Route-mapped pages
+3. `widgets/` — Composite UI blocks
+4. `features/` — Business interactions
+5. `entities/` — Domain objects
+6. `shared/` — Foundation (no slices)
+
+### ⚠️ CRITICAL IMPORT RULE
+
+A module can depend only on layers **strictly below** it.
+**No sideways imports. No upward imports.**
+
+| Layer    | Purpose                                              | May Import From                     |
+| -------- | ---------------------------------------------------- | ----------------------------------- |
+| app      | Routing, providers, global styles, framework bridges | Every layer                         |
+| pages    | Full pages, route chunks, page-specific logic        | widgets, features, entities, shared |
+| widgets  | Reusable composite blocks with complete use cases    | features, entities, shared          |
+| features | Business interactions reused across multiple places  | entities, shared                    |
+| entities | Business nouns (user, article, post, etc.)           | shared (use `@x` for peer entities) |
+| shared   | UI kit, API client, config, lib, routes, i18n        | nothing (foundation layer)          |
+
+### Deprecated Layer
+
+`processes/` — Cross-page workflows. **Deprecated.** Use `features/` or `app/`
+for orchestration instead.
+
+---
+
+## 3. Segments & Naming Conventions
+
+Segments describe **purpose**, not **essence**.
+
+| Segment   | Use When...                                           |
+| --------- | ----------------------------------------------------- |
+| `ui/`     | Components, markup, formatting helpers, local styles  |
+| `api/`    | Request functions, DTOs, mappers, loaders, actions    |
+| `model/`  | Business logic, stores, validation schemas, selectors |
+| `lib/`    | Slice-specific helpers, formatters, adapters          |
+| `config/` | Feature flags, slice-level constants                  |
+
+### ❌ Forbidden Segment Names
+
+Never use these—they describe "what" not "why":
+
+- `components/`
+- `hooks/`
+- `types/`
+- `utils/`
+- `helpers/`
+- `constants/`
+
+### Segment Structure Example
+
+```
+📂 entities/
+  📂 article/
+    📂 ui/
+      📄 ArticlePreview.tsx
+      📄 ArticleCard.tsx
+    📂 api/
+      📄 get-article.ts
+      📄 dto.ts
+      📄 mapper.ts
+    📂 model/
+      📄 article.ts
+      📄 selectors.ts
+    📄 index.ts           # Public API
+```
+
+---
+
+## 4. Public API Discipline
+
+Every slice exposes a **single public API** file (`index.ts`). Consumers must
+import from that file only.
+
+### ✅ Correct Public API
+
+```typescript
+// pages/feed/index.ts
+export { FeedPage } from "./ui/FeedPage";
+export { loader } from "./api/loader";
+export { action } from "./api/action";
+```
+
+### ❌ Anti-Patterns
+
+```typescript
+// ❌ Never use wildcard re-exports
+export * from "./ui/FeedPage";
+
+// ❌ Never expose internal structure
+export * from "./model/comments";
+```
+
+### Cross-Entity Imports with @x Notation
+
+When entities need to reference each other, use explicit `@x` files:
+
+```
+📂 entities/
+  📂 song/
+    📂 @x/
+      📄 artist.ts    # Exports minimal surface for artist entity
+    📄 index.ts
+  📂 artist/
+    📄 index.ts
+```
+
+```typescript
+// entities/song/@x/artist.ts
+export type { Song } from "../model/song";
+export { fetchSong } from "../model/songs";
+
+// entities/artist/model/artist.ts
+import type { Song } from "entities/song/@x/artist";
+
+export interface Artist {
+  name: string;
+  songs: Array<Song>;
+}
+```
+
+---
+
+## 5. Shared Layer Playbook
+
+`shared/` is the foundation layer. It has **segments only, no slices**.
+
+### Required Segments
+
+```
+📂 shared/
+  📂 ui/           # UI primitives (Button, Input, Card, etc.)
+  📂 api/          # API client, HTTP helpers, DTOs
+  📂 config/       # Environment variables, app config
+  📂 lib/          # Utilities, date helpers, formatters
+  📂 routes/       # Route path constants
+  📂 i18n/         # Internationalization utilities
+```
+
+### Bundle Optimization for shared/ui
+
+Prefer **separate index files per component** for tree-shaking:
+
+```
+📂 shared/ui/
+  📂 button/
+    📄 Button.tsx
+    📄 index.ts       # export { Button } from "./Button"
+  📂 text-field/
+    📄 TextField.tsx
+    📄 index.ts
+  📄 index.ts         # Optional aggregate (prefer specific imports)
+```
+
+**Import pattern:**
+
+```typescript
+// ✅ Prefer specific imports
+import { Button } from "@/shared/ui/button";
+import { TextField } from "@/shared/ui/text-field";
+
+// ❌ Avoid aggregate imports (blocks tree-shaking)
+import { Button, TextField } from "@/shared/ui";
+```
+
+### Shared UI Rules
+
+- Keep each UI primitive isolated in its own folder
+- No business logic, no routing awareness
+- Accept everything via props/slots
+- Use CSS Modules (`*.module.scss` or `*.module.css`) colocated with component
+- Export via folder-level `index.ts`
+
+---
+
+## 6. API Client Patterns
+
+### Shared API Client Setup
+
+```typescript
+// shared/api/client.ts
+import createClient from "openapi-fetch";
+import { backendBaseUrl } from "shared/config";
+import type { paths } from "./v1";
+
+export const { GET, POST, PUT, DELETE } = createClient<paths>({
+  baseUrl: backendBaseUrl,
+});
+```
+
+### Alternative: Axios Client
+
+```typescript
+// shared/api/client.ts
+import axios from "axios";
+
+export const client = axios.create({
+  baseURL: "https://your-api-domain.com/api/",
+  timeout: 5000,
+  headers: { "X-Custom-Header": "my-custom-value" },
+});
+```
+
+### Alternative: Fetch Wrapper
+
+```typescript
+// shared/api/client.ts
+export const client = {
+  async post(endpoint: string, body: any, options?: RequestInit) {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+    });
+    return response.json();
+  },
+  // ... get, put, delete methods
+};
+```
+
+### Alternative: Custom API Client Class
+
+```typescript
+// shared/api/base.ts
+export class ApiClient {
+  private baseUrl: string;
+
+  constructor(url: string) {
+    this.baseUrl = url;
+  }
+
+  async handleResponse<TResult>(response: Response): Promise<TResult> {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  }
+
+  public async get<TResult>(
+    endpoint: string,
+    queryParams?: Record<string, string | number>
+  ): Promise<TResult> {
+    const url = new URL(endpoint, this.baseUrl);
+    if (queryParams) {
+      Object.entries(queryParams).forEach(([key, value]) => {
+        url.searchParams.append(key, value.toString());
+      });
+    }
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    return this.handleResponse<TResult>(response);
+  }
+
+  public async post<TResult, TData>(
+    endpoint: string,
+    body: TData
+  ): Promise<TResult> {
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return this.handleResponse<TResult>(response);
+  }
+}
+
+export const apiClient = new ApiClient(API_URL);
+```
+
+### Public API Export
+
+```typescript
+// shared/api/index.ts
+export { GET, POST, PUT, DELETE } from "./client";
+export type { Article, User } from "./models";
+export {
+  createUserSession,
+  getUserFromSession,
+  requireUser,
+} from "./auth.server";
+export { CurrentUser } from "./currentUser";
+```
+
+---
+
+## 7. Type Organization
+
+### Business Entity Types
+
+Define in `shared/api/models.ts` or entity's `model/` segment:
+
+```typescript
+// shared/api/models.ts
+import type { components } from "./v1";
+export type Article = components["schemas"]["Article"];
+export type User = components["schemas"]["User"];
+```
+
+### DTOs and Mappers
+
+Keep DTOs and mappers next to request functions:
+
+```typescript
+// entities/song/api/dto.ts
+import type { ArtistDTO } from "entities/artist/@x/song";
+
+export interface SongDTO {
+  id: number;
+  title: string;
+  disc_no: number;
+  artist_ids: Array<ArtistDTO["id"]>;
+}
+```
+
+```typescript
+// entities/song/api/mapper.ts
+import type { SongDTO } from "./dto";
+
+export interface Song {
+  id: string;
+  title: string;
+  fullTitle: string;
+  artistIds: Array<string>;
+}
+
+export function adaptSongDTO(dto: SongDTO): Song {
+  return {
+    id: String(dto.id),
+    title: dto.title,
+    fullTitle: `${dto.disc_no} / ${dto.title}`,
+    artistIds: dto.artist_ids.map(String),
+  };
+}
+```
+
+### Component Props
+
+Keep in same file as component (preferred) or adjacent file in `ui/` segment:
+
+```typescript
+// Same file (preferred)
+interface ArticlePreviewProps {
+  article: Article;
+}
+export function ArticlePreview({ article }: ArticlePreviewProps) {}
+
+// Adjacent file (for large interfaces)
+// ui/ArticlePreviewProps.ts
+export interface ArticlePreviewProps {
+  article: Article;
+}
+```
+
+### Utility Types
+
+Keep in `shared/lib/utility-types/`:
+
+```typescript
+// shared/lib/utility-types/index.ts
+export type ArrayValues<T extends readonly unknown[]> = T[number];
+```
+
+### Generic/Parametrized Entity Types
+
+Use generics when entities reference each other:
+
+```typescript
+// entities/song/model/song.ts
+interface Song<ArtistType extends { id: string }> {
+  id: number;
+  title: string;
+  artists: Array<ArtistType>;
+}
+```
+
+### Ambient Module Declarations
+
+For packages without type definitions:
+
+```typescript
+// shared/lib/untyped-packages/use-react-screenshot.d.ts
+declare module "use-react-screenshot";
+```
+
+### Global Redux Types
+
+```typescript
+// app/store.ts
+import { combineReducers, createStore } from "redux";
+import { songReducer } from "entities/song";
+import { artistReducer } from "entities/artist";
+
+const rootReducer = combineReducers({
+  songs: songReducer,
+  artists: artistReducer,
+});
+
+const store = createStore(rootReducer);
+
+declare type RootState = ReturnType<typeof rootReducer>;
+declare type AppDispatch = typeof store.dispatch;
+```
+
+```typescript
+// shared/lib/redux/hooks.ts
+import {
+  useDispatch,
+  useSelector,
+  type TypedUseSelectorHook,
+} from "react-redux";
+
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+```
+
+---
+
+## 8. Entities Layer
+
+Entities represent real-world **business nouns** (user, article, post, etc.).
+
+### Structure
+
+```
+📂 entities/
+  📂 article/
+    📂 ui/
+      📄 ArticlePreview.tsx
+      📄 ArticleCard.tsx
+    📂 api/
+      📄 get-article.ts
+      📄 dto.ts
+      📄 mapper.ts
+    📂 model/
+      📄 article.ts
+      📄 selectors.ts
+    📂 @x/
+      📄 user.ts         # Cross-entity export for user entity
+    📄 index.ts
+```
+
+### Guidelines
+
+- Keep entity UI **dumb** (render-only). Inject behavior from features/pages.
+- `model/` stores validation schemas, adapters, selectors, typed stores.
+- `api/` houses entity-specific queries/mutations.
+- Cross-entity relationships must use `@x` public APIs.
+
+### Entity UI Example
+
+```typescript
+// entities/article/ui/ArticlePreview.tsx
+import { Link } from "@remix-run/react";
+import type { Article } from "shared/api";
+
+interface ArticlePreviewProps {
+  article: Article;
+}
+
+export function ArticlePreview({ article }: ArticlePreviewProps) {
+  return (
+    <div className="article-preview">
+      <div className="article-meta">
+        <Link to={`/profile/${article.author.username}`}>
+          <img src={article.author.image} alt="" />
+        </Link>
+        <div className="info">
+          <Link to={`/profile/${article.author.username}`} className="author">
+            {article.author.username}
+          </Link>
+          <span className="date">
+            {new Date(article.createdAt).toLocaleDateString(undefined, {
+              dateStyle: "long",
+            })}
+          </span>
+        </div>
+      </div>
+      <Link to={`/article/${article.slug}`} className="preview-link">
+        <h1>{article.title}</h1>
+        <p>{article.description}</p>
+        <span>Read more...</span>
+      </Link>
+    </div>
+  );
+}
+```
+
+---
+
+## 9. Features Layer
+
+Features represent **user interactions** reused across multiple pages.
+
+### Structure
+
+```
+📂 features/
+  📂 auth/
+    📂 ui/
+      📄 LoginForm.tsx
+      📄 RegisterForm.tsx
+    📂 api/
+      📄 sign-in.ts
+      📄 register.ts
+    📂 model/
+      📄 registration-schema.ts
+    📄 index.ts
+```
+
+### Guidelines
+
+- Same segment pattern as entities (`ui/`, `api/`, `model/`, `config/`).
+- Extract validation, local stores, flags into `model/`.
+- Features depend only on entities/shared.
+- **Never import another feature.**
+- Prefer composition: pass UI primitives from shared/entities via props.
+
+---
+
+## 10. Widgets Layer
+
+Widgets are **large, self-contained composite blocks** reused by multiple pages.
+
+### When to Create a Widget
+
+- Block encapsulates an entire use case (header, sidebar, testimonials)
+- Needs pieces from multiple features/entities
+- Must be composed into various pages/layouts
+
+### Structure
+
+```
+📂 widgets/
+  📂 header/
+    📂 ui/
+      📄 Header.tsx
+    📂 model/
+      📄 navigation.ts
+    📄 index.ts
+  📂 sidebar/
+    📂 ui/
+      📄 Sidebar.tsx
+    📄 index.ts
+```
+
+### Header Widget Example
+
+```typescript
+// widgets/header/ui/Header.tsx
+import { useContext } from "react";
+import { Link, useLocation } from "@remix-run/react";
+import { CurrentUser } from "shared/api";
+
+export function Header() {
+  const currentUser = useContext(CurrentUser);
+  const { pathname } = useLocation();
+
+  return (
+    <nav className="navbar navbar-light">
+      <div className="container">
+        <Link className="navbar-brand" to="/">
+          conduit
+        </Link>
+        <ul className="nav navbar-nav pull-xs-right">
+          <li className="nav-item">
+            <Link
+              className={`nav-link ${pathname === "/" ? "active" : ""}`}
+              to="/"
+            >
+              Home
+            </Link>
+          </li>
+          {currentUser == null ? (
+            <>
+              <li className="nav-item">
+                <Link className="nav-link" to="/login">
+                  Sign in
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/register">
+                  Sign up
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="nav-item">
+                <Link className="nav-link" to="/editor">
+                  <i className="ion-compose"></i>&nbsp;New Article
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/settings">
+                  <i className="ion-gear-a"></i>&nbsp;Settings
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
+    </nav>
+  );
+}
+```
+
+---
+
+## 11. Pages Layer
+
+Pages map directly to **routes** or nested route chunks.
+
+### Structure
+
+```
+📂 pages/
+  📂 feed/
+    📂 ui/
+      📄 FeedPage.tsx
+      📄 ArticlePreview.tsx
+      📄 Tabs.tsx
+      📄 PopularTags.tsx
+      📄 Pagination.tsx
+    📂 api/
+      📄 loader.ts
+    📄 index.ts
+  📂 sign-in/
+    📂 ui/
+      📄 SignInPage.tsx
+      📄 RegisterPage.tsx
+    📂 api/
+      📄 sign-in.ts
+      📄 register.ts
+    📄 index.ts
+  📂 article-edit/
+    📂 ui/
+      📄 ArticleEditPage.tsx
+      📄 TagsInput.tsx
+      📄 FormErrors.tsx
+    📂 api/
+      📄 loader.ts
+      📄 action.ts
+    📂 model/
+      📄 parseAsArticle.ts
+    📄 index.ts
+```
+
+### Guidelines
+
+- Each page slice owns everything unique to that page.
+- **Never import another page slice directly.**
+- Use `_` prefix for internal-only folders (e.g., `_home`).
+- Page `api/` houses loaders, actions, mutations.
+- Reuse features/entities when logic repeats elsewhere.
+
+### Page Public API
+
+```typescript
+// pages/feed/index.ts
+export { FeedPage } from "./ui/FeedPage";
+export { loader } from "./api/loader";
+```
+
+```typescript
+// pages/article-edit/index.ts
+export { ArticleEditPage } from "./ui/ArticleEditPage";
+export { loader } from "./api/loader";
+export { action } from "./api/action";
+```
+
+```typescript
+// pages/sign-in/index.ts
+export { SignInPage } from "./ui/SignInPage";
+export { RegisterPage } from "./ui/RegisterPage";
+export { signIn } from "./api/sign-in";
+export { register } from "./api/register";
+```
+
+---
+
+## 12. App Layer
+
+`app/` is the **application bootstrap layer**. It has **no slices**.
+
+### Structure
+
+```
+📂 app/
+  📂 providers/
+    📄 QueryProvider.tsx
+  📂 layouts/
+    📄 MainLayout.tsx
+    📄 AuthLayout.tsx
+  📂 styles/
+    📄 globals.scss
+    📄 theme.scss
+  📂 assets/
+    📄 logo.svg
+  📂 api-routes/     # For Next.js route handlers
+    📄 get-example-data.ts
+  📄 index.tsx       # Entry point
+```
+
+### Guidelines
+
+- No slices inside `app/`. Organize by technical intent.
+- Cross-layer composition lives here (injecting Header, wrapping with contexts).
+- Framework bridging files stay next to framework requirements.
+
+### Root Layout Example (Remix)
+
+```typescript
+// app/root.tsx
+import { Outlet, useLoaderData } from "@remix-run/react";
+import { Header } from "shared/ui";
+import { getUserFromSession, CurrentUser } from "shared/api";
+
+export const loader = ({ request }: LoaderFunctionArgs) =>
+  getUserFromSession(request);
+
+export default function App() {
+  const user = useLoaderData<typeof loader>();
+
+  return (
+    <html lang="en">
+      <head>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <CurrentUser.Provider value={user}>
+          <Header />
+          <Outlet />
+        </CurrentUser.Provider>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+
+---
+
+## 13. Remix Integration
+
+### Route File Pattern
+
+```typescript
+// app/routes/_index.tsx
+import type { MetaFunction } from "@remix-run/node";
+import { FeedPage } from "pages/feed";
+
+export { loader } from "pages/feed";
+
+export const meta: MetaFunction = () => {
+  return [{ title: "Conduit" }];
+};
+
+export default FeedPage;
+```
+
+### Login Route
+
+```typescript
+// app/routes/login.tsx
+import { SignInPage, signIn } from "pages/sign-in";
+
+export { signIn as action };
+
+export default SignInPage;
+```
+
+### Register Route
+
+```typescript
+// app/routes/register.tsx
+import { RegisterPage, register } from "pages/sign-in";
+
+export { register as action };
+
+export default RegisterPage;
+```
+
+### Dynamic Route
+
+```typescript
+// app/routes/article.$slug.tsx
+import { ArticleReadPage } from "pages/article-read";
+
+export { loader, action } from "pages/article-read";
+
+export default ArticleReadPage;
+```
+
+### Loader Pattern
+
+```typescript
+// pages/feed/api/loader.ts
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import type { FetchResponse } from "openapi-fetch";
+import { promiseHash } from "remix-utils/promise";
+import { GET, requireUser } from "shared/api";
+
+async function throwAnyErrors<T, O, Media extends `${string}/${string}`>(
+  responsePromise: Promise<FetchResponse<T, O, Media>>
+) {
+  const { data, error, response } = await responsePromise;
+  if (error !== undefined) {
+    throw json(error, { status: response.status });
+  }
+  return data as NonNullable<typeof data>;
+}
+
+export const LIMIT = 20;
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const selectedTag = url.searchParams.get("tag") ?? undefined;
+  const page = parseInt(url.searchParams.get("page") ?? "", 10);
+
+  return json(
+    await promiseHash({
+      articles: throwAnyErrors(
+        GET("/articles", {
+          params: {
+            query: {
+              tag: selectedTag,
+              limit: LIMIT,
+              offset: !Number.isNaN(page) ? page * LIMIT : undefined,
+            },
+          },
+        })
+      ),
+      tags: throwAnyErrors(GET("/tags")),
+    })
+  );
+};
+```
+
+### Action Pattern with Named Actions
+
+```typescript
+// pages/article-read/api/action.ts
+import { redirect, type ActionFunctionArgs } from "@remix-run/node";
+import { namedAction } from "remix-utils/named-action";
+import { redirectBack } from "remix-utils/redirect-back";
+import invariant from "tiny-invariant";
+import { DELETE, POST, requireUser } from "shared/api";
+
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const currentUser = await requireUser(request);
+  const authorization = { Authorization: `Token ${currentUser.token}` };
+  const formData = await request.formData();
+
+  return namedAction(formData, {
+    async delete() {
+      invariant(params.slug, "Expected a slug parameter");
+      await DELETE("/articles/{slug}", {
+        params: { path: { slug: params.slug } },
+        headers: authorization,
+      });
+      return redirect("/");
+    },
+    async favorite() {
+      invariant(params.slug, "Expected a slug parameter");
+      await POST("/articles/{slug}/favorite", {
+        params: { path: { slug: params.slug } },
+        headers: authorization,
+      });
+      return redirectBack(request, { fallback: "/" });
+    },
+    async unfavorite() {
+      // ... similar pattern
+    },
+    async createComment() {
+      // ... similar pattern
+    },
+  });
+};
+```
+
+---
+
+## 14. Next.js Integration
+
+### App Router Structure
+
+```
+├── app/                    # Next.js App Router
+│   ├── api/
+│   │   └── example/
+│   │       └── route.ts    # Re-exports from src/app/api-routes
+│   └── example/
+│       └── page.tsx        # Re-exports from src/pages
+├── pages/                  # Empty folder (required by Next.js)
+│   └── README.md
+└── src/
+    ├── app/               # FSD App layer
+    ├── pages/             # FSD Pages layer
+    ├── features/
+    ├── entities/
+    └── shared/
+```
+
+### Page Re-export Pattern (App Router)
+
+```typescript
+// app/example/page.tsx
+export { ExamplePage as default, metadata } from "@/pages/example";
+```
+
+### Pages Router Structure
+
+```
+├── pages/                  # Next.js routing
+│   ├── _app.tsx           # Re-exports from src/app
+│   └── example/
+│       └── index.tsx      # Re-exports from src/pages
+└── src/
+    ├── app/
+    │   └── custom-app/
+    │       └── custom-app.tsx
+    └── pages/example/
+        └── ui/ExamplePage.tsx
+```
+
+### Custom App (Pages Router)
+
+```typescript
+// src/app/custom-app/custom-app.tsx
+import type { AppProps } from "next/app";
+
+export const MyApp = ({ Component, pageProps }: AppProps) => {
+  return (
+    <>
+      <p>My Custom App component</p>
+      <Component {...pageProps} />
+    </>
+  );
+};
+
+// pages/_app.tsx
+export { MyApp as default } from "@/app/custom-app";
+```
+
+### Page Re-export (Pages Router)
+
+```typescript
+// pages/example/index.tsx
+export { Example as default } from "@/pages/example";
+```
+
+### App Router API Route Handler
+
+```typescript
+// src/app/api-routes/get-example-data.ts
+import { getExamplesList } from "@/shared/db";
+
+export const getExampleData = () => {
+  try {
+    const examplesList = getExamplesList();
+    return Response.json({ examplesList });
+  } catch {
+    return Response.json(null, {
+      status: 500,
+      statusText: "Something went wrong",
+    });
+  }
+};
+
+// app/api/example/route.ts
+export { getExampleData as GET } from "@/app/api-routes";
+```
+
+### Pages Router API Route Handler
+
+```typescript
+// src/app/api-routes/get-example-data.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+
+const config = {
+  api: { bodyParser: { sizeLimit: "1mb" } },
+  maxDuration: 5,
+};
+
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
+  res.status(200).json({ message: "Hello from FSD" });
+};
+
+export const getExampleData = { config, handler } as const;
+
+// pages/api/example.ts
+import { getExampleData } from "@/app/api-routes";
+
+export const config = getExampleData.config;
+export default getExampleData.handler;
+```
+
+---
+
+## 15. SvelteKit Integration
+
+### Configuration
+
+```typescript
+// svelte.config.js
+import adapter from "@sveltejs/adapter-auto";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+
+const config = {
+  preprocess: [vitePreprocess()],
+  kit: {
+    adapter: adapter(),
+    files: {
+      routes: "src/app/routes",
+      lib: "src",
+      appTemplate: "src/app/index.html",
+      assets: "public",
+    },
+    alias: {
+      "@/*": "src/*",
+    },
+  },
+};
+
+export default config;
+```
+
+### Page Slice
+
+```typescript
+// src/pages/home/index.ts
+export { default as HomePage } from "./ui/home-page.svelte";
+```
+
+### Route Integration
+
+```html
+<!-- src/app/routes/+page.svelte -->
+<script>
+  import { HomePage } from "@/pages/home";
+</script>
+
+<HomePage />
+```
+
+---
+
+## 16. NuxtJS Integration
+
+### Configuration with File Routing
+
+```typescript
+// nuxt.config.ts
+export default defineNuxtConfig({
+  alias: {
+    "@": "../src",
+  },
+  dir: {
+    pages: "./src/app/routes",
+  },
+});
+```
+
+### Configuration with Layouts
+
+```typescript
+// nuxt.config.ts
+export default defineNuxtConfig({
+  alias: {
+    "@": "../src",
+  },
+  dir: {
+    pages: "./src/app/routes",
+    layouts: "./src/app/layouts",
+  },
+});
+```
+
+### Config-based Routing
+
+```typescript
+// app/router.options.ts
+import type { RouterConfig } from "@nuxt/schema";
+
+export default <RouterConfig>{
+  routes: (_routes) => [
+    {
+      name: "home",
+      path: "/",
+      component: () => import("@/pages/home.vue").then((r) => r.default || r),
+    },
+  ],
+};
+```
+
+### Route Integration
+
+```vue
+<!-- src/app/routes/index.vue -->
+<script setup>
+import { HomePage } from "@/pages/home";
+</script>
+
+<template>
+  <HomePage />
+</template>
+```
+
+---
+
+## 17. Electron Integration
+
+### Project Structure
+
+```
+└── src/
+    ├── app/
+    │   ├── main/              # Main process
+    │   │   └── index.ts
+    │   ├── preload/           # Preload script
+    │   │   └── index.ts
+    │   └── renderer/          # Renderer process
+    │       └── index.html
+    ├── main/                  # Main process FSD layers
+    │   ├── features/
+    │   │   └── user/
+    │   │       └── ipc/
+    │   │           ├── get-user.ts
+    │   │           └── send-user.ts
+    │   ├── entities/
+    │   └── shared/
+    ├── renderer/              # Renderer process FSD layers
+    │   ├── pages/
+    │   ├── widgets/
+    │   ├── features/
+    │   ├── entities/
+    │   └── shared/
+    └── shared/                # Common code
+        └── ipc/               # IPC definitions
+```
+
+### IPC Channel Definitions
+
+```typescript
+// shared/ipc/channels.ts
+export const CHANNELS = {
+  GET_USER_DATA: "GET_USER_DATA",
+  SAVE_USER: "SAVE_USER",
+} as const;
+
+export type TChannelKeys = keyof typeof CHANNELS;
+```
+
+### IPC Event Contracts
+
+```typescript
+// shared/ipc/events.ts
+import { CHANNELS } from "./channels";
+
+export interface IEvents {
+  [CHANNELS.GET_USER_DATA]: {
+    args: void;
+    response?: { name: string; email: string };
+  };
+  [CHANNELS.SAVE_USER]: {
+    args: { name: string };
+    response: void;
+  };
+}
+```
+
+### Electron API Type
+
+```typescript
+// shared/ipc/api.ts
+import { CHANNELS } from "./channels";
+import type { IEvents } from "./events";
+
+type TOptionalArgs<T> = T extends void ? [] : [args: T];
+
+export type TElectronAPI = {
+  [K in keyof typeof CHANNELS]: (
+    ...args: TOptionalArgs<IEvents[(typeof CHANNELS)[K]]["args"]>
+  ) => IEvents[(typeof CHANNELS)[K]]["response"];
+};
+```
+
+### Preload Script
+
+```typescript
+// app/preload/index.ts
+import { contextBridge, ipcRenderer } from "electron";
+import { CHANNELS, type TElectronAPI } from "shared/ipc";
+
+const API: TElectronAPI = {
+  [CHANNELS.GET_USER_DATA]: () => ipcRenderer.sendSync(CHANNELS.GET_USER_DATA),
+  [CHANNELS.SAVE_USER]: (args) => ipcRenderer.invoke(CHANNELS.SAVE_USER, args),
+} as const;
+
+contextBridge.exposeInMainWorld("electron", API);
+```
+
+### Main Process Handler
+
+```typescript
+// main/features/user/ipc/send-user.ts
+import { ipcMain } from "electron";
+import { CHANNELS } from "shared/ipc";
+
+export const sendUser = () => {
+  ipcMain.on(CHANNELS.GET_USER_DATA, (ev) => {
+    ev.returnValue = {
+      name: "John Doe",
+      email: "john.doe@example.com",
+    };
+  });
+};
+```
+
+### Renderer Process Usage
+
+```typescript
+// renderer/pages/settings/ipc/get-user.ts
+import { CHANNELS } from "shared/ipc";
+
+export const getUser = () => {
+  const user = window.electron[CHANNELS.GET_USER_DATA]();
+  return user ?? { name: "John Donte", email: "john.donte@example.com" };
+};
+```
+
+---
+
+## 18. React Query Integration
+
+### QueryClient Setup
+
+```typescript
+// shared/api/query-client.ts
+import { QueryClient } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 5 * 60 * 1000,
+    },
+  },
+});
+```
+
+### Query Provider
+
+```typescript
+// app/providers/QueryProvider.tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactNode } from "react";
+
+type Props = {
+  children: ReactNode;
+  client: QueryClient;
+};
+
+export const QueryProvider = ({ client, children }: Props) => {
+  return (
+    <QueryClientProvider client={client}>
+      {children}
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+  );
+};
+```
+
+### Query Factory Pattern
+
+Place in entity or shared `api/` segment:
+
+```typescript
+// entities/post/api/post.queries.ts
+import { keepPreviousData, queryOptions } from "@tanstack/react-query";
+import { getPosts } from "./get-posts";
+import { getDetailPost } from "./get-detail-post";
+import type { PostDetailQuery } from "./query/post.query";
+
+export const postQueries = {
+  all: () => ["posts"],
+  lists: () => [...postQueries.all(), "list"],
+  list: (page: number, limit: number) =>
+    queryOptions({
+      queryKey: [...postQueries.lists(), page, limit],
+      queryFn: () => getPosts(page, limit),
+      placeholderData: keepPreviousData,
+    }),
+  details: () => [...postQueries.all(), "detail"],
+  detail: (query?: PostDetailQuery) =>
+    queryOptions({
+      queryKey: [...postQueries.details(), query?.id],
+      queryFn: () => getDetailPost({ id: query?.id }),
+      staleTime: 5000,
+    }),
+};
+```
+
+### Using Query Factory in Component
+
+```typescript
+// pages/home/ui/HomePage.tsx
+import { useQuery } from "@tanstack/react-query";
+import { postApi } from "@/entities/post";
+
+const DEFAULT_ITEMS = 10;
+const DEFAULT_PAGE = 1;
+
+export const HomePage = () => {
+  const [page, setPage] = useState(DEFAULT_PAGE);
+
+  const { data, isFetching, isLoading } = useQuery(
+    postApi.postQueries.list(page, DEFAULT_ITEMS)
+  );
+
+  return (
+    <>
+      <Pagination
+        onChange={(_, page) => setPage(page)}
+        page={page}
+        count={data?.totalPages}
+      />
+      <Posts posts={data?.posts} />
+    </>
+  );
+};
+```
+
+### Mutation Pattern
+
+```typescript
+// features/post/api/use-update-title.ts
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/shared/api";
+import { postQueries } from "@/entities/post";
+
+export const useUpdateTitle = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ newTitle }: { newTitle: string }) =>
+      apiClient.patch(`/posts/${id}`, { title: newTitle }),
+    onSuccess: (newPost) => {
+      queryClient.setQueryData(postQueries.detail({ id }), newPost);
+    },
+  });
+};
+```
+
+### Query Factory Directory Structure
+
+**Entity-based (preferred):**
+
+```
+📂 entities/
+  📂 post/
+    📂 api/
+      📄 post.queries.ts    # Query factory
+      📄 get-posts.ts       # Getter function
+      📄 create-post.ts     # Creation function
+      📄 update-post.ts     # Update function
+      📄 delete-post.ts     # Delete function
+```
+
+**Shared-based (alternative):**
+
+```
+📂 shared/
+  📂 api/
+    📂 queries/
+      📄 document.ts
+      📄 background-jobs.ts
+    📄 index.ts
+```
+
+---
+
+## 19. Redux Toolkit Integration
+
+### Slice with Entity Adapter
+
+```typescript
+// entities/song/model/songs.ts
+import {
+  createSlice,
+  createEntityAdapter,
+  createAsyncThunk,
+} from "@reduxjs/toolkit";
+import { listSongs } from "../api/listSongs";
+
+export const fetchSongs = createAsyncThunk("songs/fetchSongs", listSongs);
+
+const songAdapter = createEntityAdapter();
+
+const songsSlice = createSlice({
+  name: "songs",
+  initialState: songAdapter.getInitialState(),
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchSongs.fulfilled, (state, action) => {
+      songAdapter.upsertMany(state, action.payload);
+    });
+  },
+});
+
+export default songsSlice.reducer;
+```
+
+### State Normalization with Normalizr
+
+```typescript
+// entities/song/model/songs.ts
+import {
+  createSlice,
+  createEntityAdapter,
+  createAsyncThunk,
+} from "@reduxjs/toolkit";
+import { normalize, schema } from "normalizr";
+import { getSong } from "../api/getSong";
+
+export const artistEntity = new schema.Entity("artists");
+export const songEntity = new schema.Entity("songs", {
+  artists: [artistEntity],
+});
+
+const songAdapter = createEntityAdapter();
+
+export const fetchSong = createAsyncThunk(
+  "songs/fetchSong",
+  async (id: string) => {
+    const data = await getSong(id);
+    const normalized = normalize(data, songEntity);
+    return normalized.entities;
+  }
+);
+
+export const slice = createSlice({
+  name: "songs",
+  initialState: songAdapter.getInitialState(),
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchSong.fulfilled, (state, action) => {
+      songAdapter.upsertMany(state, action.payload.songs);
+    });
+  },
+});
+```
+
+### Handling Normalized Data in Related Slice
+
+```typescript
+// entities/artist/model/artists.ts
+import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
+import { fetchSong } from "entities/song/@x/artist";
+
+const artistAdapter = createEntityAdapter();
+
+export const slice = createSlice({
+  name: "artists",
+  initialState: artistAdapter.getInitialState(),
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchSong.fulfilled, (state, action) => {
+      artistAdapter.upsertMany(state, action.payload.artists);
+    });
+  },
+});
+```
+
+---
+
+## 20. Authentication & Sessions
+
+### Session Storage (Remix)
+
+```typescript
+// shared/api/auth.server.ts
+import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import invariant from "tiny-invariant";
+import type { User } from "./models";
+
+invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
+
+const sessionStorage = createCookieSessionStorage<{ user: User }>({
+  cookie: {
+    name: "__session",
+    httpOnly: true,
+    path: "/",
+    sameSite: "lax",
+    secrets: [process.env.SESSION_SECRET],
+    secure: process.env.NODE_ENV === "production",
+  },
+});
+
+export async function createUserSession({
+  request,
+  user,
+  redirectTo,
+}: {
+  request: Request;
+  user: User;
+  redirectTo: string;
+}) {
+  const cookie = request.headers.get("Cookie");
+  const session = await sessionStorage.getSession(cookie);
+  session.set("user", user);
+  return redirect(redirectTo, {
+    headers: {
+      "Set-Cookie": await sessionStorage.commitSession(session, {
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+      }),
+    },
+  });
+}
+
+export async function getUserFromSession(request: Request) {
+  const cookie = request.headers.get("Cookie");
+  const session = await sessionStorage.getSession(cookie);
+  return session.get("user") ?? null;
+}
+
+export async function requireUser(request: Request) {
+  const user = await getUserFromSession(request);
+  if (user === null) {
+    throw redirect("/login");
+  }
+  return user;
+}
+```
+
+### CurrentUser Context
+
+```typescript
+// shared/api/currentUser.ts
+import { createContext } from "react";
+import type { User } from "./models";
+
+export const CurrentUser = createContext<User | null>(null);
+```
+
+### Sign-In Action
+
+```typescript
+// pages/sign-in/api/sign-in.ts
+import { json, type ActionFunctionArgs } from "@remix-run/node";
+import { POST, createUserSession } from "shared/api";
+
+export const signIn = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const email = formData.get("email")?.toString() ?? "";
+  const password = formData.get("password")?.toString() ?? "";
+
+  const { data, error } = await POST("/users/login", {
+    body: { user: { email, password } },
+  });
+
+  if (error) {
+    return json({ error }, { status: 400 });
+  } else {
+    return createUserSession({
+      request,
+      user: data.user,
+      redirectTo: "/",
+    });
+  }
+};
+```
+
+---
+
+## 21. Validation & Forms
+
+### Zod Schema
+
+```typescript
+// pages/sign-in/model/registration-schema.ts
+import { z } from "zod";
+
+export const registrationData = z
+  .object({
+    email: z.string().email(),
+    password: z.string().min(6),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+```
+
+### Form Data Parser
+
+```typescript
+// pages/article-edit/model/parseAsArticle.ts
+export function parseAsArticle(data: FormData) {
+  const errors = [];
+
+  const title = data.get("title");
+  if (typeof title !== "string" || title === "") {
+    errors.push("Give this article a title");
+  }
+
+  const description = data.get("description");
+  if (typeof description !== "string" || description === "") {
+    errors.push("Describe what this article is about");
+  }
+
+  const body = data.get("body");
+  if (typeof body !== "string" || body === "") {
+    errors.push("Write the article itself");
+  }
+
+  if (errors.length > 0) {
+    throw errors;
+  }
+
+  return { title, description, body, tags: data.get("tags") ?? "" } as {
+    title: string;
+    description: string;
+    body: string;
+    tags: string;
+  };
+}
+```
+
+### Form Errors Component
+
+```typescript
+// pages/article-edit/ui/FormErrors.tsx
+import { useActionData } from "@remix-run/react";
+import type { action } from "../api/action";
+
+export function FormErrors() {
+  const actionData = useActionData<typeof action>();
+
+  return actionData?.errors != null ? (
+    <ul className="error-messages">
+      {actionData.errors.map((error) => (
+        <li key={error}>{error}</li>
+      ))}
+    </ul>
+  ) : null;
+}
+```
+
+### Client-side Validation
+
+```typescript
+// pages/sign-in/ui/RegisterPage.tsx
+import { registrationData } from "../model/registration-schema";
+
+function validate(formData: FormData) {
+  const data = Object.fromEntries(formData.entries());
+  try {
+    registrationData.parse(data);
+  } catch (error) {
+    // Show error message to the user
+  }
+}
+
+export function RegisterPage() {
+  return (
+    <form onSubmit={(e) => validate(new FormData(e.currentTarget))}>
+      <input id="email" name="email" required />
+      <input id="password" name="password" type="password" required />
+      <input
+        id="confirmPassword"
+        name="confirmPassword"
+        type="password"
+        required
+      />
+    </form>
+  );
+}
+```
+
+---
+
+## 22. Layouts
+
+### Simple Layouts (No Business Logic)
+
+Keep in `shared/ui` or `app/layouts`:
+
+```typescript
+// shared/ui/layout/Layout.tsx
+export function Layout({ children, sidebar }: LayoutProps) {
+  return (
+    <div>
+      <Header />
+      <main>{children}</main>
+      <aside>{sidebar}</aside>
+    </div>
+  );
+}
+```
+
+### Layouts with Widgets
+
+Store in `app/layouts`:
+
+```typescript
+// app/layouts/MainLayout.tsx
+import { Header } from "widgets/header";
+import { Sidebar } from "widgets/sidebar";
+
+export function MainLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <Header />
+      <Sidebar />
+      {children}
+    </>
+  );
+}
+```
+
+### React Layout with Theme Switching
+
+```typescript
+// app/layouts/Layout.tsx
+import { Link, Outlet } from "react-router-dom";
+import { useThemeSwitcher } from "./useThemeSwitcher";
+
+export function Layout({ siblingPages, headings }) {
+  const [theme, toggleTheme] = useThemeSwitcher();
+
+  return (
+    <div>
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/docs">Docs</Link>
+            </li>
+            <li>
+              <Link to="/blog">Blog</Link>
+            </li>
+          </ul>
+        </nav>
+        <button onClick={toggleTheme}>{theme}</button>
+      </header>
+      <main>
+        <SiblingPageSidebar siblingPages={siblingPages} />
+        <Outlet />
+        <HeadingsSidebar headings={headings} />
+      </main>
+      <footer>
+        <ul>
+          <li>GitHub</li>
+          <li>Twitter</li>
+        </ul>
+      </footer>
+    </div>
+  );
+}
+```
+
+### Theme Switcher Hook
+
+```typescript
+// app/layouts/useThemeSwitcher.ts
+import { useState, useEffect } from "react";
+
+export function useThemeSwitcher() {
+  const [theme, setTheme] = useState("light");
+
+  function toggleTheme() {
+    setTheme(theme === "light" ? "dark" : "light");
+  }
+
+  useEffect(() => {
+    document.body.classList.remove("light", "dark");
+    document.body.classList.add(theme);
+  }, [theme]);
+
+  return [theme, toggleTheme] as const;
+}
+```
+
+---
+
+## 23. Hooks Placement
+
+| Hook Type                 | Location                   |
+| ------------------------- | -------------------------- |
+| Domain-specific data      | Slice's `model/` segment   |
+| Reusable utility          | `shared/lib/hooks/`        |
+| UI behavior (local)       | Same file or `ui/` segment |
+| API query/mutation        | Slice's `api/` segment     |
+| Cross-slice orchestration | `app/` layer               |
+
+---
+
+## 24. Circular Import Prevention
+
+### Within Same Slice
+
+Use relative imports with full paths, never `"../"` alone:
+
+```typescript
+// ✅ Good
+import { loadUserStatistics } from "../api/loadUserStatistics";
+
+// ❌ Bad - can create circular import via index.ts
+import { loadUserStatistics } from "../";
+```
+
+### Between Slices
+
+Always use absolute imports with aliases:
+
+```typescript
+import { Button } from "@/shared/ui/button";
+```
+
+### Prevention Strategies
+
+- Index files (`index.ts`) should only re-export, never import siblings.
+- When files in same slice reference each other, use full relative paths.
+- Configure IDE auto-imports to prefer aliases over relative paths.
+
+---
+
+## 25. Slice Groups
+
+Related slices can be grouped in folders but must remain isolated:
+
+```
+📂 features/
+  📂 post/              # Group folder
+    📂 compose/         # Slice
+    📂 like/            # Slice
+    📂 delete/          # Slice
+    // ❌ NO shared code here (no index.ts, no utils.ts)
+```
+
+Each slice in the group follows normal FSD rules: own segments, own public API.
+
+---
+
+## 26. URL & Routing Rules
+
+- Lower layers (entities/features) may **never hardcode app URLs**.
+- Accept routes as props or derive from `shared/routes`.
+- Keep all path constants in `shared/routes` or the owning page slice.
+
+### Bad: Hardcoded URL in Entity
+
+```typescript
+// ❌ Bad - URL hardcoded in entity
+<Card>
+  <Card.Title href={`/post/${data.id}`} title={data.name} />
+</Card>
+```
+
+### Good: URL Passed as Prop
+
+```typescript
+// ✅ Good - URL passed from page layer
+<Card>
+  <Card.Title href={getPostUrl(data.id)} title={data.name} />
+</Card>
+```
+
+---
+
+## 27. URL State Management
+
+Encode UI state (filters, pagination) in URL search params:
+
+```typescript
+// pages/feed/ui/FeedPage.tsx
+import { Form, useSearchParams } from "@remix-run/react";
+import { ExistingSearchParams } from "remix-utils/existing-search-params";
+
+export function FeedPage() {
+  const [searchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get("page") ?? "1", 10);
+
+  return (
+    <Form>
+      <ExistingSearchParams exclude={["page"]} />
+      <button name="page" value={currentPage + 1}>
+        Next Page
+      </button>
+    </Form>
+  );
+}
+```
+
+---
+
+## 28. Styling & Assets
+
+- Use CSS Modules (`*.module.scss` or `*.module.css`) colocated with components.
+- Global styles stay in `app/styles/`.
+- Assets referenced by multiple layers live in `app/assets/` or `static/`.
+
+---
+
+## 29. Tooling & Automation
+
+- **Package manager:** bun (per project config)
+- **Linting:** ESLint, Stylelint, Prettier
+- **Architecture linting:** Steiger (`npx steiger src`)
+- **Scaffolding:** FSD CLI (`npx fsd <layer> <slice> --segments ui api`)
+- **Type generation:** openapi-typescript, orval
+
+### Generate API Types
+
+```bash
+bun run generate-api-types
+```
+
+### Generate Slice Structure
+
+```bash
+npx fsd pages feed sign-in article-read --segments ui api
+npx fsd shared --segments api config ui
+```
+
+---
+
+## 30. Anti-Patterns & Smells
+
+- ❌ Dumping domain code into catch-all folders (`components/`, `helpers/`)
+- ❌ Cross-importing slices within the same layer without `@x`
+- ❌ Hardcoding URLs below the pages layer
+- ❌ Mixing global styles into slice-level CSS modules
+- ❌ Bypassing public APIs through deep relative imports
+- ❌ Storing shared logic in page slices just because it's "small"
+- ❌ Creating new layers for ad-hoc purposes
+- ❌ Wildcard re-exports in public API (`export * from`)
+- ❌ Un-desegmented structure (actions/, epics/, constants/ at root)
+
+### Un-desegmented Structure (Problem)
+
+```
+❌ Bad - scattered by type
+├── components/
+│   ├── DeliveryCard
+│   ├── RegionSelect
+├── actions/
+│   ├── delivery.js
+│   ├── region.js
+├── epics/
+│   ├── delivery.js
+│   ├── region.js
+├── helpers/
+│   ├── delivery.js
+│   ├── region.js
+```
+
+### Desegmented Structure (Solution)
+
+```
+✅ Good - organized by domain
+├── entities/
+│   ├── delivery/
+│   │   ├── ui/
+│   │   │   ├── card.js
+│   │   │   ├── choice.js
+│   │   ├── model/
+│   │   │   ├── actions.js
+│   │   │   ├── selectors.js
+│   │   ├── lib/
+│   ├── region/
+│   ├── user/
+```
+
+---
+
+## 31. Migration & Incremental Adoption
+
+1. Solidify `shared/` + `app/` foundation (config, ui kit, theming)
+2. Group existing UI into pages/widgets, even if imports temporarily violate rules
+3. Resolve import issues by extracting features/entities over time
+4. Avoid introducing large new entities while refactoring existing ones
+5. Document every slice's public API before removing legacy entrypoints
+6. Run `npx steiger src` to identify architecture violations
+
+---
+
+## 32. Quick Reference Cheat Sheet
+
+```
+LAYERS (top to bottom):
+  app → pages → widgets → features → entities → shared
+
+SEGMENTS:
+  ui, api, model, lib, config
+
+IMPORT RULES:
+  - Only import from layers below
+  - Use @x for entity cross-references
+  - No sideways imports within same layer
+
+PUBLIC API:
+  - One index.ts per slice/segment
+  - No wildcard exports (export * from)
+  - Named exports only
+
+STYLING:
+  - CSS Modules per slice
+  - Global styles in app/styles/
+
+ROUTING:
+  - Pages own URLs
+  - Lower layers remain URL-agnostic
+  - Use shared/routes for path constants
+
+FORMS:
+  - Validation in model/
+  - UI errors in ui/
+  - Submissions via api/
+
+STATE:
+  - React Query for server state
+  - Redux for complex client state
+  - URL for UI state (filters, pagination)
+
+TOOLING:
+  - Steiger for architecture linting
+  - FSD CLI for scaffolding
+  - openapi-typescript for API types
+```
+
+---
+
+Follow these rules verbatim before adding or reviewing code. This document
+captures ALL FSD design decisions and integration patterns.

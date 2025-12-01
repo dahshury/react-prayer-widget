@@ -1,335 +1,184 @@
-# Code Refactoring and Modularization Workflow
+## Code Refactoring Command (FSCA + DDD + Clean Architecture)
 
-## Objective
+### Objective
 
-**PLANNING PHASE ONLY** - This command generates a comprehensive refactoring plan as a markdown file.
+PLANNING PHASE ONLY — Generate a comprehensive refactoring plan aligned with Feature-Sliced Clean Architecture, Domain-Driven Design, and Clean Architecture principles, **adapting to the specific user goals**. Execution happens ONLY after explicit user approval.
 
-The output is a detailed, step-by-step refactoring strategy document that the user reviews and approves. Actual code refactoring only begins after the user explicitly says "execute the plan".
+**CRITICAL PRINCIPLES:**
 
-Execute this workflow to analyze a target file and create a detailed, actionable refactoring plan aligned with the Domain-Driven Design (DDD) monorepo architecture. The plan improves maintainability, reusability, and separation of concerns.
+- **Flexible objectives**: Refactoring goals may vary (code splitting, behavioral changes, performance optimization, testing improvements, DI enhancement, technical debt reduction, etc.) — understand the user's actual objective first
+- **Preserve unless explicitly changing**: When behavioral changes are required, implement them as specified; when not specified, maintain identical behavior
+- **Move as-is when possible**: Extract code blocks verbatim when they fit architecture without modification
+- **Architectural adaptations allowed**: When architecture patterns require structural changes (wrappers, adapters, interface implementations, call signature changes), make ONLY those changes — preserve all business logic inside
+- **Strict structure adherence**: All code must be placed in correct layers per `@nextjs_structure.mdc`, adapting structure as needed while keeping functionality identical
+- **NO deprecation, removal, or legacy wrappers**: Do NOT deprecate code, do NOT remove code, do NOT create legacy wrappers, and do NOT maintain backward compatibility. Refactor code directly to the new structure — update all usages immediately
 
-## Project Context
+### Architecture Source of Truth
 
-### Codebase Structure
-
-```markdown
-app/frontend/
-├── app/ # Next.js App Router with advanced routing
-│ ├── (core)/ # Core application routes
-│ ├── (public)/ # Public routes
-│ └── api/ # API routes with microservice structure
-├── entities/ # Domain entities (DDD approach)
-│ ├── conversation/ # Conversation domain
-│ ├── event/ # Event domain
-│ ├── phone/ # Phone domain
-│ ├── rsvp/ # RSVP domain
-│ ├── user/ # User domain
-│ └── vacation/ # Vacation domain
-├── features/ # Feature modules (cohesive business features)
-│ ├── chat/ # Chat feature
-│ ├── dashboard/ # Dashboard feature
-│ ├── navigation/ # Navigation feature
-│ └── settings/ # Settings feature
-├── widgets/ # Complex UI widgets with isolated state
-│ ├── {widget-name}/ # Widget-specific folder
-│ │ ├── hooks/ # Widget-specific hooks
-│ │ └── components/ # Widget-specific components
-├── shared/ # Shared infrastructure
-│ ├── config/ # Configuration management
-│ ├── libs/ # Shared libraries
-│ │ ├── data-grid/ # Data grid utilities
-│ │ ├── calendar/ # Calendar utilities
-│ │ ├── hooks/ # Global hooks
-│ │ ├── websocket/ # WebSocket handling
-│ │ └── [other]/ # Other shared libraries
-│ ├── ui/ # Design system components
-│ └── validation/ # Shared validation schemas
-├── processes/ # Business process orchestration
-├── services/ # External service integrations
-└── styles/ # Global styles and themes
-```
-
-### Design Principles
-
-- **Domain-Driven Design (DDD)**: Organize code around business domains
-- **Uncle Bob Clean Code**: Single Responsibility, DRY, KISS
-- **Separation of Concerns**: UI, business logic, utilities, services
-- **Dependency Injection**: Make dependencies explicit and testable
-- **Type Safety**: Strict TypeScript with no `any` types
-
-## 🚨 Critical Linting Requirements
-
-**Linting validation is MANDATORY throughout the entire refactoring workflow.** This is not optional.
-
-- **After each refactoring step**: Run linting checks immediately
-- **Tools to use**:
-  - `read_lints` tool - Capture and analyze linting errors
-- **Blocking rule**: Do NOT proceed to the next refactoring step if linting fails
-- **Error logging**: Document all linting results (PASSED/FAILED with error counts)
-- **Immediate action**: Fix all linting errors before continuing
-- **Investigation**: If new linting errors appear, stop and investigate immediately
-
-**This ensures code quality, type safety, and accessibility compliance throughout the refactoring process.**
-
-## Pre-Execution Checklist
-
-Before starting the workflow:
-
-1. **Identify the Target File**
-   - You will be given a specific file path to analyze
-   - This is the ONLY file you should analyze in this planning phase
-   - Do NOT refactor anything - just analyze and plan
-
-2. **Understand the Target File**
-   - Read the entire file thoroughly
-   - Identify all functions, components, hooks, types, and utilities
-   - Map dependencies (imports) and dependents (who uses this code)
-   - Note code smells: long functions, mixed concerns, duplicated logic
-
-3. **Understand the Architecture**
-   - Review the provided codebase structure
-   - Understand when to use `entities/`, `features/`, `widgets/`, `shared/libs/`
-   - Know the distinction: domain entities vs. UI components vs. utilities
-
-4. **Analyze for Refactoring Opportunities**
-   - Large files (>300 lines) are candidates for splitting
-   - Custom hooks should move to `shared/libs/hooks/` or `widgets/{name}/hooks/`
-   - Domain logic should move to `entities/{domain}/`
-   - Reusable utilities should move to `shared/libs/`
-   - UI components should move to `features/` or `widgets/` depending on reusability
-   - Feature-specific components belong in `features/{feature}/`
-
-5. **Check Existing Patterns**
-   - Search for similar refactored examples in the codebase
-   - Understand naming conventions and folder organization
-   - Follow existing patterns for consistency
-
-## Execution Workflow
-
-### Phase 1: Comprehensive Analysis
-
-**IMPORTANT: This phase is ANALYSIS ONLY. Do NOT make any code changes.**
-
-1. **Read and Understand the File**
-   - Document all code sections: components, hooks, types, utilities, constants
-   - Identify the main responsibility of each section
-   - Note interdependencies between sections
-
-2. **Map the Refactoring Opportunities**
-   - Identify sections that violate Single Responsibility Principle
-   - Find duplicated logic that should be extracted
-   - Spot utilities that are too generic for this file
-   - Identify hooks that could be reusable
-
-3. **Capture Analysis Results**
-   - Create a detailed inventory of all refactoring candidates
-   - For each candidate, note:
-     - Current location and line numbers
-     - What it does (description)
-     - Where it should move to (target location)
-     - What else depends on it (dependents)
-     - Whether it needs new imports or creates new imports
-
-4. **Do NOT make changes yet** - analysis phase only
-
-### Phase 2: Generate Refactoring Plan Document
-
-## Output: Create a markdown file with the refactoring plan
-
-1. **File Location and Naming**
-   - Save the plan as: `/docs/[target-file-name]-refactor.md`
-   - Example: `/docs/Grid-refactor.md`
-
-2. **Document Structure**
-   - Include: Target file name, file size (lines), analysis date
-   - Include: Brief description of current state and issues
-   - Include: Overview of proposed refactoring strategy
-   - Include: Detailed refactoring plan as a step-by-step table
-
-3. **Refactoring Plan Table Format**
-   - Create a markdown table with columns:
-     - **Step**: Numbered (1, 2, 3...)
-     - **Description**: What's being refactored
-     - **Source Lines**: Line numbers from original file (e.g., 45-120)
-     - **Target Location**: Where it should move to
-     - **Import Updates**: Files/locations that need import changes
-     - **Dependencies**: What this extract depends on
-   - Each row represents ONE refactoring action
-   - Order by dependency: types → constants → utilities → hooks → components
-
-4. **Example Plan Table**
-
-   | Step | Description                | Source Lines | Target Location                                     | Import Updates          | Dependencies             |
-   | ---- | -------------------------- | ------------ | --------------------------------------------------- | ----------------------- | ------------------------ |
-   | 1    | Extract grid state types   | 12-35        | `shared/libs/data-grid/grid.types.ts`               | Grid.tsx import updated | React                    |
-   | 2    | Extract grid constants     | 38-65        | `shared/libs/data-grid/grid.constants.ts`           | Grid.tsx import updated | None                     |
-   | 3    | Extract useGridState hook  | 100-200      | `shared/libs/hooks/use-grid-state.ts`               | Grid.tsx import updated | grid.types, React hooks  |
-   | 4    | Extract GridCell component | 250-350      | `widgets/data-table-editor/components/GridCell.tsx` | Grid.tsx import updated | grid.types, shared/ui/\* |
-   | 5    | Update imports in original | -            | Grid.tsx                                            | Add 4 import statements | Previous steps           |
-
-5. **Include Additional Context**
-   - Current file stats: total lines, number of functions/components/hooks
-   - Estimated refactored state: total lines after all extractions
-   - Expected file size reduction percentage
-   - List all new files that will be created
-   - List all files that will need import updates
-   - Any risks or trade-offs to be aware of
-   - Implementation notes and patterns to follow
-
-6. **Add Success Criteria Section**
-   - Checklist of what should be true after execution
-   - Verification steps to run after each refactoring step
-
-## CRITICAL: Wait for User Approval
-
-### Do Not Proceed to Execution
-
-After generating the markdown plan document:
-
-1. Report that the plan is complete
-2. Provide the file path where the plan was saved
-3. Ask the user to review the plan
-4. **WAIT for the user to explicitly say "execute the plan"**
-5. Only when the user confirms should you proceed to actual refactoring
-
-## Phases 3-4: Execution (Conditional - Only After User Says "Execute")
-
-### These Phases Are ONLY Executed If Approved
-
-If and when the user approves, proceed with:
-
-### Phase 3: Iterative Refactoring Execution
-
-Follow the steps in the generated plan:
-
-1. **Use Cursor Todo List**
-   - Create a todo for each step in the refactoring plan
-   - Order them exactly as in the plan document
-   - Set all to `pending` initially
-
-2. **Execute Each Step**
-   - Re-read the code section to be extracted
-   - Analyze all dependencies
-   - Create the target file with proper types and exports
-   - Update the original file with new imports
-   - Update all dependent files with new imports
-   - **🚨 CRITICAL: Verify with linting after EVERY step** (see Linting Validation below)
-
-3. **Linting Validation** (MANDATORY AFTER EACH STEP)
-   - After each refactoring step, immediately run linting checks:
-     - Run: `pnpm tsc --noEmit` from `app/frontend/` to check TypeScript errors
-     - Run: `npx ultracite check app/frontend/` to check Biome linting violations
-   - **Do NOT proceed to the next step if linting fails**
-   - Fix all errors before moving to the next refactoring step
-   - Log linting results for each step in your tracking
-   - If new linting errors appear, investigate immediately and fix before continuing
-
-4. **Track Progress**
-   - Update todo status as you proceed
-   - **Document linting status after each step**: ✅ PASSED or ❌ FAILED with error count
-   - Document any deviations from the plan
-   - Flag any unexpected issues or linting violations
-   - Keep a running log of linting results
-
-### Phase 4: Post-Refactoring Validation
-
-After all todos are completed:
-
-1. **Full Codebase Linting Check** (PRIMARY VALIDATION)
-   - **MUST achieve**: Zero TypeScript errors and zero linting violations
-   - Use `read_lints` tool to capture any remaining errors for analysis
-   - If any linting errors exist, treat as critical blockers and fix immediately
-
-2. **Verify Refactoring Results**
-   - Compare original file before/after
-   - Verify all new files exist and are importable
-   - Check that all imports are correct across the codebase
-   - Validate no circular dependencies created
-   - Review linting logs to ensure no new violations were introduced
-
-3. **Final Report**
-   - Linting status: ✅ PASSED (zero errors/violations)
-   - File size reduction metrics
-   - Number of new files created
-   - Import changes summary
-   - Any patterns or lessons learned
-
-## Best Practices During Planning
-
-### Linting Best Practices
-
-- ✅ **ALWAYS run linting checks after EVERY refactoring step** - Do not skip this
-- ✅ Fix linting errors immediately before moving to the next step
-- ✅ Use the `read_lints` tool to capture detailed error information
-- ✅ Document linting status (PASSED/FAILED) for each step in your tracking
-- ✅ If linting fails at any point, stop execution and investigate before continuing
-- ✅ Treat linting failures as blocking issues - they prevent proceeding
-- ✅ Review full linting output to understand all violations before fixing
-- ❌ Don't skip linting checks to "speed up" the refactoring
-- ❌ Don't proceed to the next step if linting fails
-- ❌ Don't ignore new linting errors that appear after refactoring
-- ❌ Don't assume linting will pass - verify it every time
-
-### Step-by-Step Linting Workflow (During Refactoring Execution)
-
-1. **Capture Error Details**
-   - Use `read_lints` tool on affected files
-   - Review specific errors and understand root causes
-   - Fix all errors before proceeding to next step
-
-2. **Fix Any Errors**
-   - If errors found: analyze and fix immediately
-   - Re-run both linting commands to verify fixes
-   - Do NOT move to next step until fully resolved
-
-### Analysis Quality
-
-- ✅ Be thorough in the analysis phase
-- ✅ Identify ALL refactoring opportunities before planning
-- ✅ Consider dependency chains
-- ✅ Think about circular dependencies
-- ❌ Don't skip hard-to-refactor sections (note them as special cases)
-- ❌ Don't assume without verifying imports and usage
-
-### Plan Quality
-
-- ✅ Make the plan specific and actionable
-- ✅ Include all necessary file paths and line numbers
-- ✅ Document dependencies clearly
-- ✅ Explain WHY each extraction improves the code
-- ❌ Don't create an overly complex plan with too many steps
-- ❌ Don't suggest extractions that create circular dependencies
-
-## Common Refactoring Patterns
-
-| Pattern               | Source Location      | Target Location                                 | Example                                 |
-| --------------------- | -------------------- | ----------------------------------------------- | --------------------------------------- |
-| Custom React hook     | Large component file | `shared/libs/hooks/` or `widgets/{name}/hooks/` | Extract `useGridState` from Grid.tsx    |
-| Domain type/interface | Feature/widget file  | `entities/{domain}/`                            | Move `Event` type to entities/event/    |
-| Utility function      | Feature/widget file  | `shared/libs/`                                  | Extract `formatGridValue()`             |
-| Constants             | Scattered in file    | `shared/libs/{feature}/constants.ts`            | Create grid.constants.ts                |
-| Reusable component    | Feature-specific     | `widgets/` or `shared/ui/`                      | Move GridCell to widgets                |
-| Domain logic          | UI component         | `services/` or `processes/`                     | Move business rules to separate service |
-| Type definitions      | Component file       | `entities/`                                     | Move domain types to domain folder      |
-
-## Success Criteria for the Plan
-
-✅ Plan is specific with exact line numbers and file paths\
-✅ All refactoring steps are ordered by dependency\
-✅ No circular dependencies in the proposed structure\
-✅ Each step has clear import update instructions\
-✅ Plan explains WHY each extraction improves the code\
-✅ All new file locations follow DDD architecture\
-✅ Plan includes before/after metrics and estimates
-
-## Communication During Planning
-
-- Clearly state the target file being analyzed
-- Report the analysis findings at the end of Phase 1
-- Provide the markdown file path where the plan was saved
-- Ask for user approval before proceeding
-- **DO NOT execute any refactoring without explicit user approval**
+- All architecture details (FSD layers, DDD patterns, Clean Architecture mapping, dependency rules, public API rules, file size limits, testing structure, error handling) are defined in `@nextjs_structure.mdc` (located at `.cursor/rules/nextjs_structure.mdc`).
+- Do not restate architecture in this prompt. Always reference and follow `@nextjs_structure.mdc`.
 
 ---
 
-**Ready to begin? Analyze the provided file and generate a comprehensive refactoring plan as a markdown document. Wait for user approval before executing.**
+## Refactoring Workflow
+
+### Phase 0: Understand User Objectives (PLANNING ONLY)
+
+**Before starting analysis, clarify the refactoring goal:**
+
+- What is the primary objective? (e.g., code splitting, behavioral change, performance optimization, testing, DI improvement, tech debt reduction, etc.)
+- Are there specific pain points or code smells to address?
+- Should behavior be preserved or intentionally changed? (and what changes if applicable)
+- Are there specific metrics or success criteria?
+- Are there constraints (e.g., specific architecture patterns)?
+
+This context shapes the entire refactoring plan and determines what "success" looks like.
+
+### Phase 1: Analysis (PLANNING ONLY)
+
+1. **Read target file**
+
+   - Identify components, hooks, business logic, types, utilities
+   - Map dependencies and imports
+   - Note code smells: large files, mixed concerns, SRP violations, performance bottlenecks, testing difficulties, etc.
+   - **Preserve all logic (unless change is explicit)**: Document what each section does to ensure identical behavior after refactoring (unless user explicitly requested behavioral changes)
+
+2. **Identify refactoring opportunities aligned with user goals**
+
+   - Map code to layers/patterns defined in `@nextjs_structure.mdc`
+   - Plan extractions to entities/features/widgets/pages/shared as appropriate
+   - Plan DTOs, repositories, adapters, mappers, factories, and value objects as needed
+   - **Tailor to objective**: If goal is code splitting → prioritize extraction and modularization; if goal is performance → prioritize caching, memoization, optimization; if goal is testing → prioritize testability and DI; if goal is behavioral change → prioritize implementation of new requirements
+   - **Move vs adapt**: Determine if code can be moved as-is or needs architectural wrapping/adaptation (e.g., wrap existing function in repository interface, create adapter for external API call)
+   - **Preserve logic (unless specified)**: Even when adapting structure, keep all business logic, calculations, conditionals, and error handling exactly as-is (unless user explicitly requested changes)
+
+3. **Check import boundaries**
+   - Enforce inward dependency flow per `@nextjs_structure.mdc`
+   - No cross-feature imports or upward dependencies
+   - Use public API `index.ts` exports only (no deep imports)
+   - **Functionality unchanged**: Changing import paths does not change what the code does
+
+### Phase 2: Generate Refactoring Plan
+
+**Output**: Create markdown file at `/docs/[filename]-refactor.md`
+
+**Structure**:
+
+```markdown
+# Refactoring Plan: [Filename]
+
+## User Objectives
+
+- **Primary Goal**: [e.g., code splitting, performance optimization, behavioral enhancement, testing improvement, DI enhancement, tech debt reduction]
+- **Specific Requirements**: [list any specific changes, constraints, or success criteria]
+- **Behavioral Changes**: [if any, describe what should change; if none, state "Preserve all existing behavior"]
+
+## Current State
+
+- File: `[path]`
+- Size: [X] lines
+- Issues: [list code smells relevant to the goal]
+- Current behavior: [summarize how it works now]
+
+## Proposed Changes
+
+**Refactoring Approach:**
+
+- **Goal-aligned strategy**: [Describe how the plan addresses the user's primary objective]
+- **Scope**: [What will change, what won't]
+- **Behavioral impact**: [How existing behavior is preserved or intentionally changed]
+
+**Refactoring Constraints:**
+
+- **Move as-is when possible**: Extract exact code blocks verbatim when they fit architecture structure
+- **Architectural adaptations allowed**: When architecture requires structural changes, wrap/adapt code while preserving all business logic:
+  - Create repository interfaces and implement them with existing logic
+  - Wrap functions in adapters to match architectural patterns
+  - Change call signatures to match interfaces (but keep implementation identical)
+  - Split code across layers as required by `@nextjs_structure.mdc`
+- **Logic preservation or intentional changes**: [If goal requires behavior changes, implement them; otherwise preserve all conditionals, calculations, data transformations, error handling, and business rules exactly]
+- **Update imports**: Change import paths to use public APIs and maintain correct dependency flow
+
+| Step | Description                  | Source Lines | Target Location                     | Dependencies         | Change Type                    |
+| ---- | ---------------------------- | ------------ | ----------------------------------- | -------------------- | ------------------------------ |
+| 1    | Extract domain types         | 10-50        | `entities/{entity}/types/`          | None                 | Move as-is                     |
+| 2    | Extract value objects        | 51-100       | `entities/{entity}/value-objects/`  | types                | Move as-is                     |
+| 3    | Extract domain entity        | 101-200      | `entities/{entity}/core/`           | types, value-objects | Move as-is or adapt to pattern |
+| 4    | Extract factory              | 201-240      | `entities/{entity}/core/`           | domain               | Move as-is or wrap in factory  |
+| 5    | Extract repository interface | 241-280      | `entities/{entity}/core/`           | domain               | Create interface (new)         |
+| 6    | Extract repository impl      | 281-320      | `entities/{entity}/infrastructure/` | repository interface | Adapt to interface, keep logic |
+| 7    | Extract service              | 321-400      | `features/{feature}/services/`      | repositories         | Move as-is or adapt signature  |
+| 8    | Extract hooks                | 401-480      | `features/{feature}/hooks/`         | services             | Move as-is                     |
+| 9    | Extract UI components        | 481-600      | `features/{feature}/ui/`            | hooks                | Move as-is                     |
+| 10   | Update public APIs           | -            | Various `index.ts` files            | All above            | Export only                    |
+
+## Expected Outcomes
+
+- **Goal metrics**: [Specific metrics related to the user's objective, e.g., "Files created: X", "Performance improvement: Y%", "Test coverage increase: Z%", "Complexity reduction", etc.]
+- **Code organization**: [Files created/modified, original file size impact if applicable]
+- **Architectural compliance**: [How it adheres to `@nextjs_structure.mdc`]
+- **Behavioral validation**: [How to verify the objective was achieved]
+
+## Verification Steps
+
+- [ ] TypeScript compiles
+- [ ] All tests pass
+- [ ] Objective achieved: [specific verification related to user goal]
+- [ ] Import boundaries respected (see `@nextjs_structure.mdc`)
+- [ ] No circular dependencies
+- [ ] Behavioral changes (if any) match user requirements
+```
+
+### Phase 3: Execution (ONLY AFTER USER APPROVAL)
+
+#### Wait for User Approval
+
+Do not proceed until user explicitly says "execute the plan"
+
+1. **Create todo list**
+
+   - One todo per plan step
+   - Set all to `pending`
+
+2. **Execute each step**
+
+   - Create target file
+   - **Move or adapt as needed**:
+     - If code fits architecture: Move verbatim — copy code blocks exactly as-is
+     - If architecture requires adaptation: Wrap/adapt structure (interfaces, adapters, signatures) while preserving all business logic inside
+   - **Preserve all logic**: Never modify conditionals, calculations, data transformations, error handling, or business rules — only structural/wrapper changes
+   - **Update all usages immediately**: Update all imports and references to point to the new locations. Do NOT leave old code in place, do NOT create legacy wrappers, do NOT deprecate anything
+   - Update imports to use public APIs (change import paths, maintain dependency flow)
+   - **Verify behavior preserved**: Ensure refactored code performs identically to original — same inputs produce same outputs
+   - Verify immediately: `bun tsc --noEmit`, `bunx biome check .`
+   - Mark todo complete
+
+3. **Final validation**
+   - Run all linters and type checks
+   - Run tests
+   - Verify import boundaries and no circular dependencies
+
+---
+
+## Success Criteria
+
+✅ **User objectives clearly stated**: Goal, requirements, and success metrics defined upfront
+✅ Specific line numbers and file paths
+✅ Ordered by dependencies (no circular refs)
+✅ Import boundaries respected per `@nextjs_structure.mdc`
+✅ Explains WHY each extraction/change improves alignment with user objectives
+✅ Includes relevant metrics (before/after, goal-specific measurements)
+✅ Plans for comprehensive testing
+✅ **Goal-aligned refactoring**: Plan directly addresses the user's stated objective (code splitting, performance, behavioral change, testing, etc.)
+✅ **Behavior handling explicitly stated**: Either "Preserve all behavior" or lists specific intentional changes and why
+✅ **Move as-is or adapt structure**: Code moved verbatim when possible; when architecture requires it, wrap/adapt structure (interfaces, adapters) while keeping all business logic identical (unless change is explicit)
+✅ **Logic modifications only when specified**: Preserves all conditionals, calculations, transformations, error handling — only modifies what the user explicitly requested
+✅ **Architectural compliance**: Code properly placed in correct layers per `@nextjs_structure.mdc` with proper dependency flow and public APIs
+✅ **No deprecation or legacy code**: All code is refactored directly — no deprecated code, no legacy wrappers, no backward compatibility layers, all usages updated immediately
+
+---
+
+Ready to begin? Provide:
+
+1. Target file path to analyze
+2. Your refactoring objective (what do you want to achieve?)

@@ -3,7 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": false,
@@ -33,7 +33,8 @@
     "src",
     "*.config.*",
     "scripts",
-    "PLAN.md"
+    "PLAN.md",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules", "dist", ".next", "out"]
 }

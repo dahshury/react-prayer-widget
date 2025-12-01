@@ -371,7 +371,7 @@ function HorizontalCardVariant({
 				"flex items-center justify-between rounded-lg border border-muted/30 bg-gradient-to-r",
 				tokens.paddings,
 				resolvedGradient,
-				isCurrent && "ring-2 ring-amber-400/50",
+				!!isCurrent && "ring-2 ring-amber-400/50",
 				className,
 				classes?.container
 			)}
@@ -432,7 +432,7 @@ function VerticalCardVariant({
 				"flex flex-col items-center rounded-lg border border-muted/30 bg-gradient-to-b",
 				tokens.paddings,
 				resolvedGradient,
-				isCurrent && "ring-2 ring-amber-400/50",
+				!!isCurrent && "ring-2 ring-amber-400/50",
 				className,
 				classes?.container
 			)}

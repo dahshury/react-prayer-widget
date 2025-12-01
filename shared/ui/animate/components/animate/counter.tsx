@@ -1,5 +1,5 @@
 import { MinusIcon, PlusIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 import {
 	CounterMinusButton as CounterMinusButtonPrimitive,
 	CounterNumber as CounterNumberPrimitive,

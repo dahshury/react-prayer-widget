@@ -13,7 +13,7 @@ import {
 	DayPicker,
 	getDefaultClassNames,
 } from "react-day-picker";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 import { Button, buttonVariants } from "@/shared/ui/button";
 
 function CalendarRoot({
@@ -205,6 +205,13 @@ function CalendarDayButton({
 		}
 	}, [modifiers.focused]);
 
+	const isSelectedSingle = Boolean(
+		modifiers.selected &&
+			!modifiers.range_start &&
+			!modifiers.range_end &&
+			!modifiers.range_middle
+	);
+
 	return (
 		<Button
 			className={cn(
@@ -216,12 +223,7 @@ function CalendarDayButton({
 			data-range-end={modifiers.range_end}
 			data-range-middle={modifiers.range_middle}
 			data-range-start={modifiers.range_start}
-			data-selected-single={
-				modifiers.selected &&
-				!modifiers.range_start &&
-				!modifiers.range_end &&
-				!modifiers.range_middle
-			}
+			{...(isSelectedSingle ? { "data-selected-single": "true" } : {})}
 			ref={ref}
 			size="icon"
 			variant="ghost"

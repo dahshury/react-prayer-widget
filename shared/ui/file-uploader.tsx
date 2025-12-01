@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 import { useTranslation } from "@/shared/libs/hooks/use-translation";
+import { cn } from "@/shared/libs/utils/cn";
 
 type Toast = { message: string; type: "success" | "error" } | null;
 
@@ -156,6 +156,8 @@ export default function CompactFileUploader({
 		onRemove?.();
 	}, [onRemove]);
 
+	const minHeight = isDragging ? DRAG_ACTIVE_HEIGHT_PX : MIN_DRAG_HEIGHT_PX;
+
 	return (
 		<div
 			className={cn("flex w-full min-w-0 max-w-full flex-col gap-2", className)}
@@ -176,14 +178,14 @@ export default function CompactFileUploader({
 					"w-full min-w-0 max-w-full rounded-md border border-dashed transition-colors",
 					"cursor-pointer bg-muted/30 hover:border-primary/50",
 					isDragging ? "border-primary bg-primary/5" : "border-border",
-					disabled && "cursor-not-allowed opacity-50"
+					!!disabled && "cursor-not-allowed opacity-50"
 				)}
 				disabled={disabled}
 				onDragLeave={handleDragLeave}
 				onDragOver={handleDragOver}
 				onDrop={handleDrop}
 				style={{
-					minHeight: isDragging ? DRAG_ACTIVE_HEIGHT_PX : MIN_DRAG_HEIGHT_PX,
+					minHeight,
 				}}
 				type="button"
 			>

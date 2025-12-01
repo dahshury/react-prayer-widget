@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { LocationService } from "@/entities/location/api";
 import type { ExtendedPrayerSettings } from "@/entities/prayer";
-import { LocationService } from "@/services/location";
 
 /**
  * Hook that monitors geolocation permission changes.

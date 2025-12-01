@@ -1,9 +1,9 @@
 "use client";
 
-import countryRegionDataJson from "country-region-data/dist/data-umd";
+import { allCountries as countryRegionDataJson } from "country-region-data";
 import { CheckIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 import {
 	Command,
 	CommandEmpty,

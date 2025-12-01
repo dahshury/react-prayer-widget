@@ -5,16 +5,14 @@ export {
 	useLoadPrayerTimes,
 	usePrayerProgress,
 	usePrayerTimes,
-} from "./prayer/hooks";
+} from "./prayer";
 export {
 	ColorPickerGroup,
 	OffsetControl,
 	SettingsDialog,
-	WidgetSettingsContext,
-} from "./settings/components";
-export {
 	useAzanPlayer,
 	useGeolocationPermission,
 	useLocationDetection,
 	useSettingsPersistence,
-} from "./settings/hooks";
+	WidgetSettingsContext,
+} from "./settings";

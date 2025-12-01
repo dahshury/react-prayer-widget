@@ -1,0 +1,53 @@
+---
+globs: "frotnend/**/*"
+alwaysApply: false
+---
+
+This guide outlines Next.js-specific conventions for this project.
+
+    Next.js Best Practices
+    Core Concepts
+    - Utilize App Router for routing
+    - Implement proper metadata management
+    - Use proper caching strategies
+    - Implement proper error boundaries
+
+    Components and Features
+    - Use Next.js built-in components:
+      - Image component for optimized images (use appropriately with meaningful alt text)
+      - Link component for client-side navigation
+      - Script component for external scripts
+      - Metadata API for metadata (App Router)
+    - Implement proper loading states
+    - Use proper data fetching methods
+    - Use Vercel AI SDK for AI features with streaming and RSC patterns
+    - Provide meaningful `alt` text for images (descriptive, not generic)
+    - Ensure valid and descriptive anchor links
+
+    Server Components
+    - Default to Server Components
+    - Use URL query parameters for data fetching and server state management
+    - Use 'use client' directive only when necessary:
+      - Event listeners
+      - Browser APIs
+      - State management
+      - Client-side-only libraries
+
+    Async Request APIs (Next.js 15)
+    - Always use async versions of runtime APIs
+
+    // Always use async versions of runtime APIs
+    const cookieStore = await cookies();
+    const headersList = await headers();
+    const { isEnabled } = await draftMode();
+
+    // Handle async params in layouts/pages
+    const params = await props.params;
+    const searchParams = await props.searchParams;
+
+    Internationalization (i18n)
+    - Use next-i18next for translations
+    - Implement proper locale detection
+    - Use proper number and date formatting
+    - Implement proper RTL support
+    - Use proper currency formatting

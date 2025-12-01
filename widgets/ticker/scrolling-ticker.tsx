@@ -133,7 +133,7 @@ export function ScrollingTicker({
 
 				{/* Content */}
 				<div className="space-y-2">
-					{settings.showArabic && currentContent.arabic && (
+					{!!settings.showArabic && !!currentContent.arabic && (
 						<div className="text-right font-medium text-foreground text-lg leading-relaxed">
 							{currentContent.arabic}
 						</div>

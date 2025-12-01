@@ -27,7 +27,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 
 const liquidbuttonVariants = cva(
 	"inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-[color,box-shadow] transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -120,6 +120,9 @@ const LiquidButton = ({
 }: LiquidButtonProps & { ref?: RefObject<HTMLButtonElement | null> }) => {
 	const Comp = asChild ? Slot : "button";
 	const filterId = useId();
+	const spreadProps = asChild
+		? (props as React.ComponentProps<typeof Slot>)
+		: (props as ButtonHTMLAttributes<HTMLButtonElement>);
 
 	return (
 		<Comp
@@ -129,7 +132,7 @@ const LiquidButton = ({
 			)}
 			data-slot="button"
 			ref={ref}
-			{...props}
+			{...spreadProps}
 		>
 			<div className="absolute top-0 left-0 z-0 h-full w-full rounded-full shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)] transition-all dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
 			<div
@@ -251,11 +254,11 @@ function CardHeader({
 				<h3 className="font-semibold text-foreground leading-none tracking-tight">
 					{title}
 				</h3>
-				{subtitle && (
+				{!!subtitle && (
 					<p className="text-muted-foreground/80 text-sm">{subtitle}</p>
 				)}
 			</div>
-			{icon && <div className="text-muted-foreground/70">{icon}</div>}
+			{!!icon && <div className="text-muted-foreground/70">{icon}</div>}
 		</div>
 	);
 }
@@ -278,6 +281,9 @@ const LiquidGlassCard = ({
 }: LiquidGlassCardProps & { ref?: RefObject<HTMLDivElement | null> }) => {
 	const Comp = asChild ? Slot : "div";
 	const filterId = useId();
+	const spreadProps = asChild
+		? (props as React.ComponentProps<typeof Slot>)
+		: (props as HTMLAttributes<HTMLDivElement>);
 
 	return (
 		<Comp
@@ -286,13 +292,13 @@ const LiquidGlassCard = ({
 				cardVariants({ variant, size, hover, className })
 			)}
 			ref={ref}
-			{...props}
+			{...spreadProps}
 		>
 			{/* Glass effect overlay */}
 			<div className="pointer-events-none absolute inset-0 z-0 h-full w-full rounded-lg shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)] transition-all dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
 
 			{/* Glass filter effect */}
-			{glassEffect && (
+			{!!glassEffect && (
 				<div
 					className="-z-10 absolute inset-0 h-full w-full overflow-hidden rounded-lg"
 					style={{ backdropFilter: `url("#${filterId}")` }}
@@ -305,7 +311,7 @@ const LiquidGlassCard = ({
 			{/* Shine effect on hover */}
 			<div className="pointer-events-none absolute inset-0 z-20 rounded-lg bg-gradient-to-r from-transparent via-black/5 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:via-white/5" />
 
-			{glassEffect && <GlassFilter />}
+			{!!glassEffect && <GlassFilter />}
 		</Comp>
 	);
 };

@@ -1,12 +1,16 @@
 import countryRegionDataJson from "country-region-data/dist/data-umd";
-import { LocationService } from "@/services/location";
+import { LocationService } from "@/entities/location/api";
 import {
 	getCountryCodeFromTimezone,
 	getCountryPrimaryTimezone,
 	guessTimezoneFromCountryCode,
 } from "@/shared/libs/timezone/timezones";
 import type { AllSettings } from "@/types/settings";
-import type { CRCountry, CRRegion, NavigatorWithPermissions } from "../types";
+import type {
+	CRCountry,
+	CRRegion,
+	NavigatorWithPermissions,
+} from "../model/types";
 
 type LocationDetectionResult = {
 	autoDetectTimezone: boolean;

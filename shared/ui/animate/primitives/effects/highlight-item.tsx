@@ -10,7 +10,7 @@ import React, {
 	useRef,
 } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 import { useHighlight } from "./highlight.context";
 import type {
 	Bounds,

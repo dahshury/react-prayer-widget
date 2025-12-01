@@ -13,7 +13,7 @@ import React, {
 	useState,
 } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 import { HighlightContext } from "./highlight.context";
 import type { Bounds, HighlightProps } from "./highlight.types";
 import { HighlightItem } from "./highlight-item";
@@ -152,7 +152,7 @@ function Highlight<T extends ElementType = "div">({
 						style={{ position: "relative", zIndex: 1 }}
 					>
 						<AnimatePresence initial={false} mode="wait">
-							{boundsState && (
+							{!!boundsState && (
 								<motion.div
 									animate={{
 										top: boundsState.top,

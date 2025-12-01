@@ -1,4 +1,4 @@
-declare module "country-region-data/dist/data-umd" {
+declare module "country-region-data" {
 	export type Region = {
 		name: string;
 		shortCode: string;
@@ -10,6 +10,5 @@ declare module "country-region-data/dist/data-umd" {
 		regions: Region[];
 	};
 
-	const data: CountryRegion[];
-	export default data;
+	export const allCountries: CountryRegion[];
 }

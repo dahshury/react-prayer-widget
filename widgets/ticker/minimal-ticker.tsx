@@ -93,7 +93,7 @@ export function MinimalTicker({
 					? currentContent.arabic || currentContent.english
 					: currentContent.english}
 			</div>
-			{showSource && (
+			{!!showSource && (
 				<div
 					className={`mt-1 text-[10px] text-foreground/70 ${classes?.source ?? ""}`}
 				>

@@ -1,6 +1,6 @@
 import { UploadCloud } from "lucide-react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 import { UploadIllustration } from "./upload-illustration";
 
 // Animation constants
@@ -32,12 +32,15 @@ export function DropzoneContent({
 	onFileInputChange,
 	fileInputRef,
 }: DropzoneContentProps) {
+	const opacity = status === "dragging" ? DRAGGING_OPACITY : NORMAL_OPACITY;
+	const scale = status === "dragging" ? DRAGGING_SCALE : NORMAL_SCALE;
+
 	return (
 		<motion.div
 			animate={{
-				opacity: status === "dragging" ? DRAGGING_OPACITY : NORMAL_OPACITY,
+				opacity,
 				y: 0,
-				scale: status === "dragging" ? DRAGGING_SCALE : NORMAL_SCALE,
+				scale,
 			}}
 			className={cn(
 				"absolute inset-0 flex items-center justify-center p-2",

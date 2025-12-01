@@ -1,1 +1,1 @@
-export { TopBar, type TopBarProps } from "./top-bar";
+export { TopBar, type TopBarProps } from "./ui/top-bar";

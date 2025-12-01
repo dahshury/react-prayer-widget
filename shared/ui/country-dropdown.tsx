@@ -6,9 +6,9 @@ import { countries } from "country-data-list";
 import { CheckIcon, ChevronDown, Globe } from "lucide-react";
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { CircleFlag } from "react-circle-flags";
-// utils
-import { cn } from "@/lib/utils";
 import { getCountryUtcOffsetLabel } from "@/shared/libs/timezone/timezones";
+// utils
+import { cn } from "@/shared/libs/utils/cn";
 // shadcn
 import {
 	Command,
@@ -189,5 +189,4 @@ const CountryDropdownComponent = (
 
 CountryDropdownComponent.displayName = "CountryDropdownComponent";
 
-// biome-ignore lint/nursery/noReactForwardRef: forwardRef is necessary for component APIs
 export const CountryDropdown = forwardRef(CountryDropdownComponent);

@@ -6,18 +6,18 @@
     "useIgnoreFile": true
   },
   "files": {
-    "experimentalScannerIgnores": [
-      ".next/**",
-      "node_modules/**",
-      "tawkit-9.61/**",
-      "audio/**",
-      "images/**",
-      "themes/**",
-      "font/**",
-      "slides/**",
-      "data/**"
+    "includes": [
+      "**/*.{js,jsx,ts,tsx,cjs,mjs}",
+      "!!**/.next",
+      "!!**/node_modules",
+      "!!**/tawkit-9.61",
+      "!!**/audio",
+      "!!**/images",
+      "!!**/themes",
+      "!!**/font",
+      "!!**/slides",
+      "!!**/data"
     ],
-    "includes": ["**/*.{js,jsx,ts,tsx,cjs,mjs}"],
     "ignoreUnknown": false
   },
   "formatter": {
@@ -41,5 +41,5 @@
       "quoteStyle": "double"
     }
   },
-  "extends": ["ultracite"]
+  "extends": ["ultracite/core", "ultracite/next"]
 }

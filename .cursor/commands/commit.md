@@ -9,9 +9,9 @@ You are a Git commit autopilot. Run all repository fixers/checks until clean bef
 - The repo uses `simple-git-hooks` to run `node scripts/ci/pre-commit.mjs` on pre-commit. That hook runs in this order:
   0\) Security: `gitleaks protect --staged --redact`
   1. Markdown formatting (if any staged `*.md`): `uv run --with mdformat --with mdformat-gfm --with mdformat-frontmatter --with mdformat-ruff mdformat <markdownFiles>` then re-add only those markdown files
-  2. Frontend TypeScript (if any staged under `app/frontend`): `pnpm -C app/frontend tsc --noEmit`
-  3. Frontend lint: `pnpm -C app/frontend biome check --fix --unsafe --staged` then `pnpm -C app/frontend biome check --staged`
-  4. Frontend unused code info: `pnpm -C app/frontend knip --no-config-hints` (non-blocking)
+  2. Frontend TypeScript (if any staged under `app/frontend`): `bun -C app/frontend tsc --noEmit`
+  3. Frontend lint: `bun -C app/frontend biome check --fix --unsafe --staged` then `bun -C app/frontend biome check --staged`
+  4. Frontend unused code info: `bun -C app/frontend knip --no-config-hints` (non-blocking)
   - For Python files (outside `app/frontend`):
     1. `uv run ruff check --fix --unsafe-fixes <pythonFiles>`
     2. `uv run ruff format <pythonFiles>`
@@ -34,10 +34,10 @@ You are a Git commit autopilot. Run all repository fixers/checks until clean bef
      1. `uv run --with mdformat --with mdformat-gfm --with mdformat-frontmatter --with mdformat-ruff mdformat <markdownFiles>`
      2. Re-add ONLY the originally staged markdown files from `markdown-staged.zlst`
    - Frontend (if `frontend-staged.zlst` is non-empty):
-     1. TypeScript check: `pnpm -C app/frontend tsc --noEmit`
-     2. Biome fix: `pnpm -C app/frontend biome check --fix --unsafe --staged`
-     3. Biome check: `pnpm -C app/frontend biome check --staged`
-     4. Knip (informational): `pnpm -C app/frontend knip --no-config-hints` (do not block)
+     1. TypeScript check: `bun -C app/frontend tsc --noEmit`
+     2. Biome fix: `bun -C app/frontend biome check --fix --unsafe --staged`
+     3. Biome check: `bun -C app/frontend biome check --staged`
+     4. Knip (informational): `bun -C app/frontend knip --no-config-hints` (do not block)
      5. Re-add ONLY the originally staged frontend files from `frontend-staged.zlst` in safe batches
    - Python (if `python-staged.zlst` is non-empty):
      1. `uv run ruff check --fix --unsafe-fixes <pythonFiles>`
@@ -45,7 +45,7 @@ You are a Git commit autopilot. Run all repository fixers/checks until clean bef
      3. Re-add ONLY the originally staged Python files from `python-staged.zlst`
    - Verification gate (must pass to proceed):
      - Security → `gitleaks protect --staged --redact`
-     - Frontend present → `pnpm -C app/frontend biome check --staged` AND `pnpm -C app/frontend tsc --noEmit`
+     - Frontend present → `bun -C app/frontend biome check --staged` AND `bun -C app/frontend tsc --noEmit`
      - Python present → `uv run ruff check <pythonFiles>` AND `uv run ruff format --check <pythonFiles>`
    - If verification fails but any fixer made changes, loop another pass; if no changes across two consecutive passes, stop and surface errors.
 4. Generate a Conventional Commit message from the staged diff (see below) and perform the commit.
@@ -82,19 +82,19 @@ git diff --cached --name-only --diff-filter=ACMR -z \
 
 ```bash
 # format markdown using mdformat with plugins and re-add
-cat markdown-staged.zlst | xargs -0 -r uv run \
+cat markdown-staged.zlst | xargs -0 -r -I {} uv run \
   --with mdformat --with mdformat-gfm --with mdformat-frontmatter --with mdformat-ruff \
-  mdformat --
+  mdformat {}
 cat markdown-staged.zlst | xargs -0 -r git add --
 ```
 
 - Frontend auto-fix/check sequence (run only if `frontend-staged.zlst` is non-empty; follow hook order):
 
 ```bash
-pnpm -C app/frontend tsc --noEmit
-pnpm -C app/frontend biome check --fix --unsafe --staged
-pnpm -C app/frontend biome check --staged
-pnpm -C app/frontend knip --no-config-hints || true
+bun -C app/frontend tsc --noEmit
+bun -C app/frontend biome check --fix --unsafe --staged
+bun -C app/frontend biome check --staged
+bun -C app/frontend knip --no-config-hints || true
 # re-add ONLY the originally staged frontend files in safe batches
 cat frontend-staged.zlst | xargs -0 -r -n 50 git add --
 ```
@@ -116,8 +116,8 @@ gitleaks protect --staged --redact
 
 # FRONTEND (if staged)
 if [ -s frontend-staged.zlst ]; then
-  pnpm -C app/frontend biome check --staged
-  pnpm -C app/frontend tsc --noEmit
+  bun -C app/frontend biome check --staged
+  bun -C app/frontend tsc --noEmit
 fi
 # PYTHON (if staged)
 if [ -s python-staged.zlst ]; then
@@ -133,7 +133,7 @@ fi
 ### Notes
 
 - Do not ignore non-fixable failures (e.g., TypeScript type errors). After two unsuccessful auto-fix retries with no new changes, stop and print the exact errors for the developer.
-- Always run from repo root and prefer `pnpm -C app/frontend ...` to avoid changing directories.
+- Always run from repo root and prefer `bun -C app/frontend ...` to avoid changing directories.
 - Use the same set of commands and order as the pre-commit hook to ensure parity with CI.
 
 ### Full pre-fix/check then commit flow (bounded passes, auto message)
@@ -158,18 +158,18 @@ while :; do
 
   # MARKDOWN
   if [ -s markdown-staged.zlst ]; then
-    cat markdown-staged.zlst | xargs -0 -r uv run \
+    cat markdown-staged.zlst | xargs -0 -r -I {} uv run \
       --with mdformat --with mdformat-gfm --with mdformat-frontmatter --with mdformat-ruff \
-      mdformat -- && CHANGED=1 || true
+      mdformat {} && CHANGED=1 || true
     cat markdown-staged.zlst | xargs -0 -r git add --
   fi
 
   # FRONTEND
   if [ -s frontend-staged.zlst ]; then
-    pnpm -C app/frontend tsc --noEmit || true
-    pnpm -C app/frontend biome check --fix --unsafe --staged && CHANGED=1 || true
-    pnpm -C app/frontend biome check --staged || true
-    pnpm -C app/frontend knip --no-config-hints || true
+    bun -C app/frontend tsc --noEmit || true
+    bun -C app/frontend biome check --fix --unsafe --staged && CHANGED=1 || true
+    bun -C app/frontend biome check --staged || true
+    bun -C app/frontend knip --no-config-hints || true
     cat frontend-staged.zlst | xargs -0 -r -n 50 git add --
   fi
 
@@ -187,7 +187,7 @@ while :; do
   FRONTEND_OK=0
   PYTHON_OK=0
   if [ -s frontend-staged.zlst ]; then
-    pnpm -C app/frontend biome check --staged && pnpm -C app/frontend tsc --noEmit && FRONTEND_OK=1 || FRONTEND_OK=0
+    bun -C app/frontend biome check --staged && bun -C app/frontend tsc --noEmit && FRONTEND_OK=1 || FRONTEND_OK=0
   else
     FRONTEND_OK=1
   fi

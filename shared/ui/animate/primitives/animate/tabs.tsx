@@ -237,7 +237,6 @@ function TabsContents({
 			{...props}
 		>
 			<motion.div
-				// biome-ignore lint/style/noMagicNumbers: 100 is percentage offset for tab slide animation
 				animate={{ x: `${activeIndex * -100}%` }}
 				style={{ display: "flex", marginInline: "-20px" }}
 				transition={transition}

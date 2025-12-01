@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { type ReactNode, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/libs/utils/cn";
 
 export type ToolbarItem = {
 	id: string;
@@ -195,7 +195,7 @@ export function Toolbar({
 			>
 				{mode === "full" && showNotifications && (
 					<AnimatePresence>
-						{activeNotification && (
+						{!!activeNotification && (
 							<motion.div
 								animate="animate"
 								className="-top-8 -translate-x-1/2 absolute left-1/2 z-50 transform"
@@ -288,7 +288,7 @@ export function Toolbar({
 							</motion.button>
 						))}
 
-					{showToggle && (
+					{!!showToggle && (
 						<motion.button
 							className={cn(
 								"flex items-center gap-2 px-4 py-2",
@@ -317,7 +317,7 @@ export function Toolbar({
 								? (toggleOnIcon ?? <Edit2 className="h-3.5 w-3.5" />)
 								: (toggleOffIcon ?? <Lock className="h-3.5 w-3.5" />)}
 							<span className="font-medium text-sm">
-								{isToggled ? toggleOnLabel : toggleOffLabel}
+								{isToggled ? (toggleOnLabel ?? "") : (toggleOffLabel ?? "")}
 							</span>
 						</motion.button>
 					)}
