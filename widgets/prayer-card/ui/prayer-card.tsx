@@ -258,7 +258,7 @@ function NextCardVariant({
 	return (
 		<Card
 			className={cn(
-				"relative overflow-hidden border-amber-500/30 bg-gradient-to-r",
+				"relative gap-0 overflow-hidden border-amber-500/30 bg-gradient-to-r",
 				tokens.paddings,
 				resolvedGradient,
 				className,
@@ -296,8 +296,8 @@ function NextCardVariant({
 				/>
 			</div>
 
-			<div className="relative p-0.5 pr-12">
-				<div className="flex min-w-0 items-center gap-1.5">
+			<div className="relative flex min-h-[2rem] items-center justify-between gap-4">
+				<div className="flex min-w-0 flex-1 items-center gap-1.5">
 					{iconNode ? (
 						<div className={cn("shrink-0 scale-75", classes?.icon)}>
 							{iconNode}
@@ -305,7 +305,7 @@ function NextCardVariant({
 					) : null}
 					<span
 						className={cn(
-							"whitespace-nowrap font-medium leading-none",
+							"truncate font-medium leading-none",
 							tokens.nameText,
 							classes?.name
 						)}
@@ -314,14 +314,15 @@ function NextCardVariant({
 						{translatedName}
 					</span>
 				</div>
-				<div className="-translate-y-1/2 pointer-events-none absolute top-1/2 right-2 text-right">
+				<div
+					className={cn("shrink-0 text-right", classes?.time)}
+					style={{ color: "var(--prayer-time-color)" }}
+				>
 					<div
 						className={cn(
 							"whitespace-nowrap font-semibold leading-none",
-							tokens.timeText,
-							classes?.time
+							tokens.timeText
 						)}
-						style={{ color: "var(--prayer-time-color)" }}
 					>
 						{countdown ? (
 							<>

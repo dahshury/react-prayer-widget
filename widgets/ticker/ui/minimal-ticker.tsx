@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { PrayerTimes } from "@/entities/prayer";
 import { useTranslation } from "@/shared/lib/hooks";
 import {
@@ -41,9 +41,9 @@ export function MinimalTicker({
 	classes,
 }: MinimalTickerProps) {
 	const { language } = useTranslation();
-	const [currentContent, setCurrentContent] = useState<IslamicContent>(
-		contentPool?.[0] ?? DEFAULT_ISLAMIC_CONTENT[0]
-	);
+	const indexRef = useRef(0);
+	const poolRef = useRef<IslamicContent[]>([]);
+	const currentContentIdRef = useRef<string>("");
 
 	// Decide which pool (Sabah vs Masaa) based on current time (or prayer times if available)
 	const basePool = useMemo<IslamicContent[]>(() => {
@@ -67,18 +67,58 @@ export function MinimalTicker({
 		return [...AZKAR_GENERAL, ...timedPool, ...DEFAULT_ISLAMIC_CONTENT];
 	}, [prayerTimes, contentPool]);
 
+	const [currentContent, setCurrentContent] = useState<IslamicContent>(() => {
+		const pool = basePool.length > 0 ? basePool : DEFAULT_ISLAMIC_CONTENT;
+		poolRef.current = pool;
+		indexRef.current = 0;
+		const initialContent = pool[0];
+		currentContentIdRef.current = initialContent.id;
+		return initialContent;
+	});
+
+	// Update pool ref whenever basePool changes (not when content changes)
 	useEffect(() => {
-		let pool: IslamicContent[] = basePool;
-		let index = 0;
-		setCurrentContent(pool[index]);
+		const previousPool = poolRef.current;
+		poolRef.current = basePool;
+
+		// Only handle pool changes, not content changes
+		// Check if pool actually changed by comparing lengths or first item
+		const poolChanged =
+			previousPool.length !== basePool.length ||
+			previousPool.length === 0 ||
+			previousPool[0]?.id !== basePool[0]?.id;
+
+		if (poolChanged && previousPool.length > 0) {
+			// Pool changed - try to find current content in new pool
+			const currentId = currentContentIdRef.current;
+			const newIndex = basePool.findIndex((c) => c.id === currentId);
+			if (newIndex !== -1) {
+				indexRef.current = newIndex;
+			} else {
+				// If current content not found in new pool, reset to 0
+				indexRef.current = 0;
+				const newContent = basePool[0] ?? DEFAULT_ISLAMIC_CONTENT[0];
+				currentContentIdRef.current = newContent.id;
+				setCurrentContent(newContent);
+			}
+		}
+	}, [basePool]);
+
+	// Set up interval for cycling through content
+	useEffect(() => {
 		const interval = setInterval(() => {
-			pool = basePool;
-			index = (index + 1) % pool.length;
-			setCurrentContent(pool[index]);
+			const pool = poolRef.current;
+			if (pool.length === 0) {
+				return;
+			}
+			indexRef.current = (indexRef.current + 1) % pool.length;
+			const nextContent = pool[indexRef.current];
+			currentContentIdRef.current = nextContent.id;
+			setCurrentContent(nextContent);
 		}, intervalMs ?? DEFAULT_TICKER_INTERVAL_MS);
 
 		return () => clearInterval(interval);
-	}, [basePool, intervalMs]);
+	}, [intervalMs]);
 
 	return (
 		<div

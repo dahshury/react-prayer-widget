@@ -30,6 +30,8 @@ export type Translations = {
 	azan?: {
 		enable: string;
 		volume: string;
+		volumeLowWarning: string;
+		volumeZeroWarning: string;
 		type: string;
 		customOverride: string;
 		perPrayer: string;
@@ -69,7 +71,7 @@ export const translations: Record<Language, Translations> = {
 		settings: {
 			title: "Prayer Settings",
 			locationTimezone: "Location & Timezone",
-			displayOptions: "Display Options",
+			displayOptions: "Display",
 			horizontalPrayerList: "Vertical first",
 			verticalFirst: "Vertical first",
 			general: "General",
@@ -97,6 +99,8 @@ export const translations: Record<Language, Translations> = {
 		azan: {
 			enable: "Enable Azan",
 			volume: "Volume",
+			volumeLowWarning: "Volume might be too low to hear",
+			volumeZeroWarning: "Volume is muted. Azan will not play",
 			type: "Azan type",
 			customOverride: "Custom (overrides all)",
 			perPrayer: "Per‑prayer",
@@ -147,7 +151,7 @@ export const translations: Record<Language, Translations> = {
 		settings: {
 			title: "إعدادات الصلاة",
 			locationTimezone: "الموقع والمنطقة الزمنية",
-			displayOptions: "خيارات العرض",
+			displayOptions: "العرض",
 			horizontalPrayerList: "العرض العمودي أولًا",
 			verticalFirst: "العرض العمودي أولًا",
 			general: "عام",
@@ -174,6 +178,8 @@ export const translations: Record<Language, Translations> = {
 		azan: {
 			enable: "تفعيل الأذان",
 			volume: "مستوى الصوت",
+			volumeLowWarning: "مستوى الصوت قد يكون منخفضًا جدًا لسماعه",
+			volumeZeroWarning: "الصوت معطل. لن يتم تشغيل الأذان",
 			type: "نوع الأذان",
 			customOverride: "مخصص (يستبدل الكل)",
 			perPrayer: "لكل صلاة",

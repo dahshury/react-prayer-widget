@@ -13,7 +13,6 @@ export {
 	ColorPickerGroup,
 	DisplayTab,
 	GeneralTab,
-	LocationTab,
 	OffsetControl,
 	SettingsDialog,
 	WidgetSettingsContext,

@@ -6,6 +6,5 @@ export {
 	CalculationTab,
 	DisplayTab,
 	GeneralTab,
-	LocationTab,
 } from "./tabs";
 export { WidgetSettingsContext } from "./widget-settings-context";

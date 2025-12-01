@@ -1,5 +1,6 @@
 "use client";
 
+import { Bell, Calculator, Monitor, Settings } from "lucide-react";
 import { useState } from "react";
 import type { SettingsDialogProps } from "@/features/settings";
 import {
@@ -7,22 +8,15 @@ import {
 	CalculationTab,
 	DisplayTab,
 	GeneralTab,
-	LocationTab,
 } from "@/features/settings";
 import { useTranslation } from "@/shared/lib/hooks";
-import {
-	Tabs,
-	TabsContent,
-	TabsContents,
-	TabsList,
-	TabsTrigger,
-} from "@/shared/ui/animate/variants/radix/tabs";
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 } from "@/shared/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 
 export function SettingsDialog({
 	settings,
@@ -41,7 +35,6 @@ export function SettingsDialog({
 	};
 
 	const generalLabel = tt("settings.general", "General");
-	const locationLabel = tt("settings.locationTimezone", "Location");
 	const displayLabel = tt("settings.displayOptions", "Display");
 	const calculationLabel = tt("settings.calculation", "Calculation");
 	const azanLabel = tt("settings.azan", "Azan");
@@ -53,52 +46,52 @@ export function SettingsDialog({
 					<DialogTitle>{tt("settings.title", "Settings")}</DialogTitle>
 				</DialogHeader>
 				<Tabs className="w-full" defaultValue="General">
-					<div className="flex w-full justify-center">
-						<TabsList>
-							<TabsTrigger value="General">{generalLabel}</TabsTrigger>
-							<TabsTrigger value="Location">{locationLabel}</TabsTrigger>
-							<TabsTrigger value="Display">{displayLabel}</TabsTrigger>
-							<TabsTrigger value="Azan">{azanLabel}</TabsTrigger>
-							<TabsTrigger value="Calculation">{calculationLabel}</TabsTrigger>
-						</TabsList>
-					</div>
-					<TabsContents className="mt-3">
-						<TabsContent value="General">
-							<GeneralTab
-								onSettingsChange={onSettingsChange}
-								settings={settings}
-								t={t}
-							/>
-						</TabsContent>
-						<TabsContent value="Location">
-							<LocationTab
-								onSettingsChange={onSettingsChange}
-								settings={settings}
-								t={t}
-							/>
-						</TabsContent>
-						<TabsContent value="Display">
-							<DisplayTab
-								onSettingsChange={onSettingsChange}
-								settings={settings}
-								t={t}
-							/>
-						</TabsContent>
-						<TabsContent value="Azan">
-							<AzanTab
-								onSettingsChange={onSettingsChange}
-								settings={settings}
-								t={t}
-							/>
-						</TabsContent>
-						<TabsContent value="Calculation">
-							<CalculationTab
-								onSettingsChange={onSettingsChange}
-								settings={settings}
-								t={t}
-							/>
-						</TabsContent>
-					</TabsContents>
+					<TabsList className="grid w-full grid-cols-4">
+						<TabsTrigger value="General">
+							<Settings className="size-4" />
+							{generalLabel}
+						</TabsTrigger>
+						<TabsTrigger value="Display">
+							<Monitor className="size-4" />
+							{displayLabel}
+						</TabsTrigger>
+						<TabsTrigger value="Azan">
+							<Bell className="size-4" />
+							{azanLabel}
+						</TabsTrigger>
+						<TabsTrigger value="Calculation">
+							<Calculator className="size-4" />
+							{calculationLabel}
+						</TabsTrigger>
+					</TabsList>
+					<TabsContent value="General">
+						<GeneralTab
+							onSettingsChange={onSettingsChange}
+							settings={settings}
+							t={t}
+						/>
+					</TabsContent>
+					<TabsContent value="Display">
+						<DisplayTab
+							onSettingsChange={onSettingsChange}
+							settings={settings}
+							t={t}
+						/>
+					</TabsContent>
+					<TabsContent value="Azan">
+						<AzanTab
+							onSettingsChange={onSettingsChange}
+							settings={settings}
+							t={t}
+						/>
+					</TabsContent>
+					<TabsContent value="Calculation">
+						<CalculationTab
+							onSettingsChange={onSettingsChange}
+							settings={settings}
+							t={t}
+						/>
+					</TabsContent>
 				</Tabs>
 			</DialogContent>
 		</Dialog>

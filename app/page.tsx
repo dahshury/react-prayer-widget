@@ -1,1 +1,1 @@
-export { default } from "@/pages/prayer-times";
+export { PrayerTimesPage as default } from "@/pages/prayer-times";

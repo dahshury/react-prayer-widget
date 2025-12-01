@@ -12,6 +12,7 @@ import {
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import CompactFileUploader from "@/shared/ui/file-uploader";
+import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import {
 	Select,
@@ -20,7 +21,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/ui/select";
-import { Slider } from "@/shared/ui/slider";
 import { Switch } from "@/shared/ui/switch";
 import type { TabCommonProps } from "../../model/types";
 import { useAzanPlayer } from "../../model/use-azan-player";
@@ -33,7 +33,6 @@ const MAX_AUDIO_VOLUME = 1;
 const MIN_AUDIO_VOLUME = 0;
 const DEFAULT_FAJR_CHOICE = "fajr";
 const DEFAULT_CHOICE = "default";
-const SLIDER_WIDTH = 280;
 const TRIGGER_WIDTH = 220;
 const UPLOADER_WIDTH = 260;
 const UPLOADER_WIDTH_SM = 300;
@@ -258,28 +257,61 @@ export function AzanTab({ settings, onSettingsChange }: TabCommonProps) {
 					<div
 						className={`${
 							azanDisabled ? "pointer-events-none opacity-50" : ""
-						}flex items-center justify-between gap-3`}
+						} space-y-2`}
 					>
-						<Label className="text-sm">{t("azan.volume") || "Volume"}</Label>
-						<div className={`w-[${SLIDER_WIDTH}px]`}>
-							<Slider
-								max={VOLUME_SLIDER_MAX}
-								min={VOLUME_SLIDER_MIN}
-								onValueChange={(vals) => {
-									const v =
-										(vals?.[0] ?? VOLUME_SLIDER_MAX) / VOLUME_SCALE_FACTOR;
-									onSettingsChange({ azanVolume: v });
-									if (azanPlayer.audioRef.current) {
-										azanPlayer.audioRef.current.volume = Math.min(
-											MAX_AUDIO_VOLUME,
-											Math.max(MIN_AUDIO_VOLUME, v)
-										);
-									}
-								}}
-								value={[
-									Math.round((settings.azanVolume ?? 1) * VOLUME_SCALE_FACTOR),
-								]}
-							/>
+						{(() => {
+							const volumePercent = Math.round(
+								(settings.azanVolume ?? 1) * VOLUME_SCALE_FACTOR
+							);
+							const isZero = volumePercent === 0;
+							const isLow = volumePercent > 0 && volumePercent < 30;
+							return isZero || isLow ? (
+								<div
+									className={`text-xs ${
+										isZero ? "text-destructive" : "text-muted-foreground"
+									}`}
+								>
+									{isZero
+										? t("azan.volumeZeroWarning") ||
+											"Volume is muted. Azan will not play"
+										: t("azan.volumeLowWarning") ||
+											"Volume might be too low to hear"}
+								</div>
+							) : null;
+						})()}
+						<div className="flex items-center justify-between">
+							<Label className="text-sm" htmlFor="azan-volume-slider">
+								{t("azan.volume") || "Volume"}
+							</Label>
+							<span className="font-medium text-sm">
+								{Math.round((settings.azanVolume ?? 1) * VOLUME_SCALE_FACTOR)}%
+							</span>
+						</div>
+						<Input
+							className="h-5 cursor-pointer bg-background px-0"
+							disabled={azanDisabled}
+							id="azan-volume-slider"
+							max={VOLUME_SLIDER_MAX}
+							min={VOLUME_SLIDER_MIN}
+							onChange={(e) => {
+								const value = Number(e.target.value);
+								const v = value / VOLUME_SCALE_FACTOR;
+								onSettingsChange({ azanVolume: v });
+								if (azanPlayer.audioRef.current) {
+									azanPlayer.audioRef.current.volume = Math.min(
+										MAX_AUDIO_VOLUME,
+										Math.max(MIN_AUDIO_VOLUME, v)
+									);
+								}
+							}}
+							type="range"
+							value={Math.round(
+								(settings.azanVolume ?? 1) * VOLUME_SCALE_FACTOR
+							)}
+						/>
+						<div className="flex justify-between text-muted-foreground text-xs">
+							<span>0%</span>
+							<span>100%</span>
 						</div>
 					</div>
 				</div>

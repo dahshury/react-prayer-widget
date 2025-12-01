@@ -102,7 +102,7 @@ export function NextPrayerCard({
 				gradientClass={gradientClass}
 				isNext
 				name={nextPrayer.name}
-				nextSize={nextSize}
+				nextSize={nextSize ?? size ?? "md"}
 				progress={nextPrayer.progress}
 				showIcon={showIcon}
 				size={size}
