@@ -16,7 +16,7 @@
     "utils": "@/lib/utils",
     "ui": "@/shared/ui",
     "lib": "@/lib",
-    "hooks": "@/shared/libs/hooks"
+    "hooks": "@/shared/lib/hooks"
   },
   "registries": {
     "@kokonutui": "https://kokonutui.com/r/{name}.json",

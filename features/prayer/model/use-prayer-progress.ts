@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { PrayerTimes } from "@/entities/prayer";
-import { computePrayerProgress } from "@/shared/libs/prayer";
+import { computePrayerProgress } from "@/entities/prayer";
 
 const PRAYER_PROGRESS_UPDATE_INTERVAL_MS = 1000; // Update every 1 second
 

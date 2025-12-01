@@ -8,11 +8,11 @@ import type {
 	PrayerTimes,
 } from "@/entities/prayer";
 import { PrayerService } from "@/entities/prayer";
-import { getTimezoneCoordinates } from "@/shared/libs/prayer";
 import {
 	getLocationFromTimezoneLocalized,
+	getTimezoneCoordinates,
 	TIMEZONES,
-} from "@/shared/libs/timezone/timezones";
+} from "@/shared/lib/timezone";
 
 /**
  * Hook that handles prayer times loading with location detection.

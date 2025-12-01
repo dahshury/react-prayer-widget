@@ -1,22 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import type { SettingsDialogProps } from "@/features/settings/model/types";
+import type { SettingsDialogProps } from "@/features/settings";
 import {
 	AzanTab,
 	CalculationTab,
 	DisplayTab,
 	GeneralTab,
 	LocationTab,
-} from "@/features/settings/ui/tabs";
-import { useTranslation } from "@/shared/libs/hooks/use-translation";
+} from "@/features/settings";
+import { useTranslation } from "@/shared/lib/hooks";
 import {
 	Tabs,
 	TabsContent,
 	TabsContents,
 	TabsList,
 	TabsTrigger,
-} from "@/shared/ui/animate/components/radix/tabs";
+} from "@/shared/ui/animate/variants/radix/tabs";
 import {
 	Dialog,
 	DialogContent,

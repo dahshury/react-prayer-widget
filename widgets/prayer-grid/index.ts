@@ -1,1 +1,1 @@
-export { PrayerGrid, type PrayerGridProps } from "./prayer-grid";
+export { PrayerGrid, type PrayerGridProps } from "./ui/prayer-grid";

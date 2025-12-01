@@ -11,8 +11,8 @@ import {
 	usePrayerPageState,
 } from "@/features/prayer/ui";
 import { WidgetSettingsContext } from "@/features/settings/ui";
-import { TranslationProvider } from "@/shared/libs/hooks/use-translation";
-import { getResponsiveWidthClass, isPast } from "@/shared/libs/utils";
+import { TranslationProvider } from "@/shared/lib/hooks";
+import { getResponsiveWidthClass, isPast } from "@/shared/lib/utils";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
 
 /**

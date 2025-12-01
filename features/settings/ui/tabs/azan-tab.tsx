@@ -1,14 +1,14 @@
 "use client";
 
 import { Pause, Volume2 } from "lucide-react";
-import { useTranslation } from "@/shared/libs/hooks/use-translation";
+import { useTranslation } from "@/shared/lib/hooks";
 import {
 	getAzanSource,
 	getCustomAzanGlobalName,
 	getCustomAzanName,
 	type PrayerName,
 	removeCustomAzanFileGlobal,
-} from "@/shared/libs/prayer/azan";
+} from "@/shared/lib/prayer";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import CompactFileUploader from "@/shared/ui/file-uploader";
@@ -68,7 +68,7 @@ async function handleGlobalFileUpload(
 	azanPlayer: ReturnType<typeof useAzanPlayer>
 ) {
 	const { storeCustomAzanFileGlobal } = await import(
-		"@/shared/libs/prayer/azan"
+		"@/shared/lib/prayer/azan"
 	);
 	const res = await storeCustomAzanFileGlobal(file);
 	onSettingsChange({

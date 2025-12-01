@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import type { ExtendedPrayerSettings, PrayerTimes } from "@/entities/prayer";
-import { getAzanSource, type PrayerName } from "@/shared/libs/prayer/azan";
+import { getAzanSource, type PrayerName } from "@/shared/lib/prayer";
 
 type UseAzanArgs = {
 	prayerTimes: PrayerTimes | null;

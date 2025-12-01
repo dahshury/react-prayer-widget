@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { type ReactNode, useRef, useState } from "react";
-import { cn } from "@/shared/libs/utils/cn";
+import { cn } from "@/shared/lib/utils";
 
 export type ToolbarItem = {
 	id: string;

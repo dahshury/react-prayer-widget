@@ -2,12 +2,9 @@
 
 import type { ExtendedPrayerSettings, PrayerTimes } from "@/entities/prayer";
 import { DEFAULT_TICKER_INTERVAL_MS } from "@/features/prayer/config";
-import {
-	formatMinutesHHmm,
-	formatTimeDisplay,
-} from "@/shared/libs/time/format";
+import { formatMinutesHHmm, formatTimeDisplay } from "@/shared/lib/time";
 import { WidgetPrayerCard } from "@/widgets/prayer-card";
-import { MinimalTicker } from "@/widgets/ticker/minimal-ticker";
+import { MinimalTicker } from "@/widgets/ticker";
 
 type NextPrayerSectionProps = {
 	/** Current prayer information */
@@ -83,7 +80,7 @@ export function NextPrayerSection({
 			{/* Inline ticker directly below the central card when other prayers are hidden */}
 			{!!settings.showTicker && !otherPrayersVisible && (
 				<MinimalTicker
-					className={isSmallScreen ? "mx-auto max-w-[360px]" : null}
+					className={isSmallScreen ? "mx-auto max-w-[360px]" : ""}
 					intervalMs={settings.tickerIntervalMs ?? DEFAULT_TICKER_INTERVAL_MS}
 					prayerTimes={prayerTimes}
 				/>

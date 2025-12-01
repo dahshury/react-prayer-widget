@@ -11,8 +11,6 @@ export {
 	OffsetControl,
 	SettingsDialog,
 	useAzanPlayer,
-	useGeolocationPermission,
 	useLocationDetection,
-	useSettingsPersistence,
 	WidgetSettingsContext,
 } from "./settings";

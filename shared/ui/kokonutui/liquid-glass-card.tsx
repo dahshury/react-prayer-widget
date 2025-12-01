@@ -27,7 +27,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { cn } from "@/shared/libs/utils/cn";
+import { cn } from "@/shared/lib/utils";
 
 const liquidbuttonVariants = cva(
 	"inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-[color,box-shadow] transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -117,32 +117,38 @@ const LiquidButton = ({
 	children,
 	ref,
 	...props
-}: LiquidButtonProps & { ref?: RefObject<HTMLButtonElement | null> }) => {
-	const Comp = asChild ? Slot : "button";
+}: LiquidButtonProps & { ref?: RefObject<HTMLButtonElement> }) => {
 	const filterId = useId();
-	const spreadProps = asChild
-		? (props as React.ComponentProps<typeof Slot>)
-		: (props as ButtonHTMLAttributes<HTMLButtonElement>);
+	const buttonClassName = cn(
+		"relative",
+		liquidbuttonVariants({ variant, size, className })
+	);
 
-	return (
-		<Comp
-			className={cn(
-				"relative",
-				liquidbuttonVariants({ variant, size, className })
-			)}
-			data-slot="button"
-			ref={ref}
-			{...spreadProps}
-		>
+	const glassOverlay = (
+		<>
 			<div className="absolute top-0 left-0 z-0 h-full w-full rounded-full shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)] transition-all dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
 			<div
 				className="-z-10 absolute top-0 left-0 isolate h-full w-full overflow-hidden rounded-md"
 				style={{ backdropFilter: `url("#${filterId}")` }}
 			/>
-
 			<div className="pointer-events-none z-10">{children}</div>
 			<ButtonGlassFilter />
-		</Comp>
+		</>
+	);
+
+	if (asChild) {
+		const slotProps = { ...props, ref } as React.ComponentProps<typeof Slot>;
+		return (
+			<Slot className={buttonClassName} data-slot="button" {...slotProps}>
+				{glassOverlay}
+			</Slot>
+		);
+	}
+
+	return (
+		<button className={buttonClassName} data-slot="button" ref={ref} {...props}>
+			{glassOverlay}
+		</button>
 	);
 };
 
@@ -278,22 +284,15 @@ const LiquidGlassCard = ({
 	children,
 	ref,
 	...props
-}: LiquidGlassCardProps & { ref?: RefObject<HTMLDivElement | null> }) => {
-	const Comp = asChild ? Slot : "div";
+}: LiquidGlassCardProps & { ref?: RefObject<HTMLDivElement> }) => {
 	const filterId = useId();
-	const spreadProps = asChild
-		? (props as React.ComponentProps<typeof Slot>)
-		: (props as HTMLAttributes<HTMLDivElement>);
+	const cardClassName = cn(
+		"relative",
+		cardVariants({ variant, size, hover, className })
+	);
 
-	return (
-		<Comp
-			className={cn(
-				"relative",
-				cardVariants({ variant, size, hover, className })
-			)}
-			ref={ref}
-			{...spreadProps}
-		>
+	const cardContent = (
+		<>
 			{/* Glass effect overlay */}
 			<div className="pointer-events-none absolute inset-0 z-0 h-full w-full rounded-lg shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)] transition-all dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
 
@@ -312,7 +311,22 @@ const LiquidGlassCard = ({
 			<div className="pointer-events-none absolute inset-0 z-20 rounded-lg bg-gradient-to-r from-transparent via-black/5 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:via-white/5" />
 
 			{!!glassEffect && <GlassFilter />}
-		</Comp>
+		</>
+	);
+
+	if (asChild) {
+		const slotProps = { ...props, ref } as React.ComponentProps<typeof Slot>;
+		return (
+			<Slot className={cardClassName} {...slotProps}>
+				{cardContent}
+			</Slot>
+		);
+	}
+
+	return (
+		<div className={cardClassName} ref={ref} {...props}>
+			{cardContent}
+		</div>
 	);
 };
 

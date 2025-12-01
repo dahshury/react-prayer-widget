@@ -1,15 +1,4 @@
-export type { FileUploadProps } from "@/shared/libs/file-upload";
-export {
-	DropzoneContent,
-	ErrorMessage,
-	UploadIllustration,
-	UploadingAnimation,
-	UploadingContent,
-} from "./components";
-export { default as FileUpload } from "./file-upload";
-export {
-	useFileUploadHandlers,
-	useFileUploadState,
-	useFileValidation,
-	useUploadSimulation,
-} from "./hooks";
+// Widget composition: FileUpload widget composes shared UI components
+
+export type { FileUploadProps } from "@/shared/lib/file-upload";
+export { FileUpload } from "./ui";

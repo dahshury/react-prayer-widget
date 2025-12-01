@@ -11,7 +11,7 @@ import {
 	type RefObject,
 	useMemo,
 } from "react";
-import { cn } from "@/shared/libs/utils/cn";
+import { cn } from "@/shared/lib/utils";
 
 type AnyProps = Record<string, unknown>;
 

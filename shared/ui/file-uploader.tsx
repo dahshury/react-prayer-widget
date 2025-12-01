@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { useTranslation } from "@/shared/libs/hooks/use-translation";
-import { cn } from "@/shared/libs/utils/cn";
+import { useTranslation } from "@/shared/lib/hooks";
+import { cn } from "@/shared/lib/utils";
 
 type Toast = { message: string; type: "success" | "error" } | null;
 
@@ -151,6 +151,25 @@ export default function CompactFileUploader({
 
 	const handleDragLeave = useCallback(() => setIsDragging(false), []);
 
+	const handleClick = useCallback(() => {
+		if (!disabled) {
+			openPicker();
+		}
+	}, [disabled, openPicker]);
+
+	const handleKeyDown = useCallback(
+		(e: React.KeyboardEvent<HTMLDivElement>) => {
+			if (disabled) {
+				return;
+			}
+			if (e.key === "Enter" || e.key === " ") {
+				e.preventDefault();
+				openPicker();
+			}
+		},
+		[disabled, openPicker]
+	);
+
 	const clearFile = useCallback(() => {
 		setFile(null);
 		onRemove?.();
@@ -172,7 +191,8 @@ export default function CompactFileUploader({
 				type="file"
 			/>
 
-			<button
+			{/* biome-ignore lint/a11y/useSemanticElements: Cannot use button here due to nested button constraint */}
+			<div
 				aria-label="File upload region - drag and drop files here or click to browse"
 				className={cn(
 					"w-full min-w-0 max-w-full rounded-md border border-dashed transition-colors",
@@ -180,14 +200,16 @@ export default function CompactFileUploader({
 					isDragging ? "border-primary bg-primary/5" : "border-border",
 					!!disabled && "cursor-not-allowed opacity-50"
 				)}
-				disabled={disabled}
+				onClick={handleClick}
 				onDragLeave={handleDragLeave}
 				onDragOver={handleDragOver}
 				onDrop={handleDrop}
+				onKeyDown={handleKeyDown}
+				role="button"
 				style={{
 					minHeight,
 				}}
-				type="button"
+				tabIndex={disabled ? -1 : 0}
 			>
 				<div className="flex w-full min-w-0 max-w-full items-center justify-between gap-2 px-2 py-1.5">
 					<div className="flex min-w-0 max-w-full items-center gap-1">
@@ -196,12 +218,19 @@ export default function CompactFileUploader({
 								? t("uploader.dropHere") || "Drop file here"
 								: t("uploader.dragOr") || "Drag a file here or"}
 						</span>
-						<button disabled={disabled} onClick={openPicker} type="button">
+						<button
+							disabled={disabled}
+							onClick={(e) => {
+								e.stopPropagation();
+								openPicker();
+							}}
+							type="button"
+						>
 							{t("uploader.browse") || "browse"}
 						</button>
 					</div>
 				</div>
-			</button>
+			</div>
 
 			{file ? <FileChip file={file} onRemove={clearFile} /> : null}
 

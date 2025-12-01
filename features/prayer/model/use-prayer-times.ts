@@ -5,15 +5,14 @@ import type {
 	ExtendedPrayerSettings,
 	UsePrayerTimesOptions,
 } from "@/entities/prayer";
+import { formatTimeUntil, getCountdownString } from "@/entities/prayer";
 import {
-	useGeolocationPermission,
+	useCurrentTime,
 	useSettingsPersistence,
-} from "@/features/settings/model";
-import { useCurrentTime } from "@/shared/libs/hooks/use-current-time";
-import { useTimezoneSync } from "@/shared/libs/hooks/use-timezone-sync";
-import { getCountdownString } from "@/shared/libs/prayer";
-import { formatTimeUntil } from "@/shared/libs/prayer/calculation";
+	useTimezoneSync,
+} from "@/shared/lib/hooks";
 import { useLoadPrayerTimes } from "../api/use-load-prayer-times";
+import { useGeolocationPermission } from "./use-geolocation-permission";
 import { usePrayerProgress } from "./use-prayer-progress";
 
 /**

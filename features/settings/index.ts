@@ -4,14 +4,9 @@
 // Re-export constants for feature-level access
 export { ASR_METHODS, CALCULATION_METHODS } from "./config";
 // Re-export types for convenience
-export type { SettingsDialogProps } from "./model";
+export type { SettingsDialogProps, TabCommonProps } from "./model";
 // Re-export hooks for feature-level access
-export {
-	useAzanPlayer,
-	useGeolocationPermission,
-	useLocationDetection,
-	useSettingsPersistence,
-} from "./model";
+export { useAzanPlayer, useLocationDetection } from "./model";
 export {
 	AzanTab,
 	CalculationTab,

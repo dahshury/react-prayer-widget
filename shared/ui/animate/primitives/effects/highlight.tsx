@@ -13,7 +13,7 @@ import React, {
 	useState,
 } from "react";
 
-import { cn } from "@/shared/libs/utils/cn";
+import { cn } from "@/shared/lib/utils";
 import { HighlightContext } from "./highlight.context";
 import type { Bounds, HighlightProps } from "./highlight.types";
 import { HighlightItem } from "./highlight-item";

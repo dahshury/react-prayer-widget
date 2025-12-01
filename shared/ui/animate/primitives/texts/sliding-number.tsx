@@ -20,10 +20,7 @@ import {
 } from "react";
 import useMeasure from "react-use-measure";
 
-import {
-	type UseIsInViewOptions,
-	useIsInView,
-} from "@/shared/libs/hooks/use-is-in-view";
+import { type UseIsInViewOptions, useIsInView } from "@/shared/lib/hooks";
 
 // Constants for number display calculations
 const MODULO_DIVISOR = 10; // Base 10 digits
@@ -205,17 +202,24 @@ function SlidingNumber({
 
 			const factor = 10 ** inferredDecimals;
 
-			const unsubscribe = springVal.on("change", (latest: number) => {
-				const newValue =
-					inferredDecimals > 0
-						? Math.round(latest * factor) / factor
-						: Math.round(latest);
+			const unsubscribe = springVal.on(
+				"change",
+				(latestValue: string | number) => {
+					const latest =
+						typeof latestValue === "number"
+							? latestValue
+							: Number.parseFloat(String(latestValue));
+					const newValue =
+						inferredDecimals > 0
+							? Math.round(latest * factor) / factor
+							: Math.round(latest);
 
-				if (effectiveNumber !== newValue) {
-					setEffectiveNumber(newValue);
-					onNumberChange?.(newValue);
+					if (effectiveNumber !== newValue) {
+						setEffectiveNumber(newValue);
+						onNumberChange?.(newValue);
+					}
 				}
-			});
+			);
 			return () => unsubscribe();
 		}
 		setEffectiveNumber(isInView ? Math.abs(Number(number)) : 0);

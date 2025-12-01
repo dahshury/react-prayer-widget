@@ -1,4 +1,12 @@
-export type { Location } from "@/entities/prayer";
+export type Location = {
+	latitude: number;
+	longitude: number;
+	city: string;
+	country: string;
+	countryCode?: string;
+	cityCode?: string;
+	timezoneName?: string;
+};
 
 export type CityEntry = {
 	code: string;

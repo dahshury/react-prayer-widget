@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import type { PrayerName } from "@/shared/libs/prayer/azan";
+import type { AllSettings } from "@/entities/prayer/config";
+import type { PrayerName } from "@/shared/lib/prayer";
 import {
 	getAzanSource,
 	removeCustomAzanFile,
 	storeCustomAzanFile,
-} from "@/shared/libs/prayer/azan";
-import type { AllSettings } from "@/types/settings";
+} from "@/shared/lib/prayer";
 
 export function useAzanPlayer(settings: AllSettings) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);

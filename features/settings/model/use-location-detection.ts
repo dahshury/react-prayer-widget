@@ -1,11 +1,11 @@
 import { allCountries as countryRegionDataJson } from "country-region-data";
 import { LocationService } from "@/entities/location";
+import type { AllSettings } from "@/entities/prayer/config";
 import {
 	getCountryCodeFromTimezone,
 	getCountryPrimaryTimezone,
 	guessTimezoneFromCountryCode,
-} from "@/shared/libs/timezone/timezones";
-import type { AllSettings } from "@/types/settings";
+} from "@/shared/lib/timezone";
 import type { CRCountry, CRRegion, NavigatorWithPermissions } from "./types";
 
 type LocationDetectionResult = {
@@ -21,7 +21,7 @@ export function useLocationDetection() {
 	const applyMakkahFallback = (): LocationDetectionResult => {
 		let makkahCode: string | undefined;
 		try {
-			const sa = (countryRegionDataJson as CRCountry[]).find(
+			const sa = (countryRegionDataJson as unknown as CRCountry[]).find(
 				(c) => c.countryShortCode === "SA"
 			);
 			const match = sa?.regions?.find(
@@ -81,7 +81,7 @@ export function useLocationDetection() {
 		cityName: string
 	): { code: string; name: string } | null => {
 		try {
-			const country = (countryRegionDataJson as CRCountry[]).find(
+			const country = (countryRegionDataJson as unknown as CRCountry[]).find(
 				(c) => c.countryShortCode === countryCode
 			);
 

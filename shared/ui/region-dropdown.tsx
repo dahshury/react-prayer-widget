@@ -3,7 +3,7 @@
 import { allCountries as countryRegionDataJson } from "country-region-data";
 import { CheckIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { cn } from "@/shared/libs/utils/cn";
+import { cn } from "@/shared/lib/utils";
 import {
 	Command,
 	CommandEmpty,
@@ -71,7 +71,7 @@ export function RegionDropdown({
 				setRegions([]);
 				return;
 			}
-			const found = (countryRegionDataJson as CountryRegion[]).find(
+			const found = (countryRegionDataJson as unknown as CountryRegion[]).find(
 				(c) => c.countryShortCode === countryCode
 			);
 			setRegions(found?.regions || []);

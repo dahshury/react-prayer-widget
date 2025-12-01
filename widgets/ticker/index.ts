@@ -1,2 +1,1 @@
-export { MinimalTicker } from "./minimal-ticker";
-export { ScrollingTicker } from "./scrolling-ticker";
+export { MinimalTicker, ScrollingTicker } from "./ui";

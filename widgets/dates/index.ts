@@ -1,1 +1,1 @@
-export { DualDateDisplay } from "./dual-date-display";
+export { DualDateDisplay } from "./ui/dual-date-display";

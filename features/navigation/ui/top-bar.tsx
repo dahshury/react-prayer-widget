@@ -1,8 +1,8 @@
 "use client";
 
 import { MapPin } from "lucide-react";
-import { countryToFlag } from "@/shared/libs/geo/country";
-import { formatCurrentTime } from "@/shared/libs/time/format";
+import { countryToFlag } from "@/shared/lib/geo";
+import { formatCurrentTime } from "@/shared/lib/time";
 import { DualDateDisplay } from "@/widgets/dates";
 
 /** Props for the TopBar component */

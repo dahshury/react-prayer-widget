@@ -6,19 +6,17 @@ import {
 	DEFAULT_MAX_FILE_SIZE,
 	type FileStatus,
 	type FileUploadProps,
-} from "@/shared/libs/file-upload";
-import { cn } from "@/shared/libs/utils/cn";
-import {
-	DropzoneContent,
-	ErrorMessage,
-	UploadingContent,
-} from "@/widgets/file-upload/components";
-import {
 	useFileUploadHandlers,
 	useFileUploadState,
 	useFileValidation,
 	useUploadSimulation,
-} from "@/widgets/file-upload/hooks";
+} from "@/shared/lib/file-upload";
+import { cn } from "@/shared/lib/utils";
+import {
+	DropzoneContent,
+	ErrorMessage,
+	UploadingContent,
+} from "@/shared/ui/file-upload";
 
 // Helper function: Get height class based on variant and status
 function getHeightClass(isCompact: boolean, status: FileStatus): string {

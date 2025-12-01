@@ -3,8 +3,8 @@
 import { AnimatePresence, type HTMLMotionProps, motion } from "motion/react";
 import { Tabs as TabsPrimitive } from "radix-ui";
 import type * as React from "react";
-import { useControlledState } from "@/shared/libs/hooks/use-controlled-state";
-import { getStrictContext } from "@/shared/libs/react/get-strict-context";
+import { useControlledState } from "@/shared/lib/hooks";
+import { getStrictContext } from "@/shared/lib/react";
 import {
 	Highlight,
 	HighlightItem,

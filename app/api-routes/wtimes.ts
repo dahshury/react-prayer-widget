@@ -2,13 +2,13 @@ import { promises as fs } from "node:fs";
 import { NextResponse } from "next/server";
 import type { PrayerTimesRequestBody } from "@/entities/prayer/api";
 import {
-	findWtimesFile,
 	isInDST,
 	parseTimesFromFileContent,
 	shift,
 	shift1h,
 } from "@/entities/prayer/lib";
-import { toMonthDay } from "@/shared/libs/time";
+import { findWtimesFile } from "@/entities/prayer/lib/find-wtimes-file";
+import { toMonthDay } from "@/shared/lib/time";
 
 export async function POST(req: Request) {
 	try {

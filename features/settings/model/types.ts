@@ -1,4 +1,4 @@
-import type { AllSettings } from "@/types/settings";
+import type { AllSettings } from "@/entities/prayer/config";
 
 type CRRegion = { name: string; shortCode: string };
 type CRCountry = { countryShortCode: string; regions?: CRRegion[] };

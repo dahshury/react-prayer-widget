@@ -9,16 +9,6 @@ export type PrayerTimes = {
 	hijri: string;
 };
 
-export type Location = {
-	latitude: number;
-	longitude: number;
-	city: string;
-	country: string;
-	countryCode?: string;
-	cityCode?: string;
-	timezoneName?: string;
-};
-
 export type PrayerSettings = {
 	calculationMethod: number;
 	asrMethod: number;
@@ -37,6 +27,7 @@ export type ExtendedPrayerSettings = PrayerSettings & {
 	timezone?: string;
 	countryCode?: string;
 	city?: string;
+	cityCode?: string;
 	showOtherPrayers?: boolean;
 	showCity?: boolean;
 	showTicker?: boolean;

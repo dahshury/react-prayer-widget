@@ -1,4 +1,4 @@
-import type { Location } from "@/entities/prayer";
+import type { Location } from "../model/location";
 
 const DEFAULT_LOCATION: Location = {
 	latitude: 21.3891,

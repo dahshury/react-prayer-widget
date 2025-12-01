@@ -14,7 +14,7 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { getStrictContext } from "@/shared/libs/react/get-strict-context";
+import { getStrictContext } from "@/shared/lib/react";
 import {
 	Slot,
 	type WithAsChild,

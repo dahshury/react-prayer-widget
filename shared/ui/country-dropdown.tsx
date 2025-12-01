@@ -6,9 +6,9 @@ import { countries } from "country-data-list";
 import { CheckIcon, ChevronDown, Globe } from "lucide-react";
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { CircleFlag } from "react-circle-flags";
-import { getCountryUtcOffsetLabel } from "@/shared/libs/timezone/timezones";
+import { getCountryUtcOffsetLabel } from "@/shared/lib/timezone";
 // utils
-import { cn } from "@/shared/libs/utils/cn";
+import { cn } from "@/shared/lib/utils";
 // shadcn
 import {
 	Command,

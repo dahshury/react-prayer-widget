@@ -1,8 +1,8 @@
 "use client";
 
 import type { ExtendedPrayerSettings, PrayerTimes } from "@/entities/prayer";
-import { storeCustomAzanFile } from "@/shared/libs/prayer/azan";
-import { formatTimeDisplay } from "@/shared/libs/time/format";
+import { storeCustomAzanFile } from "@/shared/lib/prayer";
+import { formatTimeDisplay } from "@/shared/lib/time";
 import { WidgetPrayerCard } from "@/widgets/prayer-card";
 
 type PrayerCardsGridProps = {
