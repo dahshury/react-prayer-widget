@@ -22,7 +22,8 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@/pages/*": ["./src/pages/*"]
+      "@/pages/*": ["./src/pages/*"],
+      "@/src/*": ["./src/*"]
     },
     "strictNullChecks": true
   },

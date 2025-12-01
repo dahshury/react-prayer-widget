@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { DemoPage } from "@/pages/_demo";
+import { DemoPage } from "@/src/pages/_demo";
 
 export default function Page() {
 	return (
