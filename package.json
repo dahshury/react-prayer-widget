@@ -1,6 +1,6 @@
 {
   "name": "react-prayer-widget",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Embeddable prayer times widget components for React applications",
   "type": "module",
   "main": "./index.ts",

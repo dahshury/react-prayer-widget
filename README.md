@@ -212,9 +212,61 @@ Grid layout displaying all 5 prayers.
 | `size`               | `WidgetPrayerCardSize?` | Card size                                                |
 | `maxWidth`           | `string?`               | Max width of grid                                        |
 
+### `TopBar`
+
+Header component displaying date, time, and location information.
+
+**Props:**
+
+| Prop            | Type                    | Description                          |
+| --------------- | ----------------------- | ------------------------------------ |
+| `showDate`      | `boolean?`              | Show date display (default: true)    |
+| `showClock`     | `boolean?`              | Show clock (default: true)           |
+| `showCity`      | `boolean?`              | Show city/location (default: true)   |
+| `currentTime`   | `Date`                  | Current time to display              |
+| `location`      | `Location?`             | Location object with city/country    |
+| `timeFormat24h` | `boolean?`              | Use 24-hour format (default: true)   |
+| `language`      | `"en" \| "ar"?`         | Display language (default: "en")     |
+| `className`     | `string?`               | Additional CSS classes               |
+| `classes`       | `object?`               | Fine-grained class overrides         |
+
+### `WidgetSettingsContext`
+
+Context provider that enables right-click settings menu on widgets. Wrap your widgets with this to allow users to customize settings via context menu.
+
+**Props:**
+
+| Prop                | Type                        | Description                    |
+| ------------------- | --------------------------- | ------------------------------ |
+| `settings`          | `ExtendedPrayerSettings`    | Current settings object        |
+| `onSettingsChange`  | `(settings: Partial<...>) => void` | Callback when settings change |
+| `children`          | `React.ReactNode`           | Widget components to wrap      |
+
+### `DualDateDisplay`
+
+Component for displaying both Gregorian and Hijri dates side by side.
+
+**Props:**
+
+| Prop        | Type      | Description              |
+| ----------- | --------- | ------------------------ |
+| `className` | `string?` | Additional CSS classes   |
+
 ### `MinimalTicker` / `ScrollingTicker`
 
-Ticker components for displaying prayer times in a scrolling format.
+Ticker components for displaying prayer times and rotating azkar (remembrances) in a scrolling format.
+
+**Props (MinimalTicker):**
+
+| Prop          | Type         | Description                          |
+| ------------- | ------------ | ------------------------------------ |
+| `prayerTimes` | `PrayerTimes`| Prayer times data                    |
+| `intervalMs`  | `number?`    | Rotation interval in milliseconds     |
+| `className`   | `string?`    | Additional CSS classes               |
+
+**Props (ScrollingTicker):**
+
+Similar to MinimalTicker with additional scrolling animation options.
 
 ## Types
 
@@ -249,6 +301,38 @@ This package uses Tailwind CSS. Make sure your project has Tailwind CSS configur
 - `classes` prop for fine-grained styling of internal elements
 - `gradientClass` prop for custom gradients
 - `style` prop for inline styles
+
+## Demo
+
+A live demo is available at `/demo` route in this repository. The demo showcases:
+
+- Next Prayer Card with countdown
+- Prayer Grid with all 5 prayers
+- TopBar with date, time, and location
+- Minimal Ticker with rotating azkar
+- Different widget sizes
+- Right-click settings menu (via `WidgetSettingsContext`)
+
+To run the demo locally:
+
+```bash
+git clone https://github.com/dahshury/react-prayer-widget.git
+cd react-prayer-widget
+bun install
+bun dev
+# Visit http://localhost:3000/demo
+```
+
+## Utilities
+
+The package also exports utility functions:
+
+- `formatCurrentTime(date: Date, format24h?: boolean): string` - Format current time
+- `formatMinutesHHmm(minutes: number): string` - Format minutes as HH:mm
+- `formatTimeDisplay(time: string, format24h?: boolean): string` - Format time string
+- `countryToFlag(countryCode: string): string` - Get flag emoji for country code
+- `useTranslation()` - Hook to access translations
+- `cn(...classes)` - Utility for merging class names
 
 ## Requirements
 
