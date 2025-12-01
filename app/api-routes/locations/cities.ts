@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
-import path from "node:path";
 import { NextResponse } from "next/server";
 import { parseCities } from "@/entities/location";
+import { getCitiesFilePath } from "@/shared/config/paths";
 
 export async function GET(req: Request) {
 	try {
@@ -11,8 +11,7 @@ export async function GET(req: Request) {
 			return NextResponse.json({ error: "cc required" }, { status: 400 });
 		}
 
-		const root = process.cwd();
-		const filePath = path.join(root, "tawkit-9.61", "data", cc, `${cc}.js`);
+		const filePath = getCitiesFilePath(cc);
 		const content = await fs.readFile(filePath, "utf8");
 		const cities = parseCities(content);
 		return NextResponse.json({ cc, cities });

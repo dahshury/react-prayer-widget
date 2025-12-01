@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { normalizeCity } from "@/entities/location";
+import { getCountryDataDir } from "@/shared/config/paths";
 import { TZ_TO_WTIMES } from "../config/timezone-mapping";
 
 // Helper to find wtimes file by city name
@@ -67,7 +68,6 @@ export async function findWtimesFile(
 	cityRaw?: string
 ): Promise<string | null> {
 	try {
-		const root = process.cwd();
 		const inputCc = cc.toUpperCase();
 		const mapping =
 			timezone && TZ_TO_WTIMES[timezone] ? TZ_TO_WTIMES[timezone] : null;
@@ -78,7 +78,7 @@ export async function findWtimesFile(
 			new Set([inputCc, mappedCc].filter((v): v is string => !!v))
 		).map((code) => ({
 			code,
-			dir: path.join(root, "tawkit-9.61", "data", code),
+			dir: getCountryDataDir(code),
 		}));
 
 		for (const { code, dir } of dirCandidates) {
@@ -94,19 +94,22 @@ export async function findWtimesFile(
 			// 1) Try explicit city match if provided
 			const byCity = findWtimesByCity(entries, cityRaw, prefixLower);
 			if (byCity) {
-				return path.join(dir, byCity);
+				// Use path.resolve for runtime path resolution (Turbopack cannot statically analyze)
+				return path.resolve(dir, byCity);
 			}
 
 			// 2) Try via timezone mapping
 			const byTz = findWtimesByTimezone(entries, mapping, prefixLower);
 			if (byTz) {
-				return path.join(dir, byTz);
+				// Use path.resolve for runtime path resolution (Turbopack cannot statically analyze)
+				return path.resolve(dir, byTz);
 			}
 
 			// 3) Fallback: pick the first wtimes-<CC>.*.js file in this directory
 			const file = findFirstWtimesFile(entries, prefixLower);
 			if (file) {
-				return path.join(dir, file);
+				// Use path.resolve for runtime path resolution (Turbopack cannot statically analyze)
+				return path.resolve(dir, file);
 			}
 		}
 		return null;
