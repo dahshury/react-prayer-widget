@@ -1,5 +1,6 @@
 "use client";
 
+import type { AsrMethodId, CalculationMethodId } from "@/entities/prayer/model";
 import { Card } from "@/shared/ui/card";
 import { Label } from "@/shared/ui/label";
 import {
@@ -25,11 +26,13 @@ export function CalculationTab({
 					<div className="flex items-center justify-between gap-3">
 						<Label className="text-sm">{t("settings.calculationMethod")}</Label>
 						<Select
-							onValueChange={(value) =>
-								onSettingsChange({
-									calculationMethod: Number.parseInt(value, 10),
-								})
-							}
+							onValueChange={(value) => {
+								const method = Number.parseInt(
+									value,
+									10
+								) as CalculationMethodId;
+								onSettingsChange({ calculationMethod: method });
+							}}
 							value={settings.calculationMethod.toString()}
 						>
 							<SelectTrigger>
@@ -53,9 +56,10 @@ export function CalculationTab({
 					<div className="flex items-center justify-between gap-3">
 						<Label className="text-sm">{t("settings.asrCalculation")}</Label>
 						<Select
-							onValueChange={(value) =>
-								onSettingsChange({ asrMethod: Number.parseInt(value, 10) })
-							}
+							onValueChange={(value) => {
+								const method = Number.parseInt(value, 10) as AsrMethodId;
+								onSettingsChange({ asrMethod: method });
+							}}
 							value={settings.asrMethod.toString()}
 						>
 							<SelectTrigger>

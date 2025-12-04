@@ -1,6 +1,10 @@
 "use client";
 
-import type { ExtendedPrayerSettings, PrayerTimes } from "@/entities/prayer";
+import type {
+	ExtendedPrayerSettings,
+	PrayerName,
+	PrayerTimes,
+} from "@/entities/prayer";
 import { DEFAULT_TICKER_INTERVAL_MS } from "@/features/prayer/config";
 import { formatMinutesHHmm, formatTimeDisplay } from "@/shared/lib/time";
 import { MinimalTicker } from "./minimal-ticker";
@@ -9,7 +13,7 @@ import { WidgetPrayerCard } from "./prayer-card";
 type NextPrayerSectionProps = {
 	/** Current prayer information */
 	nextPrayer: {
-		name: string;
+		name: PrayerName;
 		time: string;
 		timeUntil: number;
 		progress: number;

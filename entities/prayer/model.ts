@@ -9,9 +9,55 @@ export type PrayerTimes = {
 	hijri: string;
 };
 
+export const PRAYER_TIME_KEYS = [
+	"fajr",
+	"sunrise",
+	"dhuhr",
+	"asr",
+	"maghrib",
+	"isha",
+] as const;
+
+export type PrayerTimeKey = (typeof PRAYER_TIME_KEYS)[number];
+
+export const PRAYER_NAMES = [
+	"Fajr",
+	"Sunrise",
+	"Dhuhr",
+	"Asr",
+	"Maghrib",
+	"Isha",
+] as const;
+
+export type PrayerName = (typeof PRAYER_NAMES)[number];
+
+export const PRAYER_SEQUENCE = PRAYER_NAMES.map((name, index) => ({
+	name,
+	key: PRAYER_TIME_KEYS[index],
+})) satisfies ReadonlyArray<{
+	name: PrayerName;
+	key: PrayerTimeKey;
+}>;
+
+export type CalculationMethodId =
+	| 1
+	| 2
+	| 3
+	| 4
+	| 5
+	| 7
+	| 8
+	| 9
+	| 10
+	| 11
+	| 12
+	| 13;
+
+export type AsrMethodId = 0 | 1;
+
 export type PrayerSettings = {
-	calculationMethod: number;
-	asrMethod: number;
+	calculationMethod: CalculationMethodId;
+	asrMethod: AsrMethodId;
 	fajrOffset: number;
 	dhuhrOffset: number;
 	asrOffset: number;

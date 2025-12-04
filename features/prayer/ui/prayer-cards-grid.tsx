@@ -1,6 +1,10 @@
 "use client";
 
-import type { ExtendedPrayerSettings, PrayerTimes } from "@/entities/prayer";
+import type {
+	ExtendedPrayerSettings,
+	PrayerName,
+	PrayerTimes,
+} from "@/entities/prayer";
 import { storeCustomAzanFile } from "@/shared/lib/prayer";
 import { formatTimeDisplay } from "@/shared/lib/time";
 import { WidgetPrayerCard } from "./prayer-card";
@@ -11,7 +15,7 @@ type PrayerCardsGridProps = {
 	/** Application settings */
 	settings: ExtendedPrayerSettings;
 	/** Current next prayer name */
-	nextPrayerName: string;
+	nextPrayerName: PrayerName;
 	/** Whether today is Friday */
 	isFriday: boolean;
 	/** Function to check if time has passed */
@@ -20,11 +24,13 @@ type PrayerCardsGridProps = {
 	onSettingsChange: (s: Partial<ExtendedPrayerSettings>) => void;
 };
 
+type PrimaryPrayerName = Exclude<PrayerName, "Sunrise">;
+
 type PrayerCardProps = {
-	prayerName: "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha";
+	prayerName: PrimaryPrayerName;
 	time: string;
 	settings: ExtendedPrayerSettings;
-	nextPrayerName: string;
+	nextPrayerName: PrayerName;
 	isFriday: boolean;
 	isPastTime: (hhmm: string) => boolean;
 	onDropFile: (file: File) => Promise<void>;
@@ -79,7 +85,7 @@ export function PrayerCardsGrid({
 }: PrayerCardsGridProps) {
 	// Helper to handle azan file upload for a specific prayer
 	const handleAzanUpload = async (
-		prayerName: "Fajr" | "Dhuhr" | "Asr" | "Maghrib" | "Isha",
+		prayerName: PrimaryPrayerName,
 		file: File
 	) => {
 		await storeCustomAzanFile(prayerName, file);
@@ -91,12 +97,12 @@ export function PrayerCardsGrid({
 		});
 	};
 
-	const prayers = [
-		{ name: "Fajr" as const, time: prayerTimes.fajr },
-		{ name: "Dhuhr" as const, time: prayerTimes.dhuhr },
-		{ name: "Asr" as const, time: prayerTimes.asr },
-		{ name: "Maghrib" as const, time: prayerTimes.maghrib },
-		{ name: "Isha" as const, time: prayerTimes.isha },
+	const prayers: Array<{ name: PrimaryPrayerName; time: string }> = [
+		{ name: "Fajr", time: prayerTimes.fajr },
+		{ name: "Dhuhr", time: prayerTimes.dhuhr },
+		{ name: "Asr", time: prayerTimes.asr },
+		{ name: "Maghrib", time: prayerTimes.maghrib },
+		{ name: "Isha", time: prayerTimes.isha },
 	];
 
 	return (

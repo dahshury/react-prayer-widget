@@ -41,6 +41,19 @@ Before using this package, ensure your project has:
 - **Tailwind CSS** (required for styling)
 - **Node.js 18+**
 
+## Package outputs & exports
+
+- Ships prebuilt ESM and CJS bundles with typings from `dist/`
+- Tree-shakeable surface (`sideEffects: false`) via `react-prayer-widget`
+- Core exports: `TranslationProvider`, `useTranslation`, `cn`,
+  `formatTimeDisplay`, `formatMinutesHHmm`, `formatCurrentTime`
+- Widgets: `WidgetPrayerCard`, `WidgetPrayerCardSkeleton`, `NextPrayerCard`,
+  `PrayerGrid`, `MinimalTicker`, `ScrollingTicker`, `DualDateDisplay`
+- Navigation/settings: `TopBar`, `SettingsDialog`, `WidgetSettingsContext`,
+  `SettingsDialogProps`
+- Types: `PrayerTimes`, `PrayerSettings`, `ExtendedPrayerSettings`, `Location`,
+  `NextPrayer`, `WidgetPrayerCardProps`, `PrayerGridProps`
+
 ## Next.js Project Setup
 
 If you're setting up a new Next.js project or integrating this package into an existing one, follow these steps:

@@ -1,4 +1,5 @@
-import type { PrayerTimes } from "../model";
+import type { PrayerName, PrayerTimes } from "../model";
+import { PRAYER_SEQUENCE } from "../model";
 import { getNextPrayer } from "./prayer-calculations";
 
 // Time constants
@@ -39,7 +40,7 @@ export function computePrayerProgress(
 	prayerTimes: PrayerTimes,
 	now: Date = new Date()
 ): {
-	next: { name: string; time: string };
+	next: { name: PrayerName; time: string };
 	progress: number;
 	minutesUntilNext: number;
 } {
@@ -49,16 +50,13 @@ export function computePrayerProgress(
 		now.getMinutes() +
 		now.getSeconds() / SECONDS_PER_MINUTE;
 
-	const prayers = [
-		{ name: "Fajr", time: prayerTimes.fajr },
-		{ name: "Sunrise", time: prayerTimes.sunrise },
-		{ name: "Dhuhr", time: prayerTimes.dhuhr },
-		{ name: "Asr", time: prayerTimes.asr },
-		{ name: "Maghrib", time: prayerTimes.maghrib },
-		{ name: "Isha", time: prayerTimes.isha },
-	].map((prayer) => {
-		const [hours, minutes] = prayer.time.split(":").map(Number);
-		return { ...prayer, minutes: hours * MINUTES_PER_HOUR + minutes };
+	const prayers = PRAYER_SEQUENCE.map(({ name, key }) => {
+		const [hours, minutes] = prayerTimes[key].split(":").map(Number);
+		return {
+			name,
+			time: prayerTimes[key],
+			minutes: hours * MINUTES_PER_HOUR + minutes,
+		};
 	});
 
 	let currentPrayerIndex = -1;

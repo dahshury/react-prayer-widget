@@ -2,6 +2,7 @@
 
 import { Moon, Sun, Sunrise, Sunset } from "lucide-react";
 import React from "react";
+import type { PrayerName } from "@/entities/prayer";
 import { useTranslation } from "@/shared/lib/hooks";
 import { cn } from "@/shared/lib/utils";
 import { Card } from "@/shared/ui/card";
@@ -9,7 +10,7 @@ import { Card } from "@/shared/ui/card";
 export type WidgetPrayerCardSize = "xxs" | "xs" | "sm" | "md" | "lg";
 
 export type WidgetPrayerCardProps = {
-	name: string;
+	name: PrayerName;
 	time: string;
 	/** IANA timezone to determine local weekday (for Friday/Jumuʿah handling) */
 	timezone?: string;
@@ -30,7 +31,7 @@ export type WidgetPrayerCardProps = {
 	/** Hide the icon if false */
 	showIcon?: boolean;
 	/** Provide custom icon per prayer */
-	getIcon?: (name: string) => React.ReactNode;
+	getIcon?: (name: PrayerName) => React.ReactNode;
 	/** Class overrides for fine-grained styling */
 	classes?: {
 		container?: string;
@@ -47,7 +48,7 @@ export type WidgetPrayerCardProps = {
 	onDropFile?: (file: File) => void;
 };
 
-const defaultIcon = (name: string) => {
+const defaultIcon = (name: PrayerName) => {
 	switch (name.toLowerCase()) {
 		case "fajr":
 			return <Sunrise className="h-4 w-4 text-orange-300" />;
@@ -66,7 +67,7 @@ const defaultIcon = (name: string) => {
 	}
 };
 
-const defaultGradient = (name: string) => {
+const defaultGradient = (name: PrayerName) => {
 	switch (name.toLowerCase()) {
 		case "fajr":
 			return "from-slate-800 via-orange-900/30 to-orange-800/20";
@@ -258,7 +259,7 @@ function NextCardVariant({
 	return (
 		<Card
 			className={cn(
-				"relative gap-0 overflow-hidden border-amber-500/30 bg-gradient-to-r",
+				"relative gap-0 overflow-hidden border-amber-500/30 bg-linear-to-r",
 				tokens.paddings,
 				resolvedGradient,
 				className,
@@ -287,7 +288,7 @@ function NextCardVariant({
 			>
 				<div
 					className={cn(
-						"absolute top-0 left-0 h-full bg-gradient-to-r from-amber-500 to-orange-500 opacity-30 transition-all duration-700",
+						"absolute top-0 left-0 h-full bg-linear-to-r from-amber-500 to-orange-500 opacity-30 transition-all duration-700",
 						classes?.progressFill
 					)}
 					style={{
@@ -296,7 +297,7 @@ function NextCardVariant({
 				/>
 			</div>
 
-			<div className="relative flex min-h-[2rem] items-center justify-between gap-4">
+			<div className="relative flex min-h-8 items-center justify-between gap-4">
 				<div className="flex min-w-0 flex-1 items-center gap-1.5">
 					{iconNode ? (
 						<div className={cn("shrink-0 scale-75", classes?.icon)}>
@@ -369,7 +370,7 @@ function HorizontalCardVariant({
 	return (
 		<div
 			className={cn(
-				"flex items-center justify-between rounded-lg border border-muted/30 bg-gradient-to-r",
+				"flex items-center justify-between rounded-lg border border-muted/30 bg-linear-to-r",
 				tokens.paddings,
 				resolvedGradient,
 				!!isCurrent && "ring-2 ring-amber-400/50",
@@ -430,7 +431,7 @@ function VerticalCardVariant({
 	return (
 		<div
 			className={cn(
-				"flex flex-col items-center rounded-lg border border-muted/30 bg-gradient-to-b",
+				"flex flex-col items-center rounded-lg border border-muted/30 bg-linear-to-b",
 				tokens.paddings,
 				resolvedGradient,
 				!!isCurrent && "ring-2 ring-amber-400/50",
@@ -489,7 +490,7 @@ function detectFriday(timezone: string | undefined): boolean {
 
 // Helper function: Get translated prayer name
 function getTranslatedPrayerName(
-	name: string,
+	name: PrayerName,
 	isFriday: boolean,
 	t: (key: string) => string | null
 ): string {
@@ -514,8 +515,8 @@ function getTranslatedPrayerName(
 // Helper function: Get icon node based on visibility conditions
 function getIconNode(
 	shouldShowIcon: boolean,
-	prayerName: string,
-	getIcon?: (name: string) => React.ReactNode
+	prayerName: PrayerName,
+	getIcon?: (name: PrayerName) => React.ReactNode
 ): React.ReactNode {
 	if (!shouldShowIcon) {
 		return null;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { PrayerTimes } from "@/entities/prayer";
+import type { PrayerName, PrayerTimes } from "@/entities/prayer";
 import { computePrayerProgress } from "@/entities/prayer";
 
 const PRAYER_PROGRESS_UPDATE_INTERVAL_MS = 1000; // Update every 1 second
@@ -12,7 +12,7 @@ const PRAYER_PROGRESS_UPDATE_INTERVAL_MS = 1000; // Update every 1 second
  */
 export function usePrayerProgress(prayerTimes: PrayerTimes | null) {
 	const [nextPrayer, setNextPrayer] = useState<{
-		name: string;
+		name: PrayerName;
 		time: string;
 		timeUntil: number;
 		progress: number;

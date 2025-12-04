@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "Embeddable prayer times widget components for React applications",
   "type": "module",
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "keywords": [
     "prayer-times",
     "islamic",
@@ -21,25 +22,14 @@
     "url": "https://github.com/dahshury/react-prayer-widget.git"
   },
   "files": [
-    "index.ts",
-    "shared/**/*",
-    "widgets/**/*",
-    "entities/**/*",
-    "!**/*.test.ts",
-    "!**/*.test.tsx",
-    "!**/*.spec.ts",
-    "!**/*.spec.tsx",
-    "!**/node_modules/**",
-    "!**/.next/**",
-    "!**/dist/**",
-    "!**/out/**",
-    "!**/app/**",
-    "!**/pages/**",
-    "!**/features/**"
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "predev": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
     "build": "next build",
+    "build:package": "tsup",
     "dev": "next dev --turbo",
     "lint": "next lint",
     "start": "next start",
@@ -56,10 +46,12 @@
   },
   "exports": {
     ".": {
-      "types": "./index.ts",
-      "default": "./index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
+  "sideEffects": false,
   "dependencies": {
     "@radix-ui/react-context-menu": "2.2.16",
     "@radix-ui/react-dialog": "1.1.15",
@@ -84,7 +76,8 @@
     "react-circle-flags": "^0.0.23",
     "react-day-picker": "9.9.0",
     "react-use-measure": "^2.1.7",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "tawkit-next": "."
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -108,6 +101,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@typescript/native-preview": "^7.0.0-dev.20251201.1",
+    "tsup": "^8.3.0",
     "autoprefixer": "^10.4.21",
     "husky": "^9.1.7",
     "markdownlint": "^0.38.0",

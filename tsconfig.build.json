@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "incremental": false,
+    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
+    "outDir": "./dist/.tsbuild"
+  },
+  "include": [
+    "index.ts",
+    "features/**/*",
+    "entities/**/*",
+    "shared/**/*",
+    "widgets/**/*",
+    "config/**/*"
+  ]
+}

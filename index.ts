@@ -9,7 +9,10 @@
 export type { Location } from "./entities/location";
 // Types
 export type {
+	AsrMethodId,
+	CalculationMethodId,
 	ExtendedPrayerSettings,
+	PrayerName,
 	PrayerSettings,
 	PrayerTimes,
 } from "./entities/prayer/model";

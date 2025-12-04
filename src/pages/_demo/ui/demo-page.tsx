@@ -50,7 +50,11 @@ export default function DemoPage() {
 		const minutes = now.getMinutes();
 		const currentMinutes = hours * 60 + minutes;
 
-		const prayers = [
+		const prayers: Array<{
+			name: NextPrayer["name"];
+			time: string;
+			minutes: number;
+		}> = [
 			{ name: "Fajr", time: "05:30", minutes: 5 * 60 + 30 },
 			{ name: "Dhuhr", time: "12:15", minutes: 12 * 60 + 15 },
 			{ name: "Asr", time: "15:45", minutes: 15 * 60 + 45 },

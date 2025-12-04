@@ -1,4 +1,5 @@
-import type { PrayerTimes } from "../model";
+import type { PrayerName, PrayerTimes } from "../model";
+import { PRAYER_SEQUENCE } from "../model";
 
 /**
  * Apply a time offset to an HH:MM format time string
@@ -22,21 +23,17 @@ export function applyOffset(time: string, offset: number): string {
  * Returns prayer name, time, and minutes until it occurs
  */
 export function getNextPrayer(prayerTimes: PrayerTimes): {
-	name: string;
+	name: PrayerName;
 	time: string;
 	timeUntil: number;
 } {
 	const now = new Date();
 	const currentTime = now.getHours() * 60 + now.getMinutes();
 
-	const prayers = [
-		{ name: "Fajr", time: prayerTimes.fajr },
-		{ name: "Sunrise", time: prayerTimes.sunrise },
-		{ name: "Dhuhr", time: prayerTimes.dhuhr },
-		{ name: "Asr", time: prayerTimes.asr },
-		{ name: "Maghrib", time: prayerTimes.maghrib },
-		{ name: "Isha", time: prayerTimes.isha },
-	];
+	const prayers = PRAYER_SEQUENCE.map(({ name, key }) => ({
+		name,
+		time: prayerTimes[key],
+	}));
 
 	for (const prayer of prayers) {
 		const [prayerHours, prayerMinutes] = prayer.time.split(":").map(Number);
@@ -71,7 +68,9 @@ export function formatTimeUntil(minutes: number): string {
 	const mins = minutes % 60;
 
 	if (hours > 0) {
-		return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:00`;
+		return `${hours.toString().padStart(2, "0")}:${mins
+			.toString()
+			.padStart(2, "0")}:00`;
 	}
 	return `00:${mins.toString().padStart(2, "0")}:00`;
 }

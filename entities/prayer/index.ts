@@ -19,8 +19,13 @@ export {
 	shift1h,
 } from "./lib";
 export type {
+	AsrMethodId,
+	CalculationMethodId,
 	ExtendedPrayerSettings,
+	PrayerName,
 	PrayerSettings,
+	PrayerTimeKey,
 	PrayerTimes,
 	UsePrayerTimesOptions,
 } from "./model";
+export { PRAYER_NAMES, PRAYER_SEQUENCE, PRAYER_TIME_KEYS } from "./model";
