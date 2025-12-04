@@ -1,6 +1,6 @@
 import { allCountries as countryRegionDataJson } from "country-region-data";
 import { LocationService } from "@/entities/location";
-import type { AllSettings } from "@/entities/prayer/config";
+import type { AllSettings } from "@/entities/prayer";
 import {
 	getCountryCodeFromTimezone,
 	getCountryPrimaryTimezone,

@@ -6,14 +6,11 @@ import type {
 	UsePrayerTimesOptions,
 } from "@/entities/prayer";
 import { formatTimeUntil, getCountdownString } from "@/entities/prayer";
-import {
-	useCurrentTime,
-	useSettingsPersistence,
-	useTimezoneSync,
-} from "@/shared/lib/hooks";
+import { useCurrentTime, useTimezoneSync } from "@/shared/lib/hooks";
 import { useLoadPrayerTimes } from "../api/use-load-prayer-times";
 import { useGeolocationPermission } from "./use-geolocation-permission";
 import { usePrayerProgress } from "./use-prayer-progress";
+import { useSettingsPersistence } from "./use-settings-persistence";
 
 /**
  * Main orchestration hook that composes sub-hooks for prayer times management.

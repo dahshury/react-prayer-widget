@@ -1,4 +1,4 @@
-import type { PrayerSettings } from "@/entities/prayer";
+import type { PrayerSettings } from "../model";
 
 /**
  * Default prayer calculation settings

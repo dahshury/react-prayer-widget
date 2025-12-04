@@ -1,12 +1,12 @@
 import { promises as fs } from "node:fs";
 import { NextResponse } from "next/server";
-import type { PrayerTimesRequestBody } from "@/entities/prayer/api";
+import type { PrayerTimesRequestBody } from "@/entities/prayer";
 import {
 	isInDST,
 	parseTimesFromFileContent,
 	shift,
 	shift1h,
-} from "@/entities/prayer/lib";
+} from "@/entities/prayer";
 import { findWtimesFile } from "@/entities/prayer/lib/find-wtimes-file";
 import { toMonthDay } from "@/shared/lib/time";
 

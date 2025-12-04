@@ -1,5 +1,6 @@
 export const FRIDAY_DAY_INDEX = 5;
 export const DEFAULT_TICKER_INTERVAL_MS = 5000;
+export const WTIMES_API_URL = "/api/wtimes";
 
 export const PRAYER_NAMES = [
 	"Fajr",

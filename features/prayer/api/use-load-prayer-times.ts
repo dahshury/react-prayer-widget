@@ -13,6 +13,7 @@ import {
 	getTimezoneCoordinates,
 	TIMEZONES,
 } from "@/shared/lib/timezone";
+import { WTIMES_API_URL } from "../config/constants";
 
 /**
  * Hook that handles prayer times loading with location detection.
@@ -268,18 +269,24 @@ export function useLoadPrayerTimes(
 					const currentLocation = await resolveLocation(useCurrentLocation);
 					setLocation(currentLocation);
 
-					const times = await PrayerService.getPrayerTimes(currentLocation, {
-						calculationMethod,
-						asrMethod,
-						fajrOffset,
-						dhuhrOffset,
-						asrOffset,
-						maghribOffset,
-						ishaOffset,
-						applySummerHour,
-						forceHourMore,
-						forceHourLess,
-					});
+					const times = await PrayerService.getPrayerTimes(
+						currentLocation,
+						{
+							calculationMethod,
+							asrMethod,
+							fajrOffset,
+							dhuhrOffset,
+							asrOffset,
+							maghribOffset,
+							ishaOffset,
+							applySummerHour,
+							forceHourMore,
+							forceHourLess,
+						},
+						{
+							wtimesUrl: WTIMES_API_URL,
+						}
+					);
 					setPrayerTimes(times);
 				})();
 

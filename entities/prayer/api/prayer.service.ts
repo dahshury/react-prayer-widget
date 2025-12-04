@@ -1,12 +1,85 @@
-import type { Location, PrayerSettings, PrayerTimes } from "@/entities/prayer";
+import type { Location } from "../@x/location";
 import { DEFAULT_SETTINGS } from "../config/constants";
+import type { PrayerSettings, PrayerTimes } from "../model";
 
-/**
- * Prayer times calculation service
- * Integrates with multiple APIs:
- * - Local Tawkit dataset (via /api/wtimes)
- * - Aladhan Islamic calendar API
- */
+type GetPrayerTimesOptions = {
+	wtimesUrl?: string;
+};
+
+type LocalPrayerTimeParams = {
+	location: Location;
+	settings: PrayerSettings;
+	dateStr: string;
+	wtimesUrl?: string;
+};
+
+const applyOffsetTime = (time: string, offset: number): string => {
+	if (offset === 0) {
+		return time;
+	}
+
+	const [hours, minutes] = time.split(":").map(Number);
+	const totalMinutes = hours * 60 + minutes + offset;
+	const newHours = Math.floor(totalMinutes / 60) % 24;
+	const newMinutes = totalMinutes % 60;
+
+	return `${newHours.toString().padStart(2, "0")}:${newMinutes
+		.toString()
+		.padStart(2, "0")}`;
+};
+
+const fetchLocalPrayerTimes = async (
+	params: LocalPrayerTimeParams
+): Promise<PrayerTimes | null> => {
+	const { location, settings, dateStr, wtimesUrl } = params;
+	if (!wtimesUrl) {
+		return null;
+	}
+	if (!location.countryCode) {
+		return null;
+	}
+
+	const local = await fetch(wtimesUrl, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			countryCode: location.countryCode,
+			timezone:
+				location.timezoneName ||
+				Intl.DateTimeFormat().resolvedOptions().timeZone,
+			date: dateStr,
+			city: location.cityCode ? location.cityCode.split(".")[1] : location.city,
+			offsets: {
+				fajr: settings.fajrOffset || 0,
+				sunrise: 0,
+				dhuhr: settings.dhuhrOffset || 0,
+				asr: settings.asrOffset || 0,
+				maghrib: settings.maghribOffset || 0,
+				isha: settings.ishaOffset || 0,
+			},
+			applySummerHour: !!settings.applySummerHour,
+			forceHourMore: !!settings.forceHourMore,
+			forceHourLess: !!settings.forceHourLess,
+		}),
+	});
+
+	if (!local.ok) {
+		return null;
+	}
+
+	const t = await local.json();
+	return {
+		fajr: t.fajr,
+		sunrise: t.sunrise,
+		dhuhr: t.dhuhr,
+		asr: t.asr,
+		maghrib: t.maghrib,
+		isha: t.isha,
+		date: dateStr,
+		hijri: "—",
+	};
+};
+
 export const PrayerService = {
 	/**
 	 * Get prayer times for a given location
@@ -14,52 +87,22 @@ export const PrayerService = {
 	 */
 	async getPrayerTimes(
 		location: Location,
-		settings: PrayerSettings = DEFAULT_SETTINGS
+		settings: PrayerSettings = DEFAULT_SETTINGS,
+		options?: GetPrayerTimesOptions
 	): Promise<PrayerTimes> {
 		try {
 			const date = new Date();
 			const dateStr = date.toISOString().split("T")[0];
+			const { wtimesUrl } = options || {};
 
-			// Prefer local tawkit dataset when we have a country code
-			if (location.countryCode) {
-				const local = await fetch("/api/wtimes", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						countryCode: location.countryCode,
-						timezone:
-							location.timezoneName ||
-							Intl.DateTimeFormat().resolvedOptions().timeZone,
-						date: dateStr,
-						city: location.cityCode
-							? location.cityCode.split(".")[1]
-							: location.city,
-						offsets: {
-							fajr: settings.fajrOffset || 0,
-							sunrise: 0,
-							dhuhr: settings.dhuhrOffset || 0,
-							asr: settings.asrOffset || 0,
-							maghrib: settings.maghribOffset || 0,
-							isha: settings.ishaOffset || 0,
-						},
-						applySummerHour: !!settings.applySummerHour,
-						forceHourMore: !!settings.forceHourMore,
-						forceHourLess: !!settings.forceHourLess,
-					}),
-				});
-				if (local.ok) {
-					const t = await local.json();
-					return {
-						fajr: t.fajr,
-						sunrise: t.sunrise,
-						dhuhr: t.dhuhr,
-						asr: t.asr,
-						maghrib: t.maghrib,
-						isha: t.isha,
-						date: dateStr,
-						hijri: "—",
-					};
-				}
+			const localTimes = await fetchLocalPrayerTimes({
+				location,
+				settings,
+				dateStr,
+				wtimesUrl,
+			});
+			if (localTimes) {
+				return localTimes;
 			}
 
 			const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${location.latitude}&longitude=${location.longitude}&method=${settings.calculationMethod}&school=${settings.asrMethod}`;
@@ -83,32 +126,17 @@ export const PrayerService = {
 			const timings = data.data.timings;
 			const hijriDate = data.data.date.hijri;
 
-			// Apply offsets
-			const applyOffset = (time: string, offset: number): string => {
-				if (offset === 0) {
-					return time;
-				}
-
-				const [hours, minutes] = time.split(":").map(Number);
-				const totalMinutes = hours * 60 + minutes + offset;
-				const newHours = Math.floor(totalMinutes / 60) % 24;
-				const newMinutes = totalMinutes % 60;
-
-				return `${newHours.toString().padStart(2, "0")}:${newMinutes.toString().padStart(2, "0")}`;
-			};
-
 			return {
-				fajr: applyOffset(timings.Fajr, settings.fajrOffset),
+				fajr: applyOffsetTime(timings.Fajr, settings.fajrOffset),
 				sunrise: timings.Sunrise,
-				dhuhr: applyOffset(timings.Dhuhr, settings.dhuhrOffset),
-				asr: applyOffset(timings.Asr, settings.asrOffset),
-				maghrib: applyOffset(timings.Maghrib, settings.maghribOffset),
-				isha: applyOffset(timings.Isha, settings.ishaOffset),
+				dhuhr: applyOffsetTime(timings.Dhuhr, settings.dhuhrOffset),
+				asr: applyOffsetTime(timings.Asr, settings.asrOffset),
+				maghrib: applyOffsetTime(timings.Maghrib, settings.maghribOffset),
+				isha: applyOffsetTime(timings.Isha, settings.ishaOffset),
 				date: dateStr,
 				hijri: `${hijriDate.day} ${hijriDate.month.en} ${hijriDate.year}`,
 			};
 		} catch (_error) {
-			// Fallback prayer times for Makkah
 			return {
 				fajr: "05:30",
 				sunrise: "06:45",

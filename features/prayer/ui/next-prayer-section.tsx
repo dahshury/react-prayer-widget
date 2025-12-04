@@ -3,8 +3,8 @@
 import type { ExtendedPrayerSettings, PrayerTimes } from "@/entities/prayer";
 import { DEFAULT_TICKER_INTERVAL_MS } from "@/features/prayer/config";
 import { formatMinutesHHmm, formatTimeDisplay } from "@/shared/lib/time";
-import { WidgetPrayerCard } from "@/widgets/prayer-card";
-import { MinimalTicker } from "@/widgets/ticker";
+import { MinimalTicker } from "./minimal-ticker";
+import { WidgetPrayerCard } from "./prayer-card";
 
 type NextPrayerSectionProps = {
 	/** Current prayer information */

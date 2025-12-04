@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import type { AllSettings } from "@/entities/prayer/config";
+import type { AllSettings } from "@/entities/prayer";
 import type { PrayerName } from "@/shared/lib/prayer";
 import {
 	getAzanSource,

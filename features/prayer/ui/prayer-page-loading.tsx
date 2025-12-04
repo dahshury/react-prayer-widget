@@ -1,6 +1,6 @@
 "use client";
 
-import { WidgetPrayerCardSkeleton } from "@/widgets/prayer-card";
+import { WidgetPrayerCardSkeleton } from "./prayer-card-skeleton";
 
 type PrayerPageLoadingProps = {
 	/**

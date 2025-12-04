@@ -2,7 +2,7 @@
 
 import type { PrayerTimes } from "@/entities/prayer";
 import { DEFAULT_TICKER_INTERVAL_MS } from "@/features/prayer/config";
-import { MinimalTicker } from "@/widgets/ticker";
+import { MinimalTicker } from "./minimal-ticker";
 
 type TickerSectionProps = {
 	/** Prayer times for the day */

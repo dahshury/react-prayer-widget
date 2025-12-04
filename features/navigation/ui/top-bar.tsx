@@ -3,7 +3,7 @@
 import { MapPin } from "lucide-react";
 import { countryToFlag } from "@/shared/lib/geo";
 import { formatCurrentTime } from "@/shared/lib/time";
-import { DualDateDisplay } from "@/widgets/dates";
+import { DualDateDisplay } from "@/shared/ui/dual-date-display";
 
 /** Props for the TopBar component */
 export type TopBarProps = {

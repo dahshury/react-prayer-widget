@@ -1,6 +1,8 @@
+"use server";
+
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { normalizeCity } from "@/entities/location";
+import { normalizeCity } from "@/entities/location/@x/prayer";
 import { getCountryDataDir } from "@/shared/config/paths";
 import { TZ_TO_WTIMES } from "../config/timezone-mapping";
 

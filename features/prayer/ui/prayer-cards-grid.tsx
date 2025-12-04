@@ -3,7 +3,7 @@
 import type { ExtendedPrayerSettings, PrayerTimes } from "@/entities/prayer";
 import { storeCustomAzanFile } from "@/shared/lib/prayer";
 import { formatTimeDisplay } from "@/shared/lib/time";
-import { WidgetPrayerCard } from "@/widgets/prayer-card";
+import { WidgetPrayerCard } from "./prayer-card";
 
 type PrayerCardsGridProps = {
 	/** Prayer times for all 5 prayers */
