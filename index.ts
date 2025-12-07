@@ -10,6 +10,7 @@ import "./shared/lib/inject-styles";
 
 // Location Type
 export type { Location } from "./entities/location";
+export { computePrayerProgress } from "./entities/prayer";
 // Types
 export type {
 	AsrMethodId,
@@ -21,14 +22,22 @@ export type {
 } from "./entities/prayer/model";
 // Header Components
 export { TopBar, type TopBarProps } from "./features/navigation/ui/top-bar";
+export { useSettingsPersistence } from "./features/prayer/model/use-settings-persistence";
 export type { SettingsDialogProps } from "./features/settings";
 // Settings Context (for right-click context menu)
 export {
+	type PrayerGridSettings,
+	PrayerGridSettingsContext,
+	PrayerGridSettingsDialog,
 	SettingsDialog,
+	usePrayerGridSettings,
+	useWidgetSettings,
 	WidgetSettingsContext,
 } from "./features/settings/ui";
 export type { Language } from "./shared/config/translations";
 export { countryToFlag } from "./shared/lib/geo";
+// Font settings hook (for applying custom fonts)
+export { useFontSettings } from "./shared/lib/hooks/use-font-settings";
 // Translation Provider (required for widgets to work)
 export {
 	TranslationProvider,
@@ -47,6 +56,10 @@ export {
 	type NextPrayer,
 	NextPrayerCard,
 	type NextPrayerCardProps,
+	PrayerWidget,
+	type PrayerWidgetProps,
+	StandaloneNextPrayerCard,
+	type StandaloneNextPrayerCardProps,
 	WidgetPrayerCard,
 	type WidgetPrayerCardProps,
 	type WidgetPrayerCardSize,

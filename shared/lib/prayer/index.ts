@@ -16,13 +16,15 @@ export {
 	storeCustomAzanFileGlobal,
 } from "./azan";
 export {
-	AZKAR_GENERAL,
-	AZKAR_MASAA,
-	AZKAR_SABAH,
-} from "./azkar";
-export {
 	DEFAULT_ISLAMIC_CONTENT,
 	getContentByType,
+	getContentByTypeFromTranslations,
 	getRandomContent,
+	getRandomContentFromTranslations,
 	type IslamicContent,
 } from "./islamic-content";
+export {
+	getAzkarFromTranslations,
+	getIslamicContentFromTranslations,
+	useIslamicContent,
+} from "./islamic-content-i18n";

@@ -2,8 +2,9 @@
 
 import { Pause, Play, Settings, SkipForward } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-	DEFAULT_ISLAMIC_CONTENT,
+	getIslamicContentFromTranslations,
 	type IslamicContent,
 } from "@/shared/lib/prayer";
 import { Button } from "@/shared/ui/button";
@@ -45,8 +46,12 @@ export function ScrollingTicker({
 	speedDefault = 10,
 	enabledDefault = true,
 }: ScrollingTickerProps) {
-	const [currentContent, setCurrentContent] = useState<IslamicContent>(
-		DEFAULT_ISLAMIC_CONTENT[0]
+	const { i18n } = useTranslation();
+	const locale = (i18n.language || "en") as "en" | "ar";
+	const [islamicContent, setIslamicContent] = useState<IslamicContent[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [currentContent, setCurrentContent] = useState<IslamicContent | null>(
+		null
 	);
 	const [isPlaying, setIsPlaying] = useState(true);
 	const [settings, setSettings] = useState<TickerSettings>({
@@ -57,21 +62,38 @@ export function ScrollingTicker({
 	});
 	const [progress, setProgress] = useState(0);
 
+	// Load content from translations
+	useEffect(() => {
+		async function loadContent() {
+			setIsLoading(true);
+			try {
+				const content = await getIslamicContentFromTranslations(locale);
+				setIslamicContent(content);
+				if (content.length > 0 && !currentContent) {
+					setCurrentContent(content[0]);
+				}
+			} catch (error) {
+				console.error("Failed to load Islamic content:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		}
+		loadContent();
+	}, [locale, currentContent]);
+
 	// Filter content based on settings
 	const getFilteredContent = useCallback(() => {
 		const source =
-			contentPool && contentPool.length > 0
-				? contentPool
-				: DEFAULT_ISLAMIC_CONTENT;
+			contentPool && contentPool.length > 0 ? contentPool : islamicContent;
 		if (settings.contentType === "all") {
 			return source;
 		}
 		return source.filter((content) => content.type === settings.contentType);
-	}, [contentPool, settings.contentType]);
+	}, [contentPool, settings.contentType, islamicContent]);
 
 	// Auto-advance content
 	useEffect(() => {
-		if (!(isPlaying && settings.enabled)) {
+		if (!(isPlaying && settings.enabled && currentContent) || isLoading) {
 			return;
 		}
 
@@ -80,6 +102,9 @@ export function ScrollingTicker({
 				if (prev >= PROGRESS_COMPLETE) {
 					// Move to next content
 					const filteredContent = getFilteredContent();
+					if (filteredContent.length === 0) {
+						return prev;
+					}
 					const currentIndex = filteredContent.findIndex(
 						(c) => c.id === currentContent.id
 					);
@@ -97,11 +122,18 @@ export function ScrollingTicker({
 		settings.enabled,
 		settings.speed,
 		getFilteredContent,
-		currentContent.id,
+		currentContent,
+		isLoading,
 	]);
 
 	const nextContent = () => {
+		if (!currentContent) {
+			return;
+		}
 		const filteredContent = getFilteredContent();
+		if (filteredContent.length === 0) {
+			return;
+		}
 		const currentIndex = filteredContent.findIndex(
 			(c) => c.id === currentContent.id
 		);
@@ -116,6 +148,16 @@ export function ScrollingTicker({
 
 	if (!settings.enabled) {
 		return null;
+	}
+
+	if (isLoading || !currentContent) {
+		return (
+			<Card
+				className={`border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5 p-4 ${className ?? ""}`}
+			>
+				<div className="text-muted-foreground text-sm">Loading...</div>
+			</Card>
+		);
 	}
 
 	return (

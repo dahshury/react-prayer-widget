@@ -11,7 +11,7 @@ import {
 	usePrayerPageState,
 } from "@/features/prayer/ui";
 import { WidgetSettingsContext } from "@/features/settings/ui";
-import { TranslationProvider } from "@/shared/lib/hooks";
+import { TranslationProvider, useFontSettings } from "@/shared/lib/hooks";
 import { getResponsiveWidthClass, isPast } from "@/shared/lib/utils";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
 
@@ -35,6 +35,9 @@ export default function PrayerTimesPage() {
 
 	// Initialize azan audio playback
 	useAzan({ prayerTimes, settings });
+
+	// Apply font settings to CSS variables
+	useFontSettings(settings);
 
 	// Manage page-level state (responsive visibility, settings updates, etc.)
 	const {
@@ -72,6 +75,7 @@ export default function PrayerTimesPage() {
 						isFriday={isFriday}
 						isSmallScreen={isSmallScreen}
 						nextPrayer={nextPrayer}
+						onSettingsChange={updateSettingsDeferred}
 						otherPrayersVisible={otherPrayersVisible}
 						prayerTimes={prayerTimes}
 						settings={settings}

@@ -13,6 +13,7 @@ export type Translations = {
 		showOtherPrayers: string;
 		showCity: string;
 		showTicker: string;
+		showStandaloneTicker?: string;
 		showClock?: string;
 		showDate: string;
 		calculationMethod: string;
@@ -26,6 +27,64 @@ export type Translations = {
 		autoDetectTimezone?: string;
 		locationPermissionDenied?: string;
 		tickerSpeed?: string;
+		// Layout & Sizing
+		layoutSizing?: string;
+		centerCardSize?: string;
+		otherCardsSize?: string;
+		appWidth?: string;
+		// Size options
+		sizeXxs?: string;
+		sizeXs?: string;
+		sizeSm?: string;
+		sizeMd?: string;
+		sizeLg?: string;
+		// App width options
+		appWidthXxs?: string;
+		appWidthXs?: string;
+		appWidthMd?: string;
+		appWidthLg?: string;
+		appWidthXl?: string;
+		appWidth2xl?: string;
+		appWidth3xl?: string;
+		// Prayer Cards section
+		prayerCards?: string;
+		viewType?: string;
+		viewStacked?: string;
+		viewHorizontal?: string;
+		enableShowOtherPrayersHint?: string;
+		// Visibility section
+		visibility?: string;
+		// Ticker section
+		ticker?: string;
+		enableShowTickerHint?: string;
+		tickerInterval3?: string;
+		tickerInterval5?: string;
+		tickerInterval8?: string;
+		tickerInterval10?: string;
+		// Fonts section
+		fonts?: string;
+		prayerFont?: string;
+		timeFont?: string;
+		selectFont?: string;
+		searchFonts?: string;
+		noFontFound?: string;
+		// Backgrounds section
+		cardBackgrounds?: string;
+		cardBackground?: string;
+		cardBackgroundOpacity?: string;
+		chooseFromImageBackgrounds?: string;
+		selectBackground?: string;
+		searchBackgrounds?: string;
+		noBackgroundFound?: string;
+		// Colors section
+		colors?: string;
+		prayerName?: string;
+		prayerTime?: string;
+		countdown?: string;
+		// Calculation method names
+		calculationMethodNames?: Record<string, string>;
+		// ASR methods
+		asrMethods?: Record<string, string>;
 	};
 	azan?: {
 		enable: string;
@@ -80,6 +139,7 @@ export const translations: Record<Language, Translations> = {
 			showOtherPrayers: "Show Other Prayer Cards",
 			showCity: "Show Current City",
 			showTicker: "Show Ticker",
+			showStandaloneTicker: "Show Standalone Ticker",
 			showClock: "Show Clock",
 			showDate: "Show Date",
 			calculationMethod: "Calculation Method",
@@ -95,6 +155,81 @@ export const translations: Record<Language, Translations> = {
 			locationPermissionDenied:
 				"Location permission denied. Auto-detect is off. Defaulting to Makkah Al-Mukarramah, Saudi Arabia.",
 			tickerSpeed: "Ticker change interval",
+			// Layout & Sizing
+			layoutSizing: "Layout & Sizing",
+			centerCardSize: "Center card height",
+			otherCardsSize: "Other cards height",
+			appWidth: "App width",
+			// Size options
+			sizeXxs: "XXS (thinnest)",
+			sizeXs: "XS",
+			sizeSm: "SM",
+			sizeMd: "MD",
+			sizeLg: "LG",
+			// App width options
+			appWidthXxs: "Ultra compact (xxs)",
+			appWidthXs: "Extra compact (xs)",
+			appWidthMd: "Narrow (md)",
+			appWidthLg: "Compact (lg)",
+			appWidthXl: "Comfort (xl)",
+			appWidth2xl: "Wide (2xl)",
+			appWidth3xl: "Extra wide (3xl)",
+			// Prayer Cards section
+			prayerCards: "Prayer Cards",
+			viewType: "View type",
+			viewStacked: "Stacked",
+			viewHorizontal: "Horizontal",
+			enableShowOtherPrayersHint:
+				"Enable 'Show other prayers' to use this setting",
+			// Visibility section
+			visibility: "Visibility",
+			// Ticker section
+			ticker: "Ticker",
+			enableShowTickerHint: "Enable 'Show ticker' to use this setting",
+			tickerInterval3: "3 seconds",
+			tickerInterval5: "5 seconds",
+			tickerInterval8: "8 seconds",
+			tickerInterval10: "10 seconds",
+			// Fonts section
+			fonts: "Fonts",
+			prayerFont: "Prayer name font",
+			timeFont: "Prayer time font",
+			selectFont: "Select font...",
+			searchFonts: "Search fonts...",
+			noFontFound: "No font found.",
+			// Backgrounds section
+			cardBackgrounds: "Card Backgrounds",
+			cardBackground: "Card background",
+			cardBackgroundOpacity: "Background opacity",
+			chooseFromImageBackgrounds: "Choose from image backgrounds",
+			selectBackground: "Select background...",
+			searchBackgrounds: "Search backgrounds...",
+			noBackgroundFound: "No background found.",
+			// Colors section
+			colors: "Colors",
+			prayerName: "Prayer name",
+			prayerTime: "Prayer time",
+			countdown: "Countdown",
+			// Calculation method names
+			calculationMethodNames: {
+				"1": "University of Islamic Sciences, Karachi",
+				"2": "Islamic Society of North America (ISNA)",
+				"3": "Muslim World League",
+				"4": "Umm Al-Qura University, Makkah",
+				"5": "Egyptian General Authority of Survey",
+				"7": "Institute of Geophysics, University of Tehran",
+				"8": "Gulf Region",
+				"9": "Kuwait",
+				"10": "Qatar",
+				"11": "Majlis Ugama Islam Singapura, Singapore",
+				"12": "Union Organization islamic de France",
+				"13": "Diyanet İşleri Başkanlığı, Turkey",
+			},
+			// ASR methods
+			asrMethods: {
+				standard: "Standard (Shafi, Maliki, Hanbali)",
+				hanafi: "Hanafi",
+			},
 		},
 		azan: {
 			enable: "Enable Azan",
@@ -160,6 +295,7 @@ export const translations: Record<Language, Translations> = {
 			showOtherPrayers: "إظهار بطاقات الصلوات الأخرى",
 			showCity: "إظهار المدينة الحالية",
 			showTicker: "إظهار الشريط المتحرك",
+			showStandaloneTicker: "إظهار الشريط المتحرك المستقل",
 			showClock: "إظهار الساعة",
 			showDate: "إظهار التاريخ",
 			calculationMethod: "طريقة الحساب",
@@ -174,6 +310,81 @@ export const translations: Record<Language, Translations> = {
 			locationPermissionDenied:
 				"تم رفض إذن الموقع. الاكتشاف التلقائي غير مُفعل. سيتم الافتراضي إلى مكة المكرمة، السعودية.",
 			tickerSpeed: "مدة تبديل الشريط",
+			// Layout & Sizing
+			layoutSizing: "التخطيط والحجم",
+			centerCardSize: "ارتفاع البطاقة المركزية",
+			otherCardsSize: "ارتفاع البطاقات الأخرى",
+			appWidth: "عرض التطبيق",
+			// Size options
+			sizeXxs: "صغير جدًا جدًا (أرفع)",
+			sizeXs: "صغير جدًا",
+			sizeSm: "صغير",
+			sizeMd: "متوسط",
+			sizeLg: "كبير",
+			// App width options
+			appWidthXxs: "مضغوط جدًا (xxs)",
+			appWidthXs: "مضغوط للغاية (xs)",
+			appWidthMd: "ضيق (md)",
+			appWidthLg: "مضغوط (lg)",
+			appWidthXl: "مريح (xl)",
+			appWidth2xl: "واسع (2xl)",
+			appWidth3xl: "واسع جدًا (3xl)",
+			// Prayer Cards section
+			prayerCards: "بطاقات الصلاة",
+			viewType: "نوع العرض",
+			viewStacked: "مكدسة",
+			viewHorizontal: "أفقي",
+			enableShowOtherPrayersHint:
+				"فعّل 'إظهار الصلوات الأخرى' لاستخدام هذا الإعداد",
+			// Visibility section
+			visibility: "الرؤية",
+			// Ticker section
+			ticker: "الشريط المتحرك",
+			enableShowTickerHint: "فعّل 'إظهار الشريط المتحرك' لاستخدام هذا الإعداد",
+			tickerInterval3: "3 ثوانٍ",
+			tickerInterval5: "5 ثوانٍ",
+			tickerInterval8: "8 ثوانٍ",
+			tickerInterval10: "10 ثوانٍ",
+			// Fonts section
+			fonts: "الخطوط",
+			prayerFont: "خط اسم الصلاة",
+			timeFont: "خط وقت الصلاة",
+			selectFont: "اختر الخط...",
+			searchFonts: "ابحث عن الخطوط...",
+			noFontFound: "لم يتم العثور على خط.",
+			// Backgrounds section
+			cardBackgrounds: "خلفيات البطاقات",
+			cardBackground: "خلفية البطاقة",
+			cardBackgroundOpacity: "شفافية الخلفية",
+			chooseFromImageBackgrounds: "اختر من خلفيات الصور",
+			selectBackground: "اختر الخلفية...",
+			searchBackgrounds: "ابحث عن الخلفيات...",
+			noBackgroundFound: "لم يتم العثور على خلفية.",
+			// Colors section
+			colors: "الألوان",
+			prayerName: "اسم الصلاة",
+			prayerTime: "وقت الصلاة",
+			countdown: "العد التنازلي",
+			// Calculation method names
+			calculationMethodNames: {
+				"1": "جامعة العلوم الإسلامية، كراتشي",
+				"2": "الجمعية الإسلامية لأمريكا الشمالية (ISNA)",
+				"3": "رابطة العالم الإسلامي",
+				"4": "جامعة أم القرى، مكة المكرمة",
+				"5": "الهيئة المصرية العامة للمساحة",
+				"7": "معهد الجيوفيزياء، جامعة طهران",
+				"8": "منطقة الخليج",
+				"9": "الكويت",
+				"10": "قطر",
+				"11": "مجلس أوغاما إسلام سنغافورة",
+				"12": "الاتحاد الإسلامي لفرنسا",
+				"13": "رئاسة الشؤون الدينية، تركيا",
+			},
+			// ASR methods
+			asrMethods: {
+				standard: "قياسي (شافعي، مالكي، حنبلي)",
+				hanafi: "حنفي",
+			},
 		},
 		azan: {
 			enable: "تفعيل الأذان",

@@ -127,7 +127,7 @@ export function WidgetPrayerCardSkeleton({
 		return (
 			<Card
 				className={cn(
-					"relative overflow-hidden border-amber-500/30 bg-linear-to-r from-amber-500/20 to-orange-500/20",
+					"relative overflow-hidden border-amber-500/30 bg-gradient-to-r from-amber-500/20 to-orange-500/20",
 					paddings,
 					className
 				)}
@@ -159,7 +159,7 @@ export function WidgetPrayerCardSkeleton({
 		return (
 			<div
 				className={cn(
-					"flex items-center justify-between rounded-lg border border-muted/30 bg-linear-to-r",
+					"flex items-center justify-between rounded-lg border border-muted/30 bg-gradient-to-r",
 					paddings,
 					className
 				)}
@@ -184,7 +184,7 @@ export function WidgetPrayerCardSkeleton({
 	return (
 		<div
 			className={cn(
-				"flex flex-col items-center rounded-lg border border-muted/30 bg-linear-to-b",
+				"flex flex-col items-center rounded-lg border border-muted/30 bg-gradient-to-b",
 				paddings,
 				className
 			)}

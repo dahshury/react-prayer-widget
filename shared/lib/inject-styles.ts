@@ -1,7 +1,54 @@
+import { getAssetUrl } from "./assets";
+import { AVAILABLE_FONTS } from "./fonts";
+
 /**
  * Automatically injects CSS variables required by the package
  * This runs as a side effect when the package is imported
  */
+
+const FONT_FILES: Record<string, string> = {
+	Amiri: "AmiriRegular.woff2",
+	AmiriBold: "AmiriBold.woff2",
+	Andalus: "Andalus.woff2",
+	BaradaReqa: "BaradaReqa.woff2",
+	FodaFreeFont: "FodaFreeFont.woff2",
+	FreeMono: "FreeMono.woff2",
+	FreeMonoBold: "FreeMonoBold.woff2",
+	FreeSans: "FreeSans.woff2",
+	FreeSansBold: "FreeSansBold.woff2",
+	FreeSerif: "FreeSerif.woff2",
+	FreeSerifBold: "FreeSerifBold.woff2",
+	HSNOmar: "HSNOmar.woff2",
+	KFGQPCUthmanTaha: "KFGQPCUthmanTaha.woff2",
+	KSARegular: "KSARegular.woff2",
+	mohammadboldart1: "mohammadboldart1.woff2",
+	Monofonto: "Monofonto.woff2",
+	NRTReg: "NRTReg.woff2",
+	"SFSultan-Black": "SFSultan-Black.woff2",
+	"STC-Regular": "STC-Regular.woff2",
+};
+
+const FONT_FACE_CSS = AVAILABLE_FONTS.map(({ value }) => {
+	if (value === "default") {
+		return "";
+	}
+	const file = FONT_FILES[value];
+	if (!file) {
+		return "";
+	}
+	const url = getAssetUrl(`fonts/${file}`);
+	return `
+@font-face {
+	font-family: "${value}";
+	src: url("${url}") format("woff2");
+	font-display: swap;
+	font-weight: 400;
+	font-style: normal;
+}
+`;
+})
+	.filter(Boolean)
+	.join("\n");
 
 const CSS_VARIABLES = `
 :root {
@@ -96,6 +143,8 @@ const CSS_VARIABLES = `
 	--prayer-card-h-item-md: 2.5rem;
 	--prayer-card-h-item-lg: 3rem;
 }
+
+${FONT_FACE_CSS}
 `;
 
 const STYLE_ID = "react-prayer-widget-styles";

@@ -27,7 +27,3 @@ bun-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# Project specific
-tawkit-9.61/
-tawkit-9.61-db056.zip 

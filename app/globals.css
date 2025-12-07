@@ -3,6 +3,159 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Font face declarations for competitor fonts */
+@font-face {
+	font-family: "Amiri";
+	src: url("/fonts/AmiriRegular.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "AmiriBold";
+	src: url("/fonts/AmiriBold.woff2") format("woff2");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Andalus";
+	src: url("/fonts/Andalus.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "BaradaReqa";
+	src: url("/fonts/BaradaReqa.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "FodaFreeFont";
+	src: url("/fonts/FodaFreeFont.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "FreeMono";
+	src: url("/fonts/FreeMono.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "FreeMonoBold";
+	src: url("/fonts/FreeMonoBold.woff2") format("woff2");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "FreeSans";
+	src: url("/fonts/FreeSans.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "FreeSansBold";
+	src: url("/fonts/FreeSansBold.woff2") format("woff2");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "FreeSerif";
+	src: url("/fonts/FreeSerif.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "FreeSerifBold";
+	src: url("/fonts/FreeSerifBold.woff2") format("woff2");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "HSNOmar";
+	src: url("/fonts/HSNOmar.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "KFGQPCUthmanTaha";
+	src: url("/fonts/KFGQPCUthmanTaha.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "KSARegular";
+	src: url("/fonts/KSARegular.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "mohammadboldart1";
+	src: url("/fonts/mohammadboldart1.woff2") format("woff2");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Monofonto";
+	src: url("/fonts/Monofonto.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "NRTReg";
+	src: url("/fonts/NRTReg.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SFSultan-Black";
+	src: url("/fonts/SFSultan-Black.woff2") format("woff2");
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "STC-Regular";
+	src: url("/fonts/STC-Regular.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
 :root {
 	/* Updated to Islamic-themed dark color palette */
 	--background: #1a1a1a;
@@ -42,6 +195,9 @@
 	--prayer-name-color: var(--foreground);
 	--prayer-time-color: var(--foreground);
 	--prayer-countdown-color: var(--muted-foreground);
+	/* Prayer font tokens */
+	--prayer-name-font: var(--font-sans);
+	--prayer-time-font: var(--font-sans);
 	/* Prayer card height tokens */
 	--prayer-card-h-next-xs: 2.25rem; /* matches py-1 and text scales */
 	--prayer-card-h-next-sm: 2.5rem;
@@ -91,6 +247,9 @@
 	--prayer-name-color: var(--foreground);
 	--prayer-time-color: var(--foreground);
 	--prayer-countdown-color: var(--muted-foreground);
+	/* Prayer font tokens */
+	--prayer-name-font: var(--font-sans);
+	--prayer-time-font: var(--font-sans);
 	/* Keep same height tokens in dark */
 	--prayer-card-h-next-xs: 2.25rem;
 	--prayer-card-h-next-sm: 2.5rem;

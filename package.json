@@ -24,13 +24,14 @@
   "files": [
     "dist/**/*",
     "styles.css",
+    "public/**/*",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "predev": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
+    "predev": "bun -e \"import { rmSync } from 'fs'; rmSync('.next', { recursive: true, force: true })\"",
     "build": "next build",
-    "build:package": "tsup",
+    "build:package": "bun -e \"import { rmSync } from 'fs'; rmSync('dist', { recursive: true, force: true })\" && tsup",
     "dev": "next dev --turbo",
     "lint": "next lint",
     "start": "next start",
@@ -74,8 +75,10 @@
     "countries-and-timezones": "^3.8.0",
     "country-data-list": "^1.5.5",
     "country-region-data": "^4.0.0",
+    "i18next": "^25.7.1",
     "lucide-react": "^0.543.0",
     "react-circle-flags": "^0.0.23",
+    "react-i18next": "^16.4.0",
     "tailwind-merge": "^3.3.1"
   },
   "peerDependencies": {

@@ -2,6 +2,8 @@
 
 import type { CSSProperties } from "react";
 import type { PrayerName } from "@/entities/prayer";
+import { useWidgetSettings } from "@/features/settings/ui";
+import { getRandomBackground } from "@/shared/lib/backgrounds";
 import { formatMinutesHHmm, formatTimeDisplay } from "@/shared/lib/time";
 import {
 	WidgetPrayerCard,
@@ -37,6 +39,12 @@ export type NextPrayerCardProps = {
 	};
 	/** Optional max width for the rendered card container */
 	maxWidth?: MaxWidth;
+	/** Card background setting (default, image, or color gradient theme) */
+	cardBackground?: string;
+	/** Card background opacity (0-1) */
+	cardBackgroundOpacity?: number;
+	/** Whether to use horizontal layout (affects background image selection) */
+	horizontalView?: boolean;
 };
 
 type MaxWidthToken = "md" | "lg" | "xl" | "2xl" | "3xl";
@@ -75,7 +83,16 @@ export function NextPrayerCard({
 	showIcon,
 	classes,
 	maxWidth,
+	cardBackground,
+	cardBackgroundOpacity,
+	horizontalView,
 }: NextPrayerCardProps) {
+	const settingsContext = useWidgetSettings();
+	// Use prop if provided, otherwise fall back to settings context
+	const opacity =
+		cardBackgroundOpacity !== undefined
+			? cardBackgroundOpacity
+			: settingsContext?.settings?.cardBackgroundOpacity;
 	const maxWidthClass = (() => {
 		if (maxWidth === undefined) {
 			return "";
@@ -103,13 +120,25 @@ export function NextPrayerCard({
 	return (
 		<div className={`mx-auto ${maxWidthClass}`} style={maxWidthStyle}>
 			<WidgetPrayerCard
+				cardBackground={cardBackground}
+				cardBackgroundOpacity={opacity}
 				classes={classes}
 				className={className}
 				countdown={formatMinutesHHmm(nextPrayer.timeUntil)}
 				gradientClass={gradientClass}
+				horizontalView={horizontalView}
 				isNext
 				name={nextPrayer.name}
 				nextSize={nextSize ?? size ?? "md"}
+				onNameClick={
+					settingsContext?.onSettingsChange
+						? () => {
+								settingsContext.onSettingsChange({
+									cardBackground: getRandomBackground(),
+								});
+							}
+						: null
+				}
 				progress={nextPrayer.progress}
 				showIcon={showIcon}
 				size={size}

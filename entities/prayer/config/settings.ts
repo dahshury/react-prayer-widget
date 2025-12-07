@@ -43,6 +43,10 @@ export const DEFAULT_EXTENDED_SETTINGS: ExtendedPrayerSettings = {
 	nextCardSize: "md",
 	otherCardSize: "sm",
 	appWidth: "xl",
+	prayerFont: "default",
+	timeFont: "default",
+	cardBackground: "default",
+	cardBackgroundOpacity: 0.7,
 };
 
 export const SETTINGS_STORAGE_KEY = "tawkit:settings:v1";

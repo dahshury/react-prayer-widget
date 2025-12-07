@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { PrayerTimes } from "@/entities/prayer";
-import { useTranslation } from "@/shared/lib/hooks";
 import {
-	AZKAR_GENERAL,
-	AZKAR_MASAA,
-	AZKAR_SABAH,
-	DEFAULT_ISLAMIC_CONTENT,
+	getAzkarFromTranslations,
+	getIslamicContentFromTranslations,
 	type IslamicContent,
 } from "@/shared/lib/prayer";
+import { cn } from "@/shared/lib/utils";
 
 type MinimalTickerProps = {
 	className?: string;
@@ -32,6 +31,30 @@ const MORNING_START_HOUR = 4; // Fajr time typically around 4 AM
 const MORNING_END_HOUR = 12; // Before noon
 const DEFAULT_TICKER_INTERVAL_MS = 5000; // 5 seconds
 
+// Helper function to get random content from pool, avoiding the current one
+function getRandomContentFromPool(
+	pool: IslamicContent[],
+	currentId: string,
+	fallback: IslamicContent
+): IslamicContent {
+	if (pool.length === 0) {
+		return fallback;
+	}
+	if (pool.length === 1) {
+		return pool[0];
+	}
+
+	// Filter out current content to avoid showing same content back-to-back
+	const availableContent = pool.filter((c) => c.id !== currentId);
+	if (availableContent.length === 0) {
+		// Fallback if all content is the same
+		return pool[Math.floor(Math.random() * pool.length)];
+	}
+
+	const randomIndex = Math.floor(Math.random() * availableContent.length);
+	return availableContent[randomIndex];
+}
+
 export function MinimalTicker({
 	className,
 	prayerTimes,
@@ -40,15 +63,47 @@ export function MinimalTicker({
 	showSource = true,
 	classes,
 }: MinimalTickerProps) {
-	const { language } = useTranslation();
-	const indexRef = useRef(0);
+	const { i18n } = useTranslation();
+	const locale = (i18n.language || "en") as "en" | "ar";
+	const [islamicContent, setIslamicContent] = useState<IslamicContent[]>([]);
+	const [azkar, setAzkar] = useState<{
+		sabah: IslamicContent[];
+		masaa: IslamicContent[];
+		general: IslamicContent[];
+	}>({ sabah: [], masaa: [], general: [] });
+	const [isLoading, setIsLoading] = useState(true);
+
 	const poolRef = useRef<IslamicContent[]>([]);
 	const currentContentIdRef = useRef<string>("");
+	const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+	// Load content from translations
+	useEffect(() => {
+		async function loadContent() {
+			setIsLoading(true);
+			try {
+				const [content, azkarData] = await Promise.all([
+					getIslamicContentFromTranslations(locale),
+					getAzkarFromTranslations(locale),
+				]);
+				setIslamicContent(content);
+				setAzkar(azkarData);
+			} catch (error) {
+				console.error("Failed to load Islamic content:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		}
+		loadContent();
+	}, [locale]);
 
 	// Decide which pool (Sabah vs Masaa) based on current time (or prayer times if available)
 	const basePool = useMemo<IslamicContent[]>(() => {
 		if (contentPool && contentPool.length > 0) {
 			return contentPool;
+		}
+		if (isLoading || islamicContent.length === 0) {
+			return [];
 		}
 		const now = new Date();
 		const hour = now.getHours();
@@ -63,81 +118,150 @@ export function MinimalTicker({
 			const asr = toMinutes(prayerTimes.asr);
 			morning = nowMin >= fajr && nowMin < asr;
 		}
-		const timedPool = morning ? AZKAR_SABAH : AZKAR_MASAA;
-		return [...AZKAR_GENERAL, ...timedPool, ...DEFAULT_ISLAMIC_CONTENT];
-	}, [prayerTimes, contentPool]);
+		const timedPool = morning ? azkar.sabah : azkar.masaa;
+		// Combine all content - random selection will ensure variety
+		return [...azkar.general, ...timedPool, ...islamicContent];
+	}, [prayerTimes, contentPool, isLoading, islamicContent, azkar]);
 
-	const [currentContent, setCurrentContent] = useState<IslamicContent>(() => {
-		const pool = basePool.length > 0 ? basePool : DEFAULT_ISLAMIC_CONTENT;
-		poolRef.current = pool;
-		indexRef.current = 0;
-		const initialContent = pool[0];
-		currentContentIdRef.current = initialContent.id;
-		return initialContent;
-	});
+	const [currentContent, setCurrentContent] = useState<IslamicContent | null>(
+		null
+	);
 
-	// Update pool ref whenever basePool changes (not when content changes)
+	// Initialize content when pool is ready
+	useEffect(() => {
+		if (isLoading || basePool.length === 0) {
+			return;
+		}
+		poolRef.current = basePool;
+		const randomContent = getRandomContentFromPool(basePool, "", basePool[0]);
+		currentContentIdRef.current = randomContent.id;
+		setCurrentContent(randomContent);
+	}, [basePool, isLoading]);
+
+	// Update pool ref whenever basePool changes
 	useEffect(() => {
 		const previousPool = poolRef.current;
 		poolRef.current = basePool;
 
-		// Only handle pool changes, not content changes
-		// Check if pool actually changed by comparing lengths or first item
+		// Check if pool actually changed
 		const poolChanged =
 			previousPool.length !== basePool.length ||
 			previousPool.length === 0 ||
 			previousPool[0]?.id !== basePool[0]?.id;
 
-		if (poolChanged && previousPool.length > 0) {
-			// Pool changed - try to find current content in new pool
+		if (poolChanged && basePool.length > 0) {
+			// Pool changed - get random content from new pool
 			const currentId = currentContentIdRef.current;
-			const newIndex = basePool.findIndex((c) => c.id === currentId);
-			if (newIndex !== -1) {
-				indexRef.current = newIndex;
-			} else {
-				// If current content not found in new pool, reset to 0
-				indexRef.current = 0;
-				const newContent = basePool[0] ?? DEFAULT_ISLAMIC_CONTENT[0];
-				currentContentIdRef.current = newContent.id;
-				setCurrentContent(newContent);
-			}
+			const newContent = getRandomContentFromPool(
+				basePool,
+				currentId,
+				basePool[0]
+			);
+			currentContentIdRef.current = newContent.id;
+			setCurrentContent(newContent);
 		}
 	}, [basePool]);
 
-	// Set up interval for cycling through content
+	// Handler to randomize content on click
+	const handleRandomize = useCallback(() => {
+		const currentPool = poolRef.current;
+		if (currentPool.length === 0) {
+			return;
+		}
+		const currentIdValue = currentContentIdRef.current;
+		const nextContentValue = getRandomContentFromPool(
+			currentPool,
+			currentIdValue,
+			currentPool[0]
+		);
+		currentContentIdRef.current = nextContentValue.id;
+		setCurrentContent(nextContentValue);
+		// Note: We don't reset the interval here - the main effect handles all interval management
+		// This ensures the interval always respects the current intervalMs setting
+	}, []);
+
+	// Set up interval for randomly selecting content
+	// This effect properly handles intervalMs changes by recreating the interval
 	useEffect(() => {
-		const interval = setInterval(() => {
-			const pool = poolRef.current;
-			if (pool.length === 0) {
+		const interval = intervalMs ?? DEFAULT_TICKER_INTERVAL_MS;
+
+		// Clear any existing interval first
+		if (intervalRef.current) {
+			clearInterval(intervalRef.current);
+			intervalRef.current = null;
+		}
+
+		// Create new interval with current intervalMs value
+		intervalRef.current = setInterval(() => {
+			const effectPool = poolRef.current;
+			if (effectPool.length === 0) {
 				return;
 			}
-			indexRef.current = (indexRef.current + 1) % pool.length;
-			const nextContent = pool[indexRef.current];
-			currentContentIdRef.current = nextContent.id;
-			setCurrentContent(nextContent);
-		}, intervalMs ?? DEFAULT_TICKER_INTERVAL_MS);
+			const effectCurrentId = currentContentIdRef.current;
+			const effectNextContent = getRandomContentFromPool(
+				effectPool,
+				effectCurrentId,
+				effectPool[0]
+			);
+			currentContentIdRef.current = effectNextContent.id;
+			setCurrentContent(effectNextContent);
+		}, interval);
 
-		return () => clearInterval(interval);
+		return () => {
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current);
+				intervalRef.current = null;
+			}
+		};
 	}, [intervalMs]);
 
+	if (isLoading || !currentContent) {
+		return (
+			<div
+				className={cn(
+					"rounded-xl border border-border/60 bg-muted/40 px-4 py-3 shadow-md/50 backdrop-blur-sm",
+					className,
+					classes?.container
+				)}
+			>
+				<div className={cn("text-muted-foreground text-sm", classes?.text)}>
+					Loading...
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div
-			className={`rounded-lg border border-muted/50 bg-muted/30 px-3 py-2 ${className} ${classes?.container ?? ""}`}
+		<button
+			aria-label="Click to show next random content"
+			className={cn(
+				"cursor-pointer rounded-xl border border-border/60 bg-muted/40 px-4 py-3 shadow-md/50 backdrop-blur-sm transition-all duration-200 hover:bg-muted/60 active:bg-muted/50",
+				className,
+				classes?.container
+			)}
+			onClick={handleRandomize}
+			type="button"
 		>
 			<div
-				className={`line-clamp-2 text-foreground/90 text-xs leading-relaxed ${classes?.text ?? ""}`}
+				className={cn(
+					"line-clamp-2 text-foreground text-sm leading-relaxed",
+					classes?.text
+				)}
 			>
-				{language === "ar"
+				{locale === "ar"
 					? currentContent.arabic || currentContent.english
 					: currentContent.english}
 			</div>
 			{!!showSource && (
 				<div
-					className={`mt-1 text-[10px] text-foreground/70 ${classes?.source ?? ""}`}
+					className={cn(
+						"mt-2 font-medium text-muted-foreground/70 text-xs",
+						classes?.source
+					)}
 				>
 					— {currentContent.source}
 				</div>
 			)}
-		</div>
+		</button>
 	);
 }

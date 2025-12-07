@@ -77,6 +77,7 @@ export type ExtendedPrayerSettings = PrayerSettings & {
 	showOtherPrayers?: boolean;
 	showCity?: boolean;
 	showTicker?: boolean;
+	showStandaloneTicker?: boolean;
 	showDate?: boolean;
 	horizontalView?: boolean;
 	timeFormat24h?: boolean;
@@ -115,6 +116,14 @@ export type ExtendedPrayerSettings = PrayerSettings & {
 	otherCardSize?: "xxs" | "xs" | "sm" | "md" | "lg";
 	/** Max width for the overall app/cards container */
 	appWidth?: "xxs" | "xs" | "md" | "lg" | "xl" | "2xl" | "3xl";
+	/** Font family for prayer names and general text */
+	prayerFont?: string;
+	/** Font family for prayer times */
+	timeFont?: string;
+	/** Card background style (default, image, or color gradient theme) */
+	cardBackground?: string;
+	/** Card background opacity 0..1 */
+	cardBackgroundOpacity?: number;
 	/** Error flag for location/permission issues */
 	locationError?: string;
 };

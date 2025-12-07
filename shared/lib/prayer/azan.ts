@@ -10,11 +10,13 @@ export type AzanChoiceId =
 	| "custom:global";
 
 /** Map built-in azan IDs to public asset paths */
+import { getAssetUrl } from "../assets";
+
 export const BUILTIN_AZAN_SOURCES: Record<string, string> = {
-	default: "/audio/audio_azan.mp3",
-	short: "/audio/short_azan.mp3",
-	fajr: "/audio/audio_fajr.mp3",
-	beep: "/audio/w-alert-1.wav",
+	default: getAssetUrl("audio/audio_azan.mp3"),
+	short: getAssetUrl("audio/short_azan.mp3"),
+	fajr: getAssetUrl("audio/audio_fajr.mp3"),
+	beep: getAssetUrl("audio/w-alert-1.wav"),
 };
 
 // Helper function: Get custom azan source from localStorage

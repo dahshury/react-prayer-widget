@@ -5,6 +5,7 @@ import type {
 	PrayerName,
 	PrayerTimes,
 } from "@/entities/prayer";
+import { getRandomBackground } from "@/shared/lib/backgrounds";
 import { storeCustomAzanFile } from "@/shared/lib/prayer";
 import { formatTimeDisplay } from "@/shared/lib/time";
 import { WidgetPrayerCard } from "./prayer-card";
@@ -34,6 +35,7 @@ type PrayerCardProps = {
 	isFriday: boolean;
 	isPastTime: (hhmm: string) => boolean;
 	onDropFile: (file: File) => Promise<void>;
+	onSettingsChange: (s: Partial<ExtendedPrayerSettings>) => void;
 };
 
 // Helper component to render a single prayer card
@@ -45,6 +47,7 @@ function PrayerCardItem({
 	isFriday,
 	isPastTime,
 	onDropFile,
+	onSettingsChange,
 }: PrayerCardProps) {
 	const getPastClass = (prayerTime: string): string | undefined =>
 		settings.dimPreviousPrayers && isPastTime(prayerTime)
@@ -53,12 +56,17 @@ function PrayerCardItem({
 
 	return (
 		<WidgetPrayerCard
+			cardBackground={settings.cardBackground}
+			cardBackgroundOpacity={settings.cardBackgroundOpacity}
 			className={getPastClass(time)}
 			horizontalView={settings.horizontalView}
 			isCurrent={nextPrayerName === prayerName}
 			isFriday={isFriday}
 			name={prayerName}
 			onDropFile={onDropFile}
+			onNameClick={() => {
+				onSettingsChange({ cardBackground: getRandomBackground() });
+			}}
 			size={settings.otherCardSize || "sm"}
 			time={formatTimeDisplay(
 				time,
@@ -118,6 +126,7 @@ export function PrayerCardsGrid({
 					key={prayer.name}
 					nextPrayerName={nextPrayerName}
 					onDropFile={(file) => handleAzanUpload(prayer.name, file)}
+					onSettingsChange={onSettingsChange}
 					prayerName={prayer.name}
 					settings={settings}
 					time={prayer.time}

@@ -1,0 +1,953 @@
+{
+  "islamicContent": {
+    "1": {
+      "text": "The Prophet (ﷺ) said: \"The first matter that the slave will be brought to account for on the Day of Judgment is the prayer. If it is sound, then the rest of his deeds will be sound. And if it is bad, then the rest of his deeds will be bad.\"",
+      "source": "At-Tabarani",
+      "type": "hadith"
+    },
+    "2": {
+      "text": "And establish prayer and give zakah and bow with those who bow [in worship and obedience].",
+      "source": "Quran 2:43",
+      "type": "ayah"
+    },
+    "3": {
+      "text": "The Prophet (ﷺ) said: \"Between a man and disbelief and paganism is the abandonment of prayer.\"",
+      "source": "Sahih Muslim",
+      "type": "hadith"
+    },
+    "4": {
+      "text": "Indeed, prayer prohibits immorality and wrongdoing.",
+      "source": "Quran 29:45",
+      "type": "ayah"
+    },
+    "5": {
+      "text": "The Prophet (ﷺ) said: \"The key to Paradise is prayer, and the key to prayer is ablution.\"",
+      "source": "Ahmad",
+      "type": "hadith"
+    },
+    "6": {
+      "text": "And seek help through patience and prayer.",
+      "source": "Quran 2:45",
+      "type": "ayah"
+    },
+    "7": {
+      "text": "The Prophet (ﷺ) said: \"Whoever maintains the prayers, Allah will make for him a light, a proof, and a salvation on the Day of Resurrection.\"",
+      "source": "Ahmad",
+      "type": "hadith"
+    },
+    "8": {
+      "text": "Maintain with care the [obligatory] prayers and [in particular] the middle prayer.",
+      "source": "Quran 2:238",
+      "type": "ayah"
+    },
+    "9": {
+      "text": "The Prophet (ﷺ) said: \"Prayer is the pillar of religion. Whoever establishes it has established religion, and whoever destroys it has destroyed religion.\"",
+      "source": "Al-Bayhaqi",
+      "type": "hadith"
+    },
+    "10": {
+      "text": "And when you have completed the prayer, remember Allah standing, sitting, or [lying] on your sides.",
+      "source": "Quran 4:103",
+      "type": "ayah"
+    },
+    "hadith-1000": {
+      "text": "Your smile in the face of your brother is charity.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1001": {
+      "text": "The most beloved of people to Allah are those with the best character.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1002": {
+      "text": "Nothing is heavier on the scale than good character.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1003": {
+      "text": "There is no power and no strength except with Allah.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1004": {
+      "text": "O Allah, send blessings and peace upon our Prophet Muhammad.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1005": {
+      "text": "O Allah, forgive me, have mercy on me, guide me, grant me health, and provide for me.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1006": {
+      "text": "None of you truly believes until he loves for his brother what he loves for himself.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1007": {
+      "text": "The Prophet (ﷺ) said: \"Whoever sends blessings upon me once, Allah will send blessings upon him ten times.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1008": {
+      "text": "The Prophet (ﷺ) said: \"Actions are but by intention, and every person will have what they intended.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1009": {
+      "text": "The Prophet (ﷺ) said: \"Whoever turns away from my Sunnah is not from me.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1010": {
+      "text": "The Prophet (ﷺ) said: \"Allah raises some people through this Book and lowers others through it.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1011": {
+      "text": "The Prophet (ﷺ) said: \"Whoever travels a path in search of knowledge, Allah will make easy for him a path to Paradise.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1012": {
+      "text": "The Prophet (ﷺ) said: \"Do not turn your houses into graves. Indeed, Satan flees from the house in which Surah Al-Baqarah is recited.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1013": {
+      "text": "The Prophet (ﷺ) said: \"Faith has over sixty branches, and modesty is a branch of faith.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1014": {
+      "text": "The Prophet (ﷺ) said: \"The best of you are those who learn the Quran and teach it.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1015": {
+      "text": "The Prophet (ﷺ) said: \"The believers are like a building, each part strengthening the other.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1016": {
+      "text": "The Prophet (ﷺ) said: \"Whoever helps his brother in his need, Allah will be in his need.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1017": {
+      "text": "The Prophet (ﷺ) said: \"Obedience is only in what is good.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1018": {
+      "text": "The Prophet (ﷺ) said: \"There is no obedience to any created being in disobedience to the Creator.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1019": {
+      "text": "The Prophet (ﷺ) said: \"Beware of envy, for envy consumes good deeds just as fire consumes wood.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1020": {
+      "text": "The Prophet (ﷺ) said: \"The strong is not the one who overcomes people by his strength, but the strong is the one who controls himself while in anger.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1021": {
+      "text": "The Prophet (ﷺ) said: \"The one who looks after a widow or a poor person is like a Mujahid (warrior) who fights for Allah's cause, or like him who performs prayers all the night and fasts all the day.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1022": {
+      "text": "The Prophet (ﷺ) said: \"All of you are guardians and are responsible for your wards.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1023": {
+      "text": "The Prophet (ﷺ) said: \"Persistently call upon 'O Possessor of Majesty and Honor'.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1025": {
+      "text": "The Prophet (ﷺ) said: \"He who has in his heart the weight of a mustard seed of pride shall not enter Paradise.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1026": {
+      "text": "The Prophet (ﷺ) said: \"The most beloved of you to me and the nearest of you to me on the Day of Resurrection are those with the best character.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1027": {
+      "text": "The Prophet (ﷺ) said: \"Whoever memorizes ten verses from the beginning of Surah Al-Kahf will be protected from the Dajjal.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1028": {
+      "text": "The Prophet (ﷺ) said: \"Whoever would like his provision to be increased and his life span to be extended, let him maintain the ties of kinship.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1029": {
+      "text": "The Prophet (ﷺ) said: \"When Allah wants good for someone, He gives him understanding of the religion.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1030": {
+      "text": "The Prophet (ﷺ) said: \"Whoever recites the last two verses of Surah Al-Baqarah at night, they will suffice him.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1031": {
+      "text": "The Prophet (ﷺ) said: \"The greatest of major sins are: associating partners with Allah, disobedience to parents, and bearing false witness.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1032": {
+      "text": "The Prophet (ﷺ) said: \"The covenant between us and them is prayer, so whoever abandons it has disbelieved.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1033": {
+      "text": "The Prophet (ﷺ) said: \"Oppression will be darkness on the Day of Resurrection.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1034": {
+      "text": "Whoever believes in Allah and the Last Day should speak good or remain silent.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1036": {
+      "text": "The Prophet (ﷺ) said: \"There are two blessings which many people lose: health and free time.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1037": {
+      "text": "The Prophet (ﷺ) said: \"Beware of suspicion, for suspicion is the worst of false tales.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1040": {
+      "text": "The Prophet (ﷺ) said: \"Part of the perfection of one's Islam is his leaving that which does not concern him.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1041": {
+      "text": "The Prophet (ﷺ) said: \"Jibril kept recommending me to treat neighbors well until I thought he would make them heirs.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1042": {
+      "text": "The Prophet (ﷺ) said: \"Allah does not look at your appearance or your wealth, but He looks at your hearts and your deeds.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1043": {
+      "text": "The Prophet (ﷺ) said: \"Make things easy and do not make them difficult, cheer the people up by conveying glad tidings to them and do not repulse them.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1047": {
+      "text": "The Prophet (ﷺ) said: \"The world is a prison for the believer and a paradise for the disbeliever.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1048": {
+      "text": "Excellence (Ihsan) is to worship Allah as if you see Him, and if you cannot see Him, then indeed He sees you.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1049": {
+      "text": "The Prophet (ﷺ) said: \"Paradise is surrounded by hardships and Hell is surrounded by desires.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1050": {
+      "text": "The Prophet (ﷺ) said: \"O people, repent to Allah, for I repent to Him one hundred times a day.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1051": {
+      "text": "The Prophet (ﷺ) said: \"There is no Muslim who supplicates for his brother behind his back but that an angel says: 'And for you the same.'\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1052": {
+      "text": "The Prophet (ﷺ) said: \"A Muslim is the one from whose tongue and hand the Muslims are safe.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1054": {
+      "text": "The Prophet (ﷺ) said: \"The world is but provisions, and the best provision of the world is a righteous woman.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1058": {
+      "text": "The Prophet (ﷺ) said: \"Whoever introduces something into this matter of ours that is not part of it will have it rejected.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1060": {
+      "text": "The Prophet (ﷺ) said: \"Charity does not decrease wealth.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1062": {
+      "text": "The Prophet (ﷺ) said: \"All the children of Adam are sinners, and the best of sinners are those who repent.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1065": {
+      "text": "The Prophet (ﷺ) said: \"The son of Adam does not fill any vessel worse than his stomach.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1067": {
+      "text": "The Prophet (ﷺ) said: \"Fulfill the trust to the one who entrusted you, and do not betray the one who betrayed you.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1068": {
+      "text": "The Prophet (ﷺ) said: \"Whoever believes in Allah and the Last Day should speak good or remain silent.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1073": {
+      "text": "The Prophet (ﷺ) said: \"The most beloved deed to Allah is the one that is done consistently, even if it is small.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1074": {
+      "text": "The Prophet (ﷺ) said: \"The example of the one who remembers his Lord and the one who does not remember his Lord is like that of the living and the dead.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1075": {
+      "text": "The Prophet (ﷺ) said: \"Whoever says 'Subhan Allah wa bihamdihi' (Glory be to Allah and praise be to Him) one hundred times a day will have his sins forgiven, even if they were like the foam of the sea.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1076": {
+      "text": "The Prophet (ﷺ) said: \"Allah is pleased with His servant who eats a meal and praises Him for it, or drinks a drink and praises Him for it.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1077": {
+      "text": "The Prophet (ﷺ) said: \"Were it not that I would overburden my Ummah, I would have ordered them to use the Siwak (tooth-stick) with every prayer.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1078": {
+      "text": "Whoever prays Isha in congregation is as if he has stood half the night, and whoever prays Fajr in congregation is as if he has stood the whole night.",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1079": {
+      "text": "The Prophet (ﷺ) said: \"When one of you enters the mosque, let him pray two rak'ahs before sitting.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1082": {
+      "text": "The Prophet (ﷺ) said: \"The nearest a servant comes to his Lord is when he is prostrating, so make supplication (in this state).\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1083": {
+      "text": "The Prophet (ﷺ) said: \"The two rak'ahs of Fajr are better than this world and all that it contains.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1085": {
+      "text": "The Prophet (ﷺ) said: \"Make the last of your prayer at night Witr (odd number).\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1086": {
+      "text": "The Prophet (ﷺ) said: \"When the prayer is called, there is no prayer except the obligatory one.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1088": {
+      "text": "The Prophet (ﷺ) said: \"Be in this world as if you were a stranger or a traveler.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1093": {
+      "text": "The Prophet (ﷺ) said: \"Truthfulness leads to righteousness, and righteousness leads to Paradise.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1094": {
+      "text": "The Prophet (ﷺ) said: \"Do not hate one another, do not envy one another, do not turn away from one another, but rather be servants of Allah as brothers.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1095": {
+      "text": "The Prophet (ﷺ) said: \"The upper hand is better than the lower hand.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1096": {
+      "text": "The Prophet (ﷺ) said: \"Straighten your rows, for straightening the rows is part of establishing the prayer.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "hadith-1098": {
+      "text": "The Prophet (ﷺ) said: \"When a person dies, his deeds come to an end except for three: ongoing charity, knowledge that is benefited from, or a righteous child who prays for him.\"",
+      "source": "Hadith",
+      "type": "hadith"
+    },
+    "ayah-2000": {
+      "text": "Do people think they will be left alone after saying \"We believe\" and not be tested?",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2001": {
+      "text": "Verily, in the remembrance of Allah do hearts find rest.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2003": {
+      "text": "Is not Allah sufficient for His servant?",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2005": {
+      "text": "Or who responds to the distressed when he calls upon Him?",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2007": {
+      "text": "Indeed, with hardship comes ease.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2009": {
+      "text": "Indeed, the most noble of you in the sight of Allah is the most righteous of you.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2010": {
+      "text": "Indeed, good deeds do away with misdeeds.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2011": {
+      "text": "Indeed, the patient will be given their reward without account.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2013": {
+      "text": "Indeed, the most noble of you in the sight of Allah is the most righteous of you. Indeed, Allah is Knowing and Acquainted.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2014": {
+      "text": "Indeed, Allah will not change the condition of a people until they change what is in themselves.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2016": {
+      "text": "The believers are but brothers.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2018": {
+      "text": "If Allah should aid you, no one can overcome you.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2020": {
+      "text": "Those who have believed and whose hearts are assured by the remembrance of Allah. Unquestionably, by the remembrance of Allah hearts are assured.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2021": {
+      "text": "Your good tidings today are gardens beneath which rivers flow, wherein you will abide eternally. That is the great attainment.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2022": {
+      "text": "Maintain with care the [obligatory] prayers and [in particular] the middle prayer and stand before Allah, devoutly obedient.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2023": {
+      "text": "Sufficient for me is Allah; there is no deity except Him. On Him I have relied, and He is the Lord of the Great Throne.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2024": {
+      "text": "Our Lord, let not our hearts deviate after You have guided us and grant us from Yourself mercy. Indeed, You are the Bestower.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2025": {
+      "text": "My Lord, indeed I have wronged myself, so forgive me.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2027": {
+      "text": "My Lord, do not leave me alone [with no heir], while You are the best of inheritors.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2029": {
+      "text": "My Lord, forgive and have mercy, and You are the best of the merciful.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2031": {
+      "text": "We hear and we obey. [We seek] Your forgiveness, our Lord, and to You is the [final] destination.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2033": {
+      "text": "So be patient with gracious patience.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2034": {
+      "text": "Say, \"Never will we be struck except by what Allah has decreed for us; He is our protector.\" And upon Allah let the believers rely.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2035": {
+      "text": "There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2036": {
+      "text": "You will surely find the most intense of the people in animosity toward the believers [to be] the Jews and those who associate others with Allah.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2038": {
+      "text": "And for every matter is a [time of] settlement, and you will come to know.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2041": {
+      "text": "Whoever should hope for the meeting with Allah - indeed, the term decreed by Allah is coming. And He is the Hearing, the Knowing.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2042": {
+      "text": "And He will reward them for what they patiently endured with a garden [in Paradise] and silk [garments].",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2044": {
+      "text": "And [He revealed] that the masjids are for Allah, so do not invoke with Allah anyone.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2046": {
+      "text": "And [remember] when your Lord proclaimed, \"If you are grateful, I will surely increase you [in favor].",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2047": {
+      "text": "And remind, for indeed, the reminder benefits the believers.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2049": {
+      "text": "And Allah has preferred the mujahideen over those who remain [behind] with a great reward.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2051": {
+      "text": "And fight them until there is no fitnah and [until] the religion, all of it, is for Allah.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2052": {
+      "text": "And say, \"My Lord, increase me in knowledge.\"",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2054": {
+      "text": "And never say of anything, \"Indeed, I will do that tomorrow,\" except [when adding], \"If Allah wills.\"",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2055": {
+      "text": "And your Lord is going to give you, and you will be satisfied.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2057": {
+      "text": "And never will the Jews or the Christians approve of you until you follow their religion.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2059": {
+      "text": "And whoever relies upon Allah - then He is sufficient for him.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2062": {
+      "text": "And whoever fears Allah - He will make for him a way out and will provide for him from where he does not expect.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2063": {
+      "text": "And whoever believes in Allah - He will guide his heart.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2065": {
+      "text": "And seek help through patience and prayer, and indeed, it is difficult except for the humbly submissive [to Allah].",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2066": {
+      "text": "O Prophet, strive against the disbelievers and the hypocrites and be harsh upon them.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2068": {
+      "text": "O you who have believed, fear Allah. And let every soul look to what it has put forth for tomorrow.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2069": {
+      "text": "O you who have believed, if you support Allah, He will support you.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2070": {
+      "text": "O you who have believed, if you support Allah, He will support you and plant firmly your feet.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2071": {
+      "text": "O you who have believed, do not take the Jews and the Christians as allies. They are [in fact] allies of one another.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2073": {
+      "text": "O children of Adam, take your adornment at every masjid.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2075": {
+      "text": "The Day when there will not benefit [anyone] wealth or children, but only one who comes to Allah with a sound heart.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2076": {
+      "text": "O mankind, indeed the promise of Allah is truth, so let not the worldly life delude you and be not deceived about Allah by the Deceiver.",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2077": {
+      "text": "And [remember] when your Lord proclaimed, \"If you are grateful, I will surely increase you [in favor].\"",
+      "source": "Quran",
+      "type": "ayah"
+    },
+    "ayah-2078": {
+      "text": "Reminder of the ten days of Dhul Hijjah",
+      "source": "Event - 10 Days of Dhul Hijjah",
+      "type": "ayah"
+    },
+    "ayah-2083": {
+      "text": "Allah is the Greatest, Allah is the Greatest, Allah is the Greatest, there is no deity except Allah",
+      "source": "Takbir",
+      "type": "ayah"
+    },
+    "ayah-2084": {
+      "text": "Allah is the Greatest, Allah is the Greatest, Allah is the Greatest, and to Allah belongs all praise",
+      "source": "Takbir",
+      "type": "ayah"
+    },
+    "ayah-2095": {
+      "text": "Indeed, We sent it down during a blessed night. Indeed, We were to warn [mankind].",
+      "source": "Event - Last 10 Nights of Ramadan",
+      "type": "ayah"
+    },
+    "ayah-2098": {
+      "text": "O Allah, indeed You are Pardoning, [generous] and You love to pardon, so pardon me.",
+      "source": "Event - Last 10 Nights of Ramadan",
+      "type": "ayah"
+    },
+    "ayah-2099": {
+      "text": "Indeed, We sent it down during the Night of Decree.",
+      "source": "Event - Last 10 Nights of Ramadan",
+      "type": "ayah"
+    },
+    "ayah-2100": {
+      "text": "The Night of Decree is better than a thousand months.",
+      "source": "Event - Last 10 Nights of Ramadan",
+      "type": "ayah"
+    },
+    "ayah-2109": {
+      "text": "Reminder to fast the white days",
+      "source": "Event - White Days",
+      "type": "ayah"
+    },
+    "msg-3002": {
+      "text": "Please turn off your phone when entering the mosque.",
+      "source": "Daily Message",
+      "type": "ayah"
+    },
+    "msg-3003": {
+      "text": "O Allah, I ask You for guidance, piety, chastity, and self-sufficiency.",
+      "source": "Daily Message",
+      "type": "ayah"
+    },
+    "msg-3005": {
+      "text": "Glory be to Allah and praise be to Him. Glory be to Allah, the Most Great.",
+      "source": "Daily Message",
+      "type": "ayah"
+    },
+    "msg-3006": {
+      "text": "The Messenger of Allah (ﷺ) said: \"On Friday there is an hour in which no Muslim standing in prayer asks Allah for good, but He will give it to him.\"",
+      "source": "Friday Message",
+      "type": "ayah"
+    },
+    "msg-3007": {
+      "text": "May Allah accept from us and from you righteous deeds.",
+      "source": "Event - 10/01",
+      "type": "ayah"
+    },
+    "msg-3008": {
+      "text": "Reminder of the ten days of Dhul Hijjah --- The Messenger of Allah (ﷺ) said: \"There are no days in which righteous deeds are more beloved to Allah than these days.\"",
+      "source": "Event - 10DLHJ",
+      "type": "hadith"
+    },
+    "msg-3009": {
+      "text": "Allah is the Greatest, Allah is the Greatest, there is no deity except Allah, Allah is the Greatest, Allah is the Greatest, and to Allah belongs all praise",
+      "source": "Event - 12/10",
+      "type": "ayah"
+    },
+    "slide-4002": {
+      "text": "O Allah, You are my Lord, there is no deity except You. You created me and I am Your servant, and I am upon Your covenant and promise as much as I am able. I seek refuge in You from the evil of what I have done. I acknowledge to You Your favor upon me and I acknowledge my sin, so forgive me, for indeed none can forgive sins except You.",
+      "source": "Slide",
+      "type": "hadith"
+    },
+    "slide-4003": {
+      "text": "O Allah, forgive me all my sins, the small and the great, the first and the last, the apparent and the hidden.",
+      "source": "Slide",
+      "type": "hadith"
+    },
+    "slide-4004": {
+      "text": "Our Lord, give us good in this world and good in the Hereafter and save us from the punishment of the Fire.",
+      "source": "Slide",
+      "type": "ayah"
+    },
+    "slide-4005": {
+      "text": "O Allah, suffice me with what You have made lawful instead of what You have made unlawful, and make me independent of all others besides You.",
+      "source": "Slide",
+      "type": "hadith"
+    },
+    "slide-4006": {
+      "text": "O Allah, I seek refuge in You from the withdrawal of Your blessing and the change of Your protection and the suddenness of Your punishment and all Your displeasure.",
+      "source": "Slide",
+      "type": "hadith"
+    },
+    "slide-4007": {
+      "text": "O Allah, set right for me my religion which is the safeguard of my affairs. And set right for me the affairs of my world wherein is my living. And set right for me my Hereafter to which is my return. And make life for me [a source of] abundance in every good, and make death a rest for me from every evil.",
+      "source": "Slide",
+      "type": "hadith"
+    },
+    "slide-4008": {
+      "text": "My Lord, grant me from Yourself a good offspring. Indeed, You are the Hearer of supplication.",
+      "source": "Slide",
+      "type": "ayah"
+    },
+    "slide-4009": {
+      "text": "Our Lord, we have believed in what You revealed and followed the messenger, so register us among the witnesses.",
+      "source": "Slide",
+      "type": "ayah"
+    },
+    "slide-4010": {
+      "text": "My Lord, make me an establisher of prayer, and from my descendants. Our Lord, and accept my supplication.",
+      "source": "Slide",
+      "type": "ayah"
+    },
+    "slide-4011": {
+      "text": "Our Lord, grant us from Yourself mercy and prepare for us from our affair right guidance.",
+      "source": "Slide",
+      "type": "ayah"
+    },
+    "slide-4013": {
+      "text": "O Allah, Controller of the hearts, direct our hearts to Your obedience.",
+      "source": "Slide",
+      "type": "hadith"
+    }
+  },
+  "azkar": {
+    "sabah": {
+      "s1": {
+        "text": "O Allah, by You we reach the morning and by You we reach the evening, and by You we live and by You we die, and to You is the resurrection.",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s2": {
+        "text": "Sufficient for me is Allah, there is no deity except Him. Upon Him I rely, and He is the Lord of the Great Throne.",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s3": {
+        "text": "We have reached the morning and the dominion belongs to Allah...",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s4": {
+        "text": "O Allah, You are my Lord, there is no deity except You...",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s5": {
+        "text": "O Allah, I have reached the morning and I bear witness...",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s6": {
+        "text": "In the name of Allah, with Whose name nothing can cause harm...",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s7": {
+        "text": "We have reached the morning upon the natural religion of Islam...",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s8": {
+        "text": "O Allah, grant me health in my body...",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s9": {
+        "text": "O Allah, I seek refuge in You from disbelief...",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      },
+      "s10": {
+        "text": "O Allah, I ask You for pardon and well-being...",
+        "source": "Azkar Sabah",
+        "type": "hadith"
+      }
+    },
+    "masaa": {
+      "m1": {
+        "text": "I seek refuge in Allah from Satan, the accursed.",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      },
+      "m2": {
+        "text": "The Messenger has believed in what was revealed to him...",
+        "source": "Azkar Masaa",
+        "type": "ayah"
+      },
+      "m3": {
+        "text": "We have reached the evening and the dominion belongs to Allah...",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      },
+      "m4": {
+        "text": "O Allah, You are my Lord, there is no deity except You...",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      },
+      "m5": {
+        "text": "Sufficient for me is Allah, there is no deity except Him...",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      },
+      "m6": {
+        "text": "In the name of Allah, with Whose name nothing can cause harm...",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      },
+      "m7": {
+        "text": "O Allah, by You we reach the evening and by You we reach the morning...",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      },
+      "m8": {
+        "text": "We have reached the evening upon the natural religion of Islam...",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      },
+      "m9": {
+        "text": "O Allah, grant me health in my body...",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      },
+      "m10": {
+        "text": "O Allah, I seek refuge in You from disbelief...",
+        "source": "Azkar Masaa",
+        "type": "hadith"
+      }
+    },
+    "general": {
+      "g1": {
+        "text": "I seek forgiveness from Allah.",
+        "source": "Azkar General",
+        "type": "hadith"
+      },
+      "g2": {
+        "text": "O Allah, You are Peace and from You is peace.",
+        "source": "Azkar General",
+        "type": "hadith"
+      },
+      "g3": {
+        "text": "Blessed are You, O Possessor of majesty and honor.",
+        "source": "Azkar General",
+        "type": "hadith"
+      },
+      "g4": {
+        "text": "There is no deity except Allah, alone, without partner.",
+        "source": "Azkar General",
+        "type": "hadith"
+      },
+      "g5": {
+        "text": "To Him belongs the dominion and to Him belongs the praise, and He is over all things competent.",
+        "source": "Azkar General",
+        "type": "hadith"
+      },
+      "g6": {
+        "text": "There is no power and no strength except with Allah.",
+        "source": "Azkar General",
+        "type": "hadith"
+      },
+      "g7": {
+        "text": "O Allah, help me to remember You, to thank You, and to worship You in the best of manners.",
+        "source": "Azkar General",
+        "type": "hadith"
+      },
+      "g8": {
+        "text": "Ayat al-Kursi",
+        "source": "Azkar General",
+        "type": "ayah"
+      },
+      "g9": {
+        "text": "Surah Al-Ikhlas",
+        "source": "Azkar General",
+        "type": "ayah"
+      },
+      "g10": {
+        "text": "Surah Al-Falaq",
+        "source": "Azkar General",
+        "type": "ayah"
+      },
+      "g11": {
+        "text": "Surah An-Nas",
+        "source": "Azkar General",
+        "type": "ayah"
+      }
+    },
+    "ui": {
+      "general": {
+        "loading": "Loading...",
+        "remaining": "remaining"
+      }
+    }
+  }
+}

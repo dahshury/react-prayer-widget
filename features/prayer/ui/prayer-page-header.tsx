@@ -2,6 +2,7 @@
 
 import { MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { ExtendedPrayerSettings, Location } from "@/entities/prayer";
 import { countryToFlag } from "@/shared/lib/geo";
 import { formatCurrentTime } from "@/shared/lib/time";
@@ -25,40 +26,47 @@ export function PrayerPageHeader({
 	currentTime,
 }: PrayerPageHeaderProps) {
 	const [isMounted, setIsMounted] = useState(false);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		setIsMounted(true);
 	}, []);
 
 	return (
-		<div className="flex items-center justify-between">
-			<div className="flex items-center gap-3">
-				{!!settings.showDate && <DualDateDisplay />}
-				{/* Current time outside the card, near date/city */}
-				{settings.showClock !== false && isMounted && (
-					<div className="font-mono text-muted-foreground text-xs">
-						{formatCurrentTime(
-							currentTime,
-							settings.timeFormat24h ?? true,
-							settings.language || "en"
-						)}
-					</div>
+		<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+			<div className="flex flex-wrap items-center gap-2 sm:gap-3">
+				{!!settings.showDate && (
+					<DualDateDisplay className="text-xs sm:text-sm" />
 				)}
-				{!!settings.showCity && (
-					<div className="flex items-center gap-1 text-muted-foreground text-xs">
-						<MapPin className="h-3 w-3" />
-						<span>
-							{location?.city ||
-								(settings.language === "ar" ? "جاري التحميل..." : "Loading...")}
-						</span>
-						<span className="ml-1">
-							{location?.countryCode
-								? countryToFlag(location.countryCode)
-								: countryToFlag(location?.country)}
+
+				{settings.showClock !== false && isMounted && (
+					<div className="flex items-center gap-1.5 rounded-md border border-muted/30 px-2 py-1">
+						<span className="font-mono text-foreground text-xs">
+							{formatCurrentTime(
+								currentTime,
+								settings.timeFormat24h ?? true,
+								settings.language || "en"
+							)}
 						</span>
 					</div>
 				)}
 			</div>
+
+			{!!settings.showCity && (
+				<div className="flex items-center gap-1.5 rounded-md border border-muted/30 px-2.5 py-1.5 text-foreground text-xs sm:text-sm">
+					<MapPin className="h-3.5 w-3.5 text-amber-400" />
+					<span className="font-medium leading-none" suppressHydrationWarning>
+						{isMounted
+							? location?.city || t("ui.general.loading", "Loading...")
+							: "Loading..."}
+					</span>
+					<span className="text-muted-foreground text-sm">
+						{location?.countryCode
+							? countryToFlag(location.countryCode)
+							: countryToFlag(location?.country)}
+					</span>
+				</div>
+			)}
 		</div>
 	);
 }
