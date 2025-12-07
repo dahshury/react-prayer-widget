@@ -13,11 +13,11 @@ import {
 	TranslationProvider,
 	WidgetPrayerCard,
 	WidgetSettingsContext,
-} from "react-prayer-widget";
+} from "../../../../index";
 
 /**
- * Demo page using ONLY package imports from react-prayer-widget
- * This demonstrates how external users would use the package
+ * Demo page demonstrating the react-prayer-widget package components
+ * Note: Uses local imports for build compatibility; external users would import from "react-prayer-widget"
  */
 export default function DemoPage() {
 	// Initialize with a function to avoid SSR hydration issues

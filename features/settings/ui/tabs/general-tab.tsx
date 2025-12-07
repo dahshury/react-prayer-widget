@@ -24,9 +24,9 @@ export function GeneralTab({ settings, onSettingsChange, t }: TabCommonProps) {
 			: "Makkah";
 
 	return (
-		<Card className="bg-background p-4 text-foreground">
-			<div className="space-y-3">
-				<div className="grid grid-cols-1 gap-3">
+		<Card className="bg-background p-5 text-foreground">
+			<div className="space-y-5">
+				<div className="grid grid-cols-1 gap-4">
 					<div className="flex items-center justify-between gap-3">
 						<Label className="text-sm">{t("settings.language")}</Label>
 						<Select

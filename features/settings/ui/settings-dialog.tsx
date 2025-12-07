@@ -41,7 +41,7 @@ export function SettingsDialog({
 
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
-			<DialogContent className="max-h-[90vh] w-[960px] max-w-[98vw] overflow-y-auto overflow-x-hidden">
+			<DialogContent className="max-h-[90vh] w-[960px] max-w-[98vw] overflow-y-auto overflow-x-hidden p-6">
 				<DialogHeader>
 					<DialogTitle>{tt("settings.title", "Settings")}</DialogTitle>
 				</DialogHeader>

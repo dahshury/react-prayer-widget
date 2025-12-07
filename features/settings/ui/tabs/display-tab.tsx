@@ -21,7 +21,7 @@ const DEFAULT_TICKER_INTERVAL = 5000;
 // Section: Layout settings (center/other card sizes + app width)
 function LayoutSection({ settings, onSettingsChange, t }: TabCommonProps) {
 	return (
-		<div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+		<div className="space-y-4 rounded-lg border bg-muted/30 p-4">
 			<div className="flex items-center justify-between gap-3">
 				<Label className="text-sm">
 					{t("settings.centerCardSize") !== "settings.centerCardSize"
@@ -128,7 +128,7 @@ function OtherPrayersSection({
 	t,
 }: TabCommonProps) {
 	return (
-		<div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+		<div className="space-y-4 rounded-lg border bg-muted/30 p-4">
 			<div className="flex items-center justify-between">
 				<Label className="text-sm">{t("settings.showOtherPrayers")}</Label>
 				<Switch
@@ -181,7 +181,7 @@ function DisplayTogglesSection({
 	t,
 }: TabCommonProps) {
 	return (
-		<div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+		<div className="space-y-4 rounded-lg border bg-muted/30 p-4">
 			<div className="flex items-center justify-between">
 				<Label className="text-sm">{t("settings.showCity")}</Label>
 				<Switch
@@ -214,7 +214,7 @@ function DisplayTogglesSection({
 // Section: Ticker settings
 function TickerSection({ settings, onSettingsChange, t }: TabCommonProps) {
 	return (
-		<div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+		<div className="space-y-4 rounded-lg border bg-muted/30 p-4">
 			<div className="flex items-center justify-between">
 				<Label className="text-sm">{t("settings.showTicker")}</Label>
 				<Switch
@@ -255,7 +255,7 @@ function TickerSection({ settings, onSettingsChange, t }: TabCommonProps) {
 // Section: Color pickers
 function ColorPickersSection({ settings, onSettingsChange }: TabCommonProps) {
 	return (
-		<div className="rounded-lg border bg-muted/30 p-3">
+		<div className="rounded-lg border bg-muted/30 p-4">
 			<div className="flex items-center gap-4 divide-x divide-border">
 				<ColorPickerGroup
 					ariaLabel="Pick prayer name color"
@@ -283,9 +283,9 @@ function ColorPickersSection({ settings, onSettingsChange }: TabCommonProps) {
 // Main component
 export function DisplayTab({ settings, onSettingsChange, t }: TabCommonProps) {
 	return (
-		<Card className="bg-background p-4 text-foreground">
-			<div className="space-y-3">
-				<div className="space-y-3">
+		<Card className="bg-background p-5 text-foreground">
+			<div className="space-y-5">
+				<div className="space-y-5">
 					<LayoutSection
 						onSettingsChange={onSettingsChange}
 						settings={settings}

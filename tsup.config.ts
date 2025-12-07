@@ -16,6 +16,7 @@ export default defineConfig({
 	platform: "browser",
 	minify: false,
 	treeshake: true,
+	splitting: false,
 	tsconfig: "./tsconfig.build.json",
 	external,
 });

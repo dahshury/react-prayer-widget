@@ -20,9 +20,9 @@ export function CalculationTab({
 	t,
 }: TabCommonProps) {
 	return (
-		<Card className="bg-background p-4 text-foreground">
-			<div className="space-y-3">
-				<div className="space-y-3">
+		<Card className="bg-background p-5 text-foreground">
+			<div className="space-y-5">
+				<div className="space-y-4">
 					<div className="flex items-center justify-between gap-3">
 						<Label className="text-sm">{t("settings.calculationMethod")}</Label>
 						<Select
@@ -80,7 +80,7 @@ export function CalculationTab({
 							</SelectContent>
 						</Select>
 					</div>
-					<div className="space-y-2">
+					<div className="space-y-3">
 						<Label className="font-semibold text-sm">
 							{t("settings.timeAdjustments")}
 						</Label>
@@ -88,7 +88,7 @@ export function CalculationTab({
 							{t("settings.timeAdjustmentsHelp")}
 						</p>
 						<div
-							className="space-y-1 rounded-md p-2"
+							className="space-y-2 rounded-md p-4"
 							style={{ backgroundColor: "#161921" }}
 						>
 							<OffsetControl

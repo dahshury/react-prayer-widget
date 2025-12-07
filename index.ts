@@ -5,6 +5,9 @@
  * Perfect for headers, sidebars, or dedicated prayer time sections.
  */
 
+// Auto-inject CSS variables (side effect)
+import "./shared/lib/inject-styles";
+
 // Location Type
 export type { Location } from "./entities/location";
 // Types

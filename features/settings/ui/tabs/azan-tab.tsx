@@ -8,6 +8,7 @@ import {
 	getCustomAzanName,
 	type PrayerName,
 	removeCustomAzanFileGlobal,
+	storeCustomAzanFileGlobal,
 } from "@/shared/lib/prayer";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
@@ -66,9 +67,6 @@ async function handleGlobalFileUpload(
 	onSettingsChange: TabCommonProps["onSettingsChange"],
 	azanPlayer: ReturnType<typeof useAzanPlayer>
 ) {
-	const { storeCustomAzanFileGlobal } = await import(
-		"@/shared/lib/prayer/azan"
-	);
 	const res = await storeCustomAzanFileGlobal(file);
 	onSettingsChange({
 		azanGlobalChoice: "custom:global",
@@ -147,7 +145,7 @@ function GlobalAzanSection({
 		<div
 			className={`${
 				disabled ? "pointer-events-none opacity-50" : ""
-			}space-y-2 rounded-lg border bg-muted/30 p-3`}
+			} space-y-4 rounded-lg border bg-muted/30 p-4`}
 		>
 			{/* Global azan type section */}
 			<div className="flex items-center justify-between gap-3">
@@ -235,10 +233,10 @@ export function AzanTab({ settings, onSettingsChange }: TabCommonProps) {
 	const azanDisabled = isAzanDisabled(settings.azanEnabled);
 
 	return (
-		<Card className="bg-background p-4 text-foreground">
-			<div className="space-y-3">
+		<Card className="bg-background p-5 text-foreground">
+			<div className="space-y-5">
 				{/* Enable/Volume section */}
-				<div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+				<div className="space-y-4 rounded-lg border bg-muted/30 p-4">
 					<div className="flex items-center justify-between">
 						<Label className="text-sm">
 							{t("azan.enable") || "Enable Azan"}
@@ -357,7 +355,7 @@ function PerPrayerSection({
 		<div
 			className={`${
 				azanDisabled ? "pointer-events-none opacity-50" : ""
-			}space-y-2 rounded-lg border bg-muted/30 p-3`}
+			} space-y-4 rounded-lg border bg-muted/30 p-4`}
 		>
 			<div className="flex items-center justify-between">
 				<Label className="font-semibold text-sm">
@@ -374,7 +372,7 @@ function PerPrayerSection({
 					}}
 				/>
 			</div>
-			<div className="grid grid-cols-1 gap-3">
+			<div className="grid grid-cols-1 gap-4">
 				{prayers.map((p) => (
 					<PrayerAzanControl
 						azanDisabled={azanDisabled}

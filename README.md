@@ -103,6 +103,8 @@ Ensure your `app/globals.css` (or `styles/globals.css`) includes Tailwind direct
 @tailwind utilities;
 ```
 
+**Note**: CSS variables are automatically injected when you import the package. No additional CSS import is needed!
+
 ### 5. Run Development Server
 
 ```bash
@@ -118,6 +120,8 @@ Visit `http://localhost:3000` to see your app.
 ## Quick Start
 
 > **Important**: All widgets require a `TranslationProvider` wrapper. Make sure to wrap your app or the component tree where you use the widgets with `TranslationProvider`.
+>
+> **Note**: CSS variables are automatically injected when you import the package. No manual CSS import is required!
 
 ### Setup Translation Provider
 
@@ -620,6 +624,10 @@ type WidgetPrayerCardSize = "xxs" | "xs" | "sm" | "md" | "lg";
 ## Styling
 
 This package uses **Tailwind CSS** for styling. Make sure your project has Tailwind CSS configured.
+
+### Automatic CSS Injection
+
+**CSS variables are automatically injected** when you import the package. No manual CSS import is required! The package will automatically add all necessary CSS variables (colors, spacing, component tokens) to your document when any component is imported.
 
 ### Customization Options
 
