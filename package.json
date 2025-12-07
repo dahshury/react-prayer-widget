@@ -31,7 +31,7 @@
   "scripts": {
     "predev": "bun -e \"import { rmSync } from 'fs'; rmSync('.next', { recursive: true, force: true })\"",
     "build": "next build",
-    "build:package": "bun -e \"import { rmSync } from 'fs'; rmSync('dist', { recursive: true, force: true })\" && tsup",
+    "build:package": "bun -e \"import { rmSync } from 'fs'; rmSync('dist', { recursive: true, force: true })\" && bunx tsup",
     "dev": "next dev --turbo",
     "lint": "next lint",
     "start": "next start",
@@ -118,6 +118,7 @@
     "react-use-measure": "^2.1.7",
     "tailwindcss": "^4.1.13",
     "tailwindcss-animate": "^1.0.7",
+    "tsup": "^8.3.5",
     "typescript": "^5.9.2",
     "ultracite": "6.3.8"
   }
