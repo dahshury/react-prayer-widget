@@ -1,6 +1,7 @@
 "use client";
 
-import { Tabs as TabsPrimitive } from "radix-ui";
+// biome-ignore lint/performance/noNamespaceImport: Radix UI components are designed as namespace exports
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 import {
 	type ComponentPropsWithoutRef,
 	type ElementRef,

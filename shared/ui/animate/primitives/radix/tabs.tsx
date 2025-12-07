@@ -1,7 +1,8 @@
 "use client";
 
+// biome-ignore lint/performance/noNamespaceImport: Radix UI components are designed as namespace exports
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { AnimatePresence, type HTMLMotionProps, motion } from "motion/react";
-import { Tabs as TabsPrimitive } from "radix-ui";
 import type * as React from "react";
 import { useControlledState } from "@/shared/lib/hooks";
 import { getStrictContext } from "@/shared/lib/react";

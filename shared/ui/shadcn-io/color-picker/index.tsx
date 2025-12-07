@@ -1,8 +1,9 @@
 "use client";
 
+// biome-ignore lint/performance/noNamespaceImport: Radix UI components are designed as namespace exports
+import * as Slider from "@radix-ui/react-slider";
 import Color from "color";
 import { PipetteIcon } from "lucide-react";
-import { Slider } from "radix-ui";
 import {
 	type ComponentProps,
 	createContext,
@@ -265,7 +266,10 @@ export const ColorPickerHue = ({
 		<Slider.Root
 			className={cn("relative flex h-4 w-full touch-none", className)}
 			max={360}
-			onValueChange={([newHue]) => setHue(newHue)}
+			onValueChange={(value: number[]) => {
+				const [newHue] = value;
+				setHue(newHue);
+			}}
 			step={1}
 			value={[hue]}
 			{...props}
@@ -290,7 +294,10 @@ export const ColorPickerAlpha = ({
 		<Slider.Root
 			className={cn("relative flex h-4 w-full touch-none", className)}
 			max={100}
-			onValueChange={([newAlpha]) => setAlpha(newAlpha)}
+			onValueChange={(value: number[]) => {
+				const [newAlpha] = value;
+				setAlpha(newAlpha);
+			}}
 			step={1}
 			value={[alpha]}
 			{...props}

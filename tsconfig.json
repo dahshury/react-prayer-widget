@@ -38,5 +38,5 @@
     "PLAN.md",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "dist", ".next", "out"]
+  "exclude": ["node_modules", "dist", ".next", "out", "tsup.config.ts"]
 }
