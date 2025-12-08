@@ -4,6 +4,13 @@ import pkg from "./package.json";
 const external = [
 	...Object.keys(pkg.peerDependencies ?? {}),
 	...Object.keys(pkg.dependencies ?? {}),
+	// Explicitly mark problematic packages that use dynamic require
+	"countries-and-timezones",
+	"country-data-list",
+	"country-region-data",
+	// Next.js should not be bundled (it's a framework, not a library dependency)
+	"next",
+	"next/image",
 ];
 
 export default defineConfig({
@@ -19,4 +26,11 @@ export default defineConfig({
 	splitting: false,
 	tsconfig: "./tsconfig.build.json",
 	external,
+	// Ensure proper ESM/CJS interop
+	esbuildOptions(options) {
+		// Prevent dynamic require in output
+		options.keepNames = true;
+	},
+	// Prevent bundling of node_modules
+	noExternal: [],
 });

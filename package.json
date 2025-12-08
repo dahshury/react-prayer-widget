@@ -1,6 +1,6 @@
 {
   "name": "react-prayer-widget",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Embeddable prayer times widget components for React applications",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -29,13 +29,13 @@
     "LICENSE"
   ],
   "scripts": {
-    "predev": "bun -e \"import { rmSync } from 'fs'; rmSync('.next', { recursive: true, force: true })\"",
+    "predev": "bun -e \"import { rmSync } from 'fs'; rmSync('.next', { recursive: true, force: true })\" && bun run build:package",
     "build": "next build",
     "build:package": "bun -e \"import { rmSync } from 'fs'; rmSync('dist', { recursive: true, force: true })\" && bunx tsup",
     "dev": "next dev --turbo",
     "lint": "next lint",
     "start": "next start",
-    "prepare": "husky",
+    "prepare": "bunx husky",
     "check": "bunx ultracite fix && bun run typecheck",
     "biome:check": "biome check --no-errors-on-unmatched .",
     "biome:fix": "biome check --write --no-errors-on-unmatched .",

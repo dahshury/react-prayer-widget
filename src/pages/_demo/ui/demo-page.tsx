@@ -19,11 +19,11 @@ import {
 	useSettingsPersistence,
 	WidgetPrayerCard,
 	WidgetSettingsContext,
-} from "../../../../index";
+} from "react-prayer-widget";
 
 /**
  * Demo page demonstrating the react-prayer-widget package components
- * Note: Uses local imports for build compatibility; external users would import from "react-prayer-widget"
+ * Note: Uses the actual built package to 100% simulate external usage
  */
 export default function DemoPage() {
 	// Initialize as null to avoid SSR/client time mismatch; set on mount

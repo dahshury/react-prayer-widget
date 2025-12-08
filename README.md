@@ -6,15 +6,17 @@ Embeddable prayer times widget components for React applications. Perfect for ad
 
 - [Installation](#installation)
 - [Prerequisites](#prerequisites)
+- [Package Exports](#package-exports)
 - [Next.js Project Setup](#nextjs-project-setup)
 - [Quick Start](#quick-start)
 - [Components](#components)
+- [Hooks & Utilities](#hooks--utilities)
 - [Settings & Configuration](#settings--configuration)
 - [Types](#types)
 - [Styling](#styling)
 - [Demo](#demo)
-- [Utilities](#utilities)
 - [Requirements](#requirements)
+- [Troubleshooting](#troubleshooting)
 - [License](#license)
 
 ## Installation
@@ -41,18 +43,58 @@ Before using this package, ensure your project has:
 - **Tailwind CSS** (required for styling)
 - **Node.js 18+**
 
-## Package outputs & exports
+## Package Exports
 
-- Ships prebuilt ESM and CJS bundles with typings from `dist/`
-- Tree-shakeable surface (`sideEffects: false`) via `react-prayer-widget`
-- Core exports: `TranslationProvider`, `useTranslation`, `cn`,
-  `formatTimeDisplay`, `formatMinutesHHmm`, `formatCurrentTime`
-- Widgets: `WidgetPrayerCard`, `WidgetPrayerCardSkeleton`, `NextPrayerCard`,
-  `PrayerGrid`, `MinimalTicker`, `ScrollingTicker`, `DualDateDisplay`
-- Navigation/settings: `TopBar`, `SettingsDialog`, `WidgetSettingsContext`,
-  `SettingsDialogProps`
-- Types: `PrayerTimes`, `PrayerSettings`, `ExtendedPrayerSettings`, `Location`,
-  `NextPrayer`, `WidgetPrayerCardProps`, `PrayerGridProps`
+The package exports prebuilt ESM and CJS bundles with TypeScript types from `dist/`. The package is tree-shakeable for optimal bundle sizes.
+
+### Widget Components
+
+- `PrayerWidget` - All-in-one widget with next prayer card, grid, and ticker
+- `StandaloneNextPrayerCard` - Drop-in next prayer card with built-in context
+- `NextPrayerCard` - Next prayer card component
+- `WidgetPrayerCard` - Individual prayer card component
+- `WidgetPrayerCardSkeleton` - Loading skeleton for prayer cards
+- `PrayerGrid` - Grid layout for all 5 prayers
+- `MinimalTicker` / `ScrollingTicker` - Ticker components with rotating azkar
+- `DualDateDisplay` - Gregorian and Hijri date display
+
+### Navigation & Settings
+
+- `TopBar` - Header with date, time, and location
+- `SettingsDialog` - Settings dialog component
+- `PrayerGridSettingsDialog` - Settings dialog for prayer grid
+- `WidgetSettingsContext` - Context for right-click settings menu
+- `PrayerGridSettingsContext` - Context for prayer grid settings
+
+### Hooks
+
+- `useTranslation` - Access translations in components
+- `useWidgetSettings` - Access widget settings from context
+- `usePrayerGridSettings` - Access prayer grid settings from context
+- `useSettingsPersistence` - Hook for localStorage settings persistence
+- `useFontSettings` - Hook for applying custom fonts
+
+### Utilities
+
+- `formatCurrentTime` - Format Date object as time string
+- `formatMinutesHHmm` - Format minutes as HH:mm string
+- `formatTimeDisplay` - Format time string (24h/12h)
+- `countryToFlag` - Get flag emoji for country code
+- `computePrayerProgress` - Compute prayer progress value
+- `cn` - Class name utility (like clsx)
+
+### Providers
+
+- `TranslationProvider` - Required provider for all widgets (handles i18n)
+
+### Type Exports
+
+- `PrayerTimes`, `NextPrayer`, `Location`
+- `PrayerSettings`, `ExtendedPrayerSettings`
+- `PrayerName`, `CalculationMethodId`, `AsrMethodId`
+- `WidgetPrayerCardProps`, `NextPrayerCardProps`, `PrayerWidgetProps`
+- `PrayerGridProps`, `StandaloneNextPrayerCardProps`
+- `TopBarProps`, `SettingsDialogProps`
 
 ## Next.js Project Setup
 
@@ -119,13 +161,67 @@ Visit `http://localhost:3000` to see your app.
 
 ## Quick Start
 
-> **Important**: All widgets require a `TranslationProvider` wrapper. Make sure to wrap your app or the component tree where you use the widgets with `TranslationProvider`.
+> **Important**: Most widgets require a `TranslationProvider` wrapper. However, `PrayerWidget` and `StandaloneNextPrayerCard` include their own providers for convenience.
 >
 > **Note**: CSS variables are automatically injected when you import the package. No manual CSS import is required!
 
-### Setup Translation Provider
+### Simplest Example - PrayerWidget (All-in-One)
 
-Wrap your app or component tree with `TranslationProvider`:
+The easiest way to get started is with `PrayerWidget`, which bundles everything:
+
+```tsx
+import { PrayerWidget, TranslationProvider } from "react-prayer-widget";
+
+function PrayerSection() {
+  const prayerTimes = {
+    fajr: "05:30",
+    sunrise: "06:45",
+    dhuhr: "12:15",
+    asr: "15:45",
+    maghrib: "18:20",
+    isha: "19:45",
+    date: "2025-01-15",
+    hijri: "1446-07-14",
+  };
+
+  return (
+    <TranslationProvider language="en">
+      <PrayerWidget
+        prayerTimes={prayerTimes}
+        showGrid={true}
+        showTicker={true}
+      />
+    </TranslationProvider>
+  );
+}
+```
+
+### Standalone Next Prayer Card
+
+For a drop-in next prayer card that handles everything internally:
+
+```tsx
+import { StandaloneNextPrayerCard } from "react-prayer-widget";
+
+function Header() {
+  const prayerTimes = {
+    fajr: "05:30",
+    sunrise: "06:45",
+    dhuhr: "12:15",
+    asr: "15:45",
+    maghrib: "18:20",
+    isha: "19:45",
+    date: "2025-01-15",
+    hijri: "1446-07-14",
+  };
+
+  return <StandaloneNextPrayerCard prayerTimes={prayerTimes} />;
+}
+```
+
+### Setup Translation Provider (for manual components)
+
+For components that don't include their own providers, wrap your app or component tree:
 
 ```tsx
 import { TranslationProvider } from "react-prayer-widget";
@@ -139,28 +235,28 @@ function App() {
 }
 ```
 
-### Basic Usage - Prayer Card
+### Basic Usage - Individual Components
 
 ```tsx
-import { WidgetPrayerCard, TranslationProvider } from "react-prayer-widget";
+import {
+  WidgetPrayerCard,
+  NextPrayerCard,
+  PrayerGrid,
+  TranslationProvider,
+} from "react-prayer-widget";
 
-function Header() {
-  return (
-    <TranslationProvider language="en">
-      <header>
-        <WidgetPrayerCard name="Dhuhr" time="12:30" isCurrent={true} />
-      </header>
-    </TranslationProvider>
-  );
-}
-```
+function PrayerTimesSection() {
+  const prayerTimes = {
+    fajr: "05:30",
+    sunrise: "06:45",
+    dhuhr: "12:15",
+    asr: "15:45",
+    maghrib: "18:20",
+    isha: "19:45",
+    date: "2025-01-15",
+    hijri: "1446-07-14",
+  };
 
-### Next Prayer with Countdown
-
-```tsx
-import { NextPrayerCard, TranslationProvider } from "react-prayer-widget";
-
-function PrayerWidget() {
   const nextPrayer = {
     name: "Asr",
     time: "15:45",
@@ -175,33 +271,9 @@ function PrayerWidget() {
         timeFormat24h={true}
         language="en"
       />
-    </TranslationProvider>
-  );
-}
-```
-
-### Prayer Grid (All 5 Prayers)
-
-```tsx
-import { PrayerGrid, TranslationProvider } from "react-prayer-widget";
-
-function PrayerTimesSection() {
-  const prayerTimes = {
-    fajr: "05:30",
-    sunrise: "06:45",
-    dhuhr: "12:15",
-    asr: "15:45",
-    maghrib: "18:20",
-    isha: "19:45",
-    date: "2025-01-15",
-    hijri: "1446-07-14",
-  };
-
-  return (
-    <TranslationProvider language="en">
       <PrayerGrid
         prayerTimes={prayerTimes}
-        currentOrNextName="Dhuhr"
+        currentOrNextName={nextPrayer.name}
         timeFormat24h={true}
         language="en"
       />
@@ -210,21 +282,20 @@ function PrayerTimesSection() {
 }
 ```
 
-### Complete Example with Settings
+### Complete Example with Settings Persistence
 
 ```tsx
 import {
-  NextPrayerCard,
-  PrayerGrid,
-  TopBar,
+  PrayerWidget,
   TranslationProvider,
-  WidgetSettingsContext,
+  useSettingsPersistence,
   type ExtendedPrayerSettings,
 } from "react-prayer-widget";
 import { useState } from "react";
 
 function PrayerApp() {
-  const [settings, setSettings] = useState<ExtendedPrayerSettings>({
+  // Settings with automatic localStorage persistence
+  const { settings, setSettings } = useSettingsPersistence({
     calculationMethod: 4,
     asrMethod: 0,
     timeFormat24h: true,
@@ -232,12 +303,6 @@ function PrayerApp() {
     showOtherPrayers: true,
     showCity: true,
     showTicker: true,
-    showDate: true,
-    showClock: true,
-    dimPreviousPrayers: true,
-    horizontalView: false,
-    nextCardSize: "lg",
-    otherCardSize: "sm",
   });
 
   const prayerTimes = {
@@ -251,52 +316,15 @@ function PrayerApp() {
     hijri: "1446-07-14",
   };
 
-  const nextPrayer = {
-    name: "Asr",
-    time: "15:45",
-    timeUntil: 125,
-    progress: 0.65,
-  };
-
   return (
     <TranslationProvider language={settings.language || "en"}>
-      <WidgetSettingsContext
+      <PrayerWidget
+        prayerTimes={prayerTimes}
         settings={settings}
-        onSettingsChange={(newSettings) =>
-          setSettings((prev) => ({ ...prev, ...newSettings }))
-        }
-      >
-        <div className="p-8">
-          <TopBar
-            currentTime={new Date()}
-            location={{ city: "Cairo", country: "Egypt", countryCode: "EG" }}
-            showDate={settings.showDate}
-            showClock={settings.showClock}
-            showCity={settings.showCity}
-            timeFormat24h={settings.timeFormat24h}
-            language={settings.language}
-          />
-
-          <NextPrayerCard
-            nextPrayer={nextPrayer}
-            timeFormat24h={settings.timeFormat24h}
-            language={settings.language}
-            nextSize={settings.nextCardSize}
-          />
-
-          {settings.showOtherPrayers && (
-            <PrayerGrid
-              prayerTimes={prayerTimes}
-              currentOrNextName={nextPrayer.name}
-              dimPreviousPrayers={settings.dimPreviousPrayers}
-              horizontalView={settings.horizontalView}
-              timeFormat24h={settings.timeFormat24h}
-              language={settings.language}
-              size={settings.otherCardSize}
-            />
-          )}
-        </div>
-      </WidgetSettingsContext>
+        onSettingsChange={setSettings}
+        showGrid={settings.showOtherPrayers}
+        showTicker={settings.showTicker}
+      />
     </TranslationProvider>
   );
 }
@@ -304,44 +332,92 @@ function PrayerApp() {
 
 ## Components
 
+### `PrayerWidget`
+
+One-stop bundled widget that includes next prayer card, prayer grid, and ticker with built-in settings management.
+
+**Props:**
+
+| Prop               | Type                                | Default | Description                                 |
+| ------------------ | ----------------------------------- | ------- | ------------------------------------------- |
+| `prayerTimes`      | `PrayerTimes`                       | -       | Prayer times for all prayers                |
+| `settings`         | `Partial<ExtendedPrayerSettings>?`  | -       | Settings object (optional, has defaults)    |
+| `onSettingsChange` | `(settings: Partial<...>) => void?` | -       | Callback when settings change               |
+| `className`        | `string?`                           | -       | Additional CSS classes for container        |
+| `cardClassName`    | `string?`                           | -       | Additional CSS classes for next prayer card |
+| `gridClassName`    | `string?`                           | -       | Additional CSS classes for prayer grid      |
+| `tickerClassName`  | `string?`                           | -       | Additional CSS classes for ticker           |
+| `showGrid`         | `boolean?`                          | `true`  | Show prayer grid                            |
+| `showTicker`       | `boolean?`                          | `true`  | Show ticker                                 |
+| `maxWidth`         | `MaxWidth`                          | -       | Max width constraint (see types below)      |
+
+### `StandaloneNextPrayerCard`
+
+Drop-in next prayer card that bundles translation provider and settings context. Only requires `prayerTimes` prop.
+
+**Props:**
+
+| Prop             | Type                               | Default | Description                             |
+| ---------------- | ---------------------------------- | ------- | --------------------------------------- |
+| `prayerTimes`    | `PrayerTimes`                      | -       | Prayer times for all prayers (required) |
+| `settings`       | `Partial<ExtendedPrayerSettings>?` | -       | Optional settings override              |
+| `className`      | `string?`                          | -       | Additional CSS classes                  |
+| `gradientClass`  | `string?`                          | -       | Override gradient classes               |
+| `showIcon`       | `boolean?`                         | `true`  | Show prayer icon                        |
+| `classes`        | `object?`                          | -       | Fine-grained class overrides            |
+| `maxWidth`       | `MaxWidth`                         | -       | Max width constraint                    |
+| `nextSize`       | `WidgetPrayerCardSize?`            | -       | Size of the card                        |
+| `size`           | `WidgetPrayerCardSize?`            | -       | Size (alias for nextSize)               |
+| `timeFormat24h`  | `boolean?`                         | -       | Use 24-hour format                      |
+| `cardBackground` | `string?`                          | -       | Custom card background image URL        |
+
 ### `WidgetPrayerCard`
 
 Individual prayer card component for displaying a single prayer time.
 
 **Props:**
 
-| Prop             | Type                                     | Default | Description                                   |
-| ---------------- | ---------------------------------------- | ------- | --------------------------------------------- |
-| `name`           | `string`                                 | -       | Prayer name (Fajr, Dhuhr, Asr, Maghrib, Isha) |
-| `time`           | `string`                                 | -       | Prayer time (e.g., "12:30")                   |
-| `timezone`       | `string?`                                | -       | IANA timezone for Friday detection            |
-| `isFriday`       | `boolean?`                               | `false` | Override Friday detection                     |
-| `isCurrent`      | `boolean?`                               | `false` | Highlight as current prayer                   |
-| `isNext`         | `boolean?`                               | `false` | Show as next prayer with countdown            |
-| `progress`       | `number?`                                | -       | Progress value (0-1) for countdown            |
-| `countdown`      | `string?`                                | -       | Countdown string (e.g., "02:05")              |
-| `size`           | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?` | `"md"`  | Card size                                     |
-| `horizontalView` | `boolean?`                               | `false` | Compact horizontal layout                     |
-| `showIcon`       | `boolean?`                               | `true`  | Show prayer icon                              |
-| `className`      | `string?`                                | -       | Additional CSS classes                        |
+| Prop                    | Type                                     | Default | Description                                   |
+| ----------------------- | ---------------------------------------- | ------- | --------------------------------------------- |
+| `name`                  | `string`                                 | -       | Prayer name (Fajr, Dhuhr, Asr, Maghrib, Isha) |
+| `time`                  | `string`                                 | -       | Prayer time (e.g., "12:30")                   |
+| `timezone`              | `string?`                                | -       | IANA timezone for Friday detection            |
+| `isFriday`              | `boolean?`                               | `false` | Override Friday detection                     |
+| `isCurrent`             | `boolean?`                               | `false` | Highlight as current prayer                   |
+| `isNext`                | `boolean?`                               | `false` | Show as next prayer with countdown            |
+| `progress`              | `number?`                                | -       | Progress value (0-1) for countdown            |
+| `countdown`             | `string?`                                | -       | Countdown string (e.g., "02:05")              |
+| `size`                  | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?` | `"md"`  | Card size                                     |
+| `horizontalView`        | `boolean?`                               | `false` | Compact horizontal layout                     |
+| `showIcon`              | `boolean?`                               | `true`  | Show prayer icon                              |
+| `className`             | `string?`                                | -       | Additional CSS classes                        |
+| `classes`               | `object?`                                | -       | Fine-grained class overrides                  |
+| `gradientClass`         | `string?`                                | -       | Override gradient classes                     |
+| `cardBackground`        | `string?`                                | -       | Custom background image URL                   |
+| `cardBackgroundOpacity` | `number?`                                | -       | Background opacity (0-1)                      |
+| `onNameClick`           | `() => void?`                            | -       | Callback when prayer name is clicked          |
+| `onDropFile`            | `(file: File) => Promise<void>?`         | -       | Callback for drag-drop file upload            |
 
 ### `NextPrayerCard`
 
-Specialized card for displaying the next prayer with countdown. This is a convenience wrapper around `WidgetPrayerCard` with `isNext={true}`.
+Specialized card for displaying the next prayer with countdown.
 
 **Props:**
 
-| Prop            | Type                                                          | Default | Description                                                         |
-| --------------- | ------------------------------------------------------------- | ------- | ------------------------------------------------------------------- |
-| `nextPrayer`    | `NextPrayer`                                                  | -       | Object with `name`, `time`, `timeUntil` (minutes), `progress` (0-1) |
-| `timeFormat24h` | `boolean?`                                                    | `true`  | Use 24-hour format                                                  |
-| `language`      | `"en" \| "ar"?`                                               | `"en"`  | Display language                                                    |
-| `size`          | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?`                      | `"md"`  | Card size                                                           |
-| `nextSize`      | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?`                      | `"md"`  | Size for next prayer card                                           |
-| `gradientClass` | `string?`                                                     | -       | Override gradient classes                                           |
-| `showIcon`      | `boolean?`                                                    | `true`  | Show prayer icon                                                    |
-| `className`     | `string?`                                                     | -       | Additional CSS classes                                              |
-| `maxWidth`      | `"md" \| "lg" \| "xl" \| "2xl" \| "3xl" \| number \| string?` | -       | Max width constraint                                                |
+| Prop                    | Type                                     | Default | Description                                                         |
+| ----------------------- | ---------------------------------------- | ------- | ------------------------------------------------------------------- |
+| `nextPrayer`            | `NextPrayer`                             | -       | Object with `name`, `time`, `timeUntil` (minutes), `progress` (0-1) |
+| `timeFormat24h`         | `boolean?`                               | `true`  | Use 24-hour format                                                  |
+| `language`              | `"en" \| "ar"?`                          | `"en"`  | Display language                                                    |
+| `size`                  | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?` | `"md"`  | Card size                                                           |
+| `nextSize`              | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?` | `"md"`  | Size for next prayer card                                           |
+| `gradientClass`         | `string?`                                | -       | Override gradient classes                                           |
+| `showIcon`              | `boolean?`                               | `true`  | Show prayer icon                                                    |
+| `className`             | `string?`                                | -       | Additional CSS classes                                              |
+| `classes`               | `object?`                                | -       | Fine-grained class overrides                                        |
+| `maxWidth`              | `MaxWidth`                               | -       | Max width constraint                                                |
+| `cardBackground`        | `string?`                                | -       | Custom background image URL                                         |
+| `cardBackgroundOpacity` | `number?`                                | -       | Background opacity (0-1)                                            |
 
 ### `PrayerGrid`
 
@@ -349,18 +425,35 @@ Grid layout displaying all 5 prayers in a responsive grid.
 
 **Props:**
 
-| Prop                 | Type                    | Default | Description                                                       |
-| -------------------- | ----------------------- | ------- | ----------------------------------------------------------------- |
-| `prayerTimes`        | `PrayerTimes`           | -       | Object with fajr, sunrise, dhuhr, asr, maghrib, isha, date, hijri |
-| `currentOrNextName`  | `string`                | -       | Name of current/next prayer to highlight                          |
-| `dimPreviousPrayers` | `boolean?`              | `true`  | Dim past prayers                                                  |
-| `horizontalView`     | `boolean?`              | `false` | Horizontal layout                                                 |
-| `timeFormat24h`      | `boolean?`              | `true`  | Use 24-hour format                                                |
-| `language`           | `"en" \| "ar"?`         | `"en"`  | Display language                                                  |
-| `timezone`           | `string?`               | -       | IANA timezone                                                     |
-| `isFriday`           | `boolean?`              | -       | Friday override                                                   |
-| `size`               | `WidgetPrayerCardSize?` | `"sm"`  | Card size                                                         |
-| `maxWidth`           | `string?`               | -       | Max width of grid                                                 |
+| Prop                    | Type                    | Default | Description                                                       |
+| ----------------------- | ----------------------- | ------- | ----------------------------------------------------------------- |
+| `prayerTimes`           | `PrayerTimes`           | -       | Object with fajr, sunrise, dhuhr, asr, maghrib, isha, date, hijri |
+| `currentOrNextName`     | `string`                | -       | Name of current/next prayer to highlight                          |
+| `dimPreviousPrayers`    | `boolean?`              | `true`  | Dim past prayers                                                  |
+| `horizontalView`        | `boolean?`              | `false` | Horizontal layout                                                 |
+| `timeFormat24h`         | `boolean?`              | `true`  | Use 24-hour format                                                |
+| `language`              | `"en" \| "ar"?`         | `"en"`  | Display language                                                  |
+| `timezone`              | `string?`               | -       | IANA timezone                                                     |
+| `isFriday`              | `boolean?`              | -       | Friday override                                                   |
+| `size`                  | `WidgetPrayerCardSize?` | `"sm"`  | Card size                                                         |
+| `maxWidth`              | `MaxWidth?`             | -       | Max width of grid                                                 |
+| `gradientClass`         | `string?`               | -       | Override gradient classes                                         |
+| `showIcon`              | `boolean?`              | `true`  | Show prayer icons                                                 |
+| `classes`               | `object?`               | -       | Fine-grained class overrides                                      |
+| `cardBackground`        | `string?`               | -       | Custom background image URL                                       |
+| `cardBackgroundOpacity` | `number?`               | -       | Background opacity (0-1)                                          |
+
+### `WidgetPrayerCardSkeleton`
+
+Loading skeleton component for prayer cards. Useful while prayer times are being fetched.
+
+**Props:**
+
+| Prop             | Type                                     | Default | Description            |
+| ---------------- | ---------------------------------------- | ------- | ---------------------- |
+| `size`           | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?` | `"md"`  | Skeleton size          |
+| `horizontalView` | `boolean?`                               | `false` | Horizontal layout      |
+| `className`      | `string?`                                | -       | Additional CSS classes |
 
 ### `TopBar`
 
@@ -392,15 +485,13 @@ Context provider that enables right-click settings menu on widgets. Wrap your wi
 | `onSettingsChange` | `(settings: Partial<ExtendedPrayerSettings>) => void` | Callback when settings change |
 | `children`         | `React.ReactNode`                                     | Widget components to wrap     |
 
-### `DualDateDisplay`
+### `PrayerGridSettingsContext`
 
-Component for displaying both Gregorian and Hijri dates side by side.
+Context provider specifically for prayer grid settings. Used with `PrayerGridSettingsDialog`.
 
 **Props:**
 
-| Prop        | Type      | Description            |
-| ----------- | --------- | ---------------------- |
-| `className` | `string?` | Additional CSS classes |
+Similar to `WidgetSettingsContext` but focused on grid-specific settings.
 
 ### `MinimalTicker` / `ScrollingTicker`
 
@@ -417,6 +508,172 @@ Ticker components for displaying prayer times and rotating azkar (remembrances) 
 **Props (ScrollingTicker):**
 
 Similar to MinimalTicker with additional scrolling animation options.
+
+### `DualDateDisplay`
+
+Component for displaying both Gregorian and Hijri dates side by side.
+
+**Props:**
+
+| Prop        | Type      | Description            |
+| ----------- | --------- | ---------------------- |
+| `className` | `string?` | Additional CSS classes |
+
+## Hooks & Utilities
+
+### `useSettingsPersistence`
+
+Hook for managing settings with automatic localStorage persistence. Settings are saved automatically whenever they change.
+
+```tsx
+import { useSettingsPersistence } from "react-prayer-widget";
+
+function MyComponent() {
+  const { settings, setSettings } = useSettingsPersistence({
+    calculationMethod: 4,
+    language: "en",
+    // ... initial settings
+  });
+
+  // Settings are automatically persisted to localStorage
+  const updateLanguage = (lang: "en" | "ar") => {
+    setSettings({ language: lang });
+    // Automatically saved to localStorage!
+  };
+
+  return <div>Current language: {settings.language}</div>;
+}
+```
+
+**Returns:**
+
+- `settings: ExtendedPrayerSettings` - Current settings object
+- `setSettings: (settings: Partial<ExtendedPrayerSettings>) => void` - Update settings function
+
+### `useFontSettings`
+
+Hook for applying custom fonts based on settings. Automatically injects font styles.
+
+```tsx
+import { useFontSettings } from "react-prayer-widget";
+import type { ExtendedPrayerSettings } from "react-prayer-widget";
+
+function MyComponent() {
+  const settings: ExtendedPrayerSettings = {
+    fontFamily: "Amiri",
+    // ... other settings
+  };
+
+  useFontSettings(settings); // Applies font styles automatically
+  // ...
+}
+```
+
+### `useWidgetSettings`
+
+Hook to access widget settings from `WidgetSettingsContext`.
+
+```tsx
+import { useWidgetSettings } from "react-prayer-widget";
+
+function MyComponent() {
+  const { settings, updateSettings } = useWidgetSettings();
+  // Access settings from context
+}
+```
+
+### `usePrayerGridSettings`
+
+Hook to access prayer grid settings from `PrayerGridSettingsContext`.
+
+```tsx
+import { usePrayerGridSettings } from "react-prayer-widget";
+
+function MyComponent() {
+  const { settings, updateSettings } = usePrayerGridSettings();
+  // Access grid-specific settings
+}
+```
+
+### `useTranslation`
+
+Hook to access translations in your components.
+
+```tsx
+import { useTranslation } from "react-prayer-widget";
+
+function MyComponent() {
+  const t = useTranslation();
+  return <div>{t.prayers.fajr}</div>; // "Fajr"
+}
+```
+
+### `computePrayerProgress`
+
+Utility function to compute prayer progress value (0-1) based on time until prayer.
+
+```tsx
+import { computePrayerProgress } from "react-prayer-widget";
+
+const progress = computePrayerProgress(
+  currentTime,
+  previousPrayerTime,
+  nextPrayerTime
+); // Returns 0-1 value
+```
+
+### `formatCurrentTime(date: Date, format24h?: boolean): string`
+
+Format a Date object as a time string.
+
+```tsx
+import { formatCurrentTime } from "react-prayer-widget";
+
+const time = formatCurrentTime(new Date(), true); // "14:30"
+const time12h = formatCurrentTime(new Date(), false); // "2:30 PM"
+```
+
+### `formatMinutesHHmm(minutes: number): string`
+
+Format minutes as HH:mm string.
+
+```tsx
+import { formatMinutesHHmm } from "react-prayer-widget";
+
+const time = formatMinutesHHmm(125); // "02:05"
+```
+
+### `formatTimeDisplay(time: string, format24h?: boolean, language?: string): string`
+
+Format a time string (HH:mm) to 12-hour format if needed.
+
+```tsx
+import { formatTimeDisplay } from "react-prayer-widget";
+
+const time24h = formatTimeDisplay("14:30", true); // "14:30"
+const time12h = formatTimeDisplay("14:30", false); // "2:30 PM"
+```
+
+### `countryToFlag(countryCode: string): string`
+
+Get flag emoji for a country code.
+
+```tsx
+import { countryToFlag } from "react-prayer-widget";
+
+const flag = countryToFlag("US"); // "🇺🇸"
+const flag2 = countryToFlag("SA"); // "🇸🇦"
+```
+
+### `cn(...classes): string`
+
+Utility for merging class names (similar to `clsx`).
+
+```tsx
+import { cn } from "react-prayer-widget";
+
+const className = cn("base-class", condition && "conditional-class");
+```
 
 ## Settings & Configuration
 
@@ -464,15 +721,18 @@ The `ExtendedPrayerSettings` type provides comprehensive configuration options f
 
 ### Visual Customization
 
-| Property               | Type                                                       | Default     | Description                              |
-| ---------------------- | ---------------------------------------------------------- | ----------- | ---------------------------------------- |
-| `nextCardSize`         | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?`                   | `"md"`      | Size of the next prayer card             |
-| `otherCardSize`        | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?`                   | `"sm"`      | Size of other prayer cards in grid       |
-| `appWidth`             | `"xxs" \| "xs" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl"?` | `"xl"`      | Max width for the overall container      |
-| `prayerNameColor`      | `string?`                                                  | `"#ffffff"` | Custom color for prayer name text        |
-| `prayerTimeColor`      | `string?`                                                  | `"#ffffff"` | Custom color for prayer time text        |
-| `prayerCountdownColor` | `string?`                                                  | `"#ffffff"` | Custom color for countdown text          |
-| `tickerIntervalMs`     | `number?`                                                  | `5000`      | Ticker rotation interval in milliseconds |
+| Property                | Type                                                       | Default     | Description                              |
+| ----------------------- | ---------------------------------------------------------- | ----------- | ---------------------------------------- |
+| `nextCardSize`          | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?`                   | `"md"`      | Size of the next prayer card             |
+| `otherCardSize`         | `"xxs" \| "xs" \| "sm" \| "md" \| "lg"?`                   | `"sm"`      | Size of other prayer cards in grid       |
+| `appWidth`              | `"xxs" \| "xs" \| "md" \| "lg" \| "xl" \| "2xl" \| "3xl"?` | `"xl"`      | Max width for the overall container      |
+| `prayerNameColor`       | `string?`                                                  | `"#ffffff"` | Custom color for prayer name text        |
+| `prayerTimeColor`       | `string?`                                                  | `"#ffffff"` | Custom color for prayer time text        |
+| `prayerCountdownColor`  | `string?`                                                  | `"#ffffff"` | Custom color for countdown text          |
+| `cardBackground`        | `string?`                                                  | -           | Custom background image URL for cards    |
+| `cardBackgroundOpacity` | `number?`                                                  | -           | Background opacity (0-1)                 |
+| `fontFamily`            | `string?`                                                  | -           | Custom font family                       |
+| `tickerIntervalMs`      | `number?`                                                  | `5000`      | Ticker rotation interval in milliseconds |
 
 ### Azan (Adhan) Settings
 
@@ -556,6 +816,9 @@ const settings: ExtendedPrayerSettings = {
   prayerNameColor: "#ffffff",
   prayerTimeColor: "#ffffff",
   prayerCountdownColor: "#ffffff",
+  cardBackground: "https://example.com/bg.jpg",
+  cardBackgroundOpacity: 0.8,
+  fontFamily: "Amiri",
   tickerIntervalMs: 5000,
 
   // Azan
@@ -621,6 +884,29 @@ type WidgetPrayerCardSize = "xxs" | "xs" | "sm" | "md" | "lg";
 | `md`  | Medium (default)  |
 | `lg`  | Large             |
 
+### `MaxWidth`
+
+```typescript
+type MaxWidth =
+  | "md"
+  | "lg"
+  | "xl"
+  | "2xl"
+  | "3xl"
+  | number
+  | string
+  | "fit-content"
+  | "max-content"
+  | "min-content"
+  | "auto"
+  | `calc(${string})`
+  | `clamp(${string})`
+  | `min(${string})`
+  | `max(${string})`
+  | `var(${string})`
+  | `${number}${"px" | "rem" | "em" | "%" | "vw" | "vh" | "ch"}`;
+```
+
 ## Styling
 
 This package uses **Tailwind CSS** for styling. Make sure your project has Tailwind CSS configured.
@@ -636,6 +922,8 @@ Components are fully customizable via:
 - **`className` prop** - Additional CSS classes for the root element
 - **`classes` prop** - Fine-grained styling of internal elements (object with nested class names)
 - **`gradientClass` prop** - Override gradient classes for prayer cards
+- **`cardBackground` prop** - Custom background image URL
+- **`cardBackgroundOpacity` prop** - Background opacity (0-1)
 - **`style` prop** - Inline styles
 
 ### Example: Custom Styling
@@ -650,19 +938,42 @@ Components are fully customizable via:
     time: "text-xl font-bold",
   }}
   gradientClass="bg-gradient-to-r from-blue-500 to-purple-500"
+  cardBackground="https://example.com/bg.jpg"
+  cardBackgroundOpacity={0.8}
 />
+```
+
+### Font Customization
+
+Use the `fontFamily` setting and `useFontSettings` hook to apply custom fonts:
+
+```tsx
+import { useFontSettings } from "react-prayer-widget";
+
+function MyComponent() {
+  const settings = {
+    fontFamily: "Amiri", // or any font name from available fonts
+  };
+
+  useFontSettings(settings);
+  // Font styles are automatically applied
+}
 ```
 
 ## Demo
 
 A comprehensive live demo is available at `/demo` route in this repository. The demo showcases:
 
+- PrayerWidget - All-in-one widget
+- StandaloneNextPrayerCard - Drop-in next prayer card
 - Next Prayer Card with countdown
 - Prayer Grid with all 5 prayers
 - TopBar with date, time, and location
 - Minimal Ticker with rotating azkar
 - Different widget sizes (xxs, xs, sm, md, lg)
 - Right-click settings menu (via `WidgetSettingsContext`)
+- Settings persistence with localStorage
+- Custom fonts and backgrounds
 - All settings variations and configurations
 
 ### Running the Demo Locally
@@ -685,76 +996,6 @@ npm run dev
 # Visit http://localhost:3000/demo
 ```
 
-## Utilities
-
-The package exports several utility functions:
-
-### `formatCurrentTime(date: Date, format24h?: boolean): string`
-
-Format a Date object as a time string.
-
-```tsx
-import { formatCurrentTime } from "react-prayer-widget";
-
-const time = formatCurrentTime(new Date(), true); // "14:30"
-const time12h = formatCurrentTime(new Date(), false); // "2:30 PM"
-```
-
-### `formatMinutesHHmm(minutes: number): string`
-
-Format minutes as HH:mm string.
-
-```tsx
-import { formatMinutesHHmm } from "react-prayer-widget";
-
-const time = formatMinutesHHmm(125); // "02:05"
-```
-
-### `formatTimeDisplay(time: string, format24h?: boolean): string`
-
-Format a time string (HH:mm) to 12-hour format if needed.
-
-```tsx
-import { formatTimeDisplay } from "react-prayer-widget";
-
-const time24h = formatTimeDisplay("14:30", true); // "14:30"
-const time12h = formatTimeDisplay("14:30", false); // "2:30 PM"
-```
-
-### `countryToFlag(countryCode: string): string`
-
-Get flag emoji for a country code.
-
-```tsx
-import { countryToFlag } from "react-prayer-widget";
-
-const flag = countryToFlag("US"); // "🇺🇸"
-const flag2 = countryToFlag("SA"); // "🇸🇦"
-```
-
-### `useTranslation(): Translations`
-
-Hook to access translations in your components.
-
-```tsx
-import { useTranslation } from "react-prayer-widget";
-
-function MyComponent() {
-  const t = useTranslation();
-  return <div>{t.prayers.fajr}</div>; // "Fajr"
-}
-```
-
-### `cn(...classes): string`
-
-Utility for merging class names (similar to `clsx`).
-
-```tsx
-import { cn } from "react-prayer-widget";
-
-const className = cn("base-class", condition && "conditional-class");
-```
-
 ## Requirements
 
 - **React 19+** (peer dependency)
@@ -762,6 +1003,64 @@ const className = cn("base-class", condition && "conditional-class");
 - **TypeScript 5+** (recommended)
 - **Tailwind CSS** (required for styling)
 - **Node.js 18+**
+
+## Troubleshooting
+
+### Dynamic require error in Next.js with Turbopack
+
+**Why this happens:** This error occurs when importing the **built package** (`react-prayer-widget` from `node_modules`), but **not** when using the source code directly (like in this repo's demo page or Vercel deployment).
+
+- **Demo/Vercel**: Uses source TypeScript files → Next.js processes them directly → Dependencies handled normally by Node.js module resolution
+- **External imports**: Uses pre-built bundle from `node_modules` → Turbopack processes the bundle → Tries to analyze dependencies → Encounters dynamic `require()` calls in `countries-and-timezones`, `country-data-list`, and `country-region-data` → Fails
+
+The built package correctly externalizes these dependencies, but Turbopack still tries to process them when analyzing the bundle, causing the error.
+
+**Solution:** If you encounter the error "dynamic usage of require is not supported" when using this package with Next.js 16+ and Turbopack, add the following configuration to your `next.config.js` or `next.config.mjs`:
+
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // For Next.js 16+ with Turbopack
+  experimental: {
+    serverExternalPackages: [
+      "countries-and-timezones",
+      "country-data-list",
+      "country-region-data",
+    ],
+  },
+  // Alternative: If using webpack instead of Turbopack
+  webpack: (config) => {
+    config.externals = config.externals || [];
+    config.externals.push({
+      "countries-and-timezones": "commonjs countries-and-timezones",
+      "country-data-list": "commonjs country-data-list",
+      "country-region-data": "commonjs country-region-data",
+    });
+    return config;
+  },
+};
+
+module.exports = nextConfig;
+```
+
+Or if using ESM format (`next.config.mjs`):
+
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    serverExternalPackages: [
+      "countries-and-timezones",
+      "country-data-list",
+      "country-region-data",
+    ],
+  },
+};
+
+export default nextConfig;
+```
+
+This configuration tells Next.js/Turbopack to treat these packages as external dependencies and not attempt to bundle them, which resolves the dynamic require issue.
 
 ## License
 
